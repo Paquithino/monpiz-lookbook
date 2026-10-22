@@ -1,0 +1,90 @@
+# Contenuti del lookbook MonPiz.
+# Tutti i percorsi delle immagini sono relativi alla cartella `assets/`.
+# I testi accettano "\n" (o i blocchi YAML `|`) per forzare un a capo.
+
+meta:
+  title: Lookbook MonPiz — Collezione Inverno
+  author: MonPiz
+  subject: Pedule urban fashion, made in Italy
+
+cover:
+  tagline: Pedule urban fashion
+  title: MonPiz
+  claim: Una storia italiana. Qualità ed eccellenza che si guardano, si toccano e si indossano.
+  highlights: [Collezione Inverno, Made in Italy, Suole Vibram]
+  background_mask: images/brand/cover-trees-mask.png
+
+brand:
+  eyebrow: Il marchio
+  title: Tra tradizione ed innovazione
+  folio: MonPiz — Montebelluna, Italia
+  paragraphs:
+    - >-
+      Negli anni ’50, Montebelluna, un comune in provincia di Treviso, è diventato
+      un centro di eccellenza per la produzione di calzature tecniche. Le pedule,
+      scarpe progettate per il trekking e l’escursionismo, sono nate qui grazie
+      all’abilità e alla tradizione dei calzolai locali.
+    - >-
+      MonPiz coniuga tradizione artigianale e innovazione, introducendo materiali
+      dell’eccellenza italiana e migliorando comfort e prestazioni delle pedule
+      senza compromettere la qualità. Un twist urbano, a proprio agio su qualsiasi
+      terreno.
+  banner:
+    path: images/brand/heritage.jpg
+    focus_y: 0.5
+  details_title: Qualità nei dettagli
+  details:
+    - name: Tomaia
+      description: in pelle di vitello conciato in Toscana
+      image: images/details/upper.png
+    - name: Fodera
+      description: in pelle di vitello con lavorazione sottovuoto
+      image: images/details/lining.png
+    - name: Suola
+      description: in gomma Vibram
+      image: images/details/sole.png
+    - name: Ganci e anelli
+      description: in ferro con trattamento antiruggine
+      image: images/details/hardware.png
+
+# Ogni sezione genera una pagina divisoria e poi una pagina per prodotto,
+# nell'ordine in cui compaiono qui sotto.
+sections:
+  - name: Donna
+    # SEGNAPOSTO: testo provvisorio, da rivedere.
+    intro: >-
+      Pedule nate sulle Dolomiti, pensate per la città. Pellami conciati in
+      Toscana, suole Vibram e una costruzione artigianale che dura nel tempo.
+    products:
+      - name: Cortina Pelle Martellata
+        line: Cortina
+        description: Pelle martellata, look raffinato e versatile.
+        sizes: 36–43
+        # Al massimo due varianti per pagina. Senza `image` compare il segnaposto
+        # "Foto in arrivo"; per la foto aggiungi ad esempio:
+       
+        variants:
+          - color: Bianco
+            image: images/products/Cortina_Donna_Pelle_martellata_Bianca_spaiate.webp
+          - color: Nero
+            image: images/products/Cortina Donna Pelle martellata nera spaiate.webp
+
+# Pagina rivenditori + contatti, al momento disattivata.
+# Per riattivarla togli il "# " davanti alle righe seguenti.
+retailers:
+   eyebrow: Dove trovarci
+   title: Dove trovare MonPiz
+   intro: >-
+    I nostri rivenditori autorizzati, regione per regione. L’elenco completo,
+    con indirizzi e mappe, è consultabile su monpiz.it.
+   source: retailers.yaml
+
+closing:
+   title: Sei pronto?
+   text: Scopri i nuovi prodotti MonPiz, o cerca il rivenditore più vicino a te.
+   contacts:
+     - [monpiz@monpiz.it, +39 335 760 4522]
+     - [monpiz.it, instagram.com/monpiz_]
+
+identity:
+  logo_mask: images/brand/logo-mask.png

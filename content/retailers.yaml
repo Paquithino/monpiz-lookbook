@@ -1,0 +1,60 @@
+# Rivenditori autorizzati MonPiz, raggruppati per regione.
+# L'ordine delle regioni e dei negozi è quello di stampa.
+# `province` è opzionale (es. negozi esteri).
+
+- region: Veneto
+  stores:
+    - {name: Calzature Paludetti, city: Vittorio Veneto, province: TV}
+    - {name: Marinotti, city: Cortina d’Ampezzo, province: BL}
+    - {name: Pellizzari Negozi Moda, city: Vedelago, province: TV}
+    - {name: Public, city: Padova, province: PD}
+    - {name: Sartoria Meccanica, city: Rovigo, province: RO}
+    - {name: Sorelle Ramonda, city: Montecchio Maggiore, province: VI}
+    - {name: Sorelle Ramonda, city: Castrette, province: TV}
+    - {name: Stimm, city: Belluno, province: BL}
+    - {name: Stimm, city: Pieve di Soligo, province: TV}
+    - {name: Stimm, city: San Vendemiano, province: TV}
+
+- region: Trentino-Alto Adige
+  stores:
+    - {name: Boteghes Lagazoi, city: San Cassiano, province: BZ}
+    - {name: Bottamedi Sport, city: Andalo, province: TN}
+    - {name: Bulli e Pupe, city: Malé, province: TN}
+    - {name: Calzature Rabanser, city: Ortisei, province: BZ}
+    - {name: Caneppele, city: Trento, province: TN}
+    - {name: Giga Store, city: Cavalese, province: TN}
+    - {name: Livio Sport, city: Moena, province: TN}
+    - {name: Lorenzetti Luxury, city: Madonna di Campiglio, province: TN}
+    - {name: Oberrauch-Zitt, city: Bolzano, province: BZ}
+    - {name: Sport Kostner, city: Corvara in Badia, province: BZ}
+    - {name: Sport Mode Schönhuber, city: Brunico, province: BZ}
+
+- region: Friuli-Venezia Giulia
+  stores:
+    - {name: Bravi Calzature, city: Gemona, province: UD}
+    - {name: Dodo Sport, city: Percoto, province: UD}
+    - {name: Donnapiù, city: Tolmezzo, province: UD}
+    - {name: Lui & Lei Abbigliamento, city: Sappada}
+    - {name: Morassi Sport, city: Ravascletto, province: UD}
+    - {name: Piazza Sport, city: Maniago, province: PN}
+    - {name: Reporter’s Abbigliamento, city: Tarvisio, province: UD}
+    - {name: Sorelle Ramonda, city: Reana del Rojale, province: UD}
+    - {name: Taurus, city: Trieste, province: TS}
+
+- region: Lombardia
+  stores:
+    - {name: Bordoni 1962 Calzature, city: Morbegno, province: SO}
+    - {name: Due C, city: Sondrio, province: SO}
+    - {name: Pellizzari Negozi Moda, city: Roncadelle, province: BS}
+
+- region: Emilia-Romagna
+  stores:
+    - {name: Code 7.4, city: Piacenza, province: PC}
+
+- region: Lazio
+  stores:
+    - {name: Pellizzari Negozi Moda, city: "Porta di Roma, Roma", province: RM}
+
+- region: Estero
+  stores:
+    - {name: Montesport, city: Andorra}

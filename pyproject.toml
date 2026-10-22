@@ -1,0 +1,55 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "monpiz-lookbook"
+version = "0.1.0"
+description = "Generatore del lookbook MonPiz in PDF a partire da contenuti YAML."
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [{ name = "Francesco Fabbro" }]
+dependencies = [
+    "reportlab>=4.0",
+    "pillow>=10.0",
+    "pydantic>=2.5",
+    "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "ruff>=0.5",
+    "mypy>=1.10",
+    "types-PyYAML",
+    "fonttools>=4.47",  # only for scripts/instance_fonts.py
+]
+
+[project.scripts]
+monpiz-lookbook = "monpiz_lookbook.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+
+[tool.ruff]
+line-length = 110
+target-version = "py311"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "SIM", "RUF", "PTH"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+mypy_path = "src"
+files = ["src", "tests", "scripts"]
+plugins = ["pydantic.mypy"]
+
+[[tool.mypy.overrides]]
+module = ["reportlab.*", "fontTools.*"]
+ignore_missing_imports = true
