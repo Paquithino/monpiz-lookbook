@@ -50,16 +50,21 @@ Il flusso è lineare: `YAML → modelli validati → pagine → PDF`.
 
 ## Modificare i contenuti
 
-- **Sezioni** (`sections`, es. Donna e Uomo): ogni sezione genera una pagina
-  divisoria a tutta pagina e poi una pagina per prodotto, nell'ordine del file.
-- **Nuovo prodotto**: aggiungilo alla lista `products` della sezione. Campi: `name`,
-  `description` e `variants` obbligatori; `line` (famiglia, es. Cortina) e `sizes`
-  facoltativi. Ogni variante ha `color` e, quando c'è la foto, `image`
-  (percorso in `assets/images/products/`); senza foto la pagina mostra un segnaposto.
-  Massimo due varianti per pagina, impilate a tutta larghezza. Le foto restano intere
-  (non vengono ritagliate in altezza): il fondale da studio viene esteso ai lati fino
-  ai bordi della pagina, quindi vanno scattate su fondale uniforme con margine attorno
-  alla scarpa.
+- **Copertina**: logo a colori (`identity.logo`), foto prodotto su fondo bianco
+  (`cover.photo`) e un massiccio dolomitico vettoriale disegnato nel codice
+  (`src/monpiz_lookbook/mountain.py`). La foto è fusa in modalità Moltiplica: il suo
+  bianco sparisce e gli scarponi stanno davanti alle montagne; la posizione si basa
+  sull'ingombro della scarpa nella foto, quindi va bene qualsiasi scatto su fondo bianco.
+- **Struttura**: sezione (`sections`, es. Donna) → modelli (`models`, es. Cortina) →
+  prodotti (`products`). Ogni sezione genera una pagina divisoria; ogni modello una
+  pagina di presentazione (foto, descrizione, fino a 4 materiali) seguita da una pagina
+  per ciascun prodotto.
+- **Prodotto**: `name`, `description` e `variants` obbligatori, `sizes` facoltativo. Ogni
+  variante ha `color` e, quando c'è la foto, `image`. Massimo due varianti per pagina,
+  impilate a tutta larghezza. Le foto restano intere: il fondale da studio viene esteso
+  ai lati fino ai bordi della pagina, quindi vanno scattate su fondale uniforme.
+- **Foto mancanti**: ovunque manchi `image` (modello, materiali, varianti) compare il
+  segnaposto "Foto in arrivo".
 - **Rivenditori**: pagina facoltativa, attiva quando in `lookbook.yaml` sono presenti
   i blocchi `retailers` e `closing` (insieme). L'elenco sta in `content/retailers.yaml`;
   le regioni vengono distribuite su tre colonne minimizzando la colonna più alta.

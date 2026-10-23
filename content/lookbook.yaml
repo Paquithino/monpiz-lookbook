@@ -9,11 +9,9 @@ meta:
 
 cover:
   tagline: Pedule urban fashion
-  title: MonPiz
   claim: Una storia italiana. Qualità ed eccellenza che si guardano, si toccano e si indossano.
-  highlights: [Collezione Inverno, Made in Italy, Suole Vibram]
-  background_mask: images/brand/cover-trees-mask.png
-
+  highlights: [Collezione F.W.2026/2027, Made in Italy, Suole Vibram]
+  photo: images/products/FALCADE MARTELLATO DOPPIO LACCIO3.jpg
 brand:
   eyebrow: Il marchio
   title: Tra tradizione ed innovazione
@@ -47,30 +45,121 @@ brand:
       description: in ferro con trattamento antiruggine
       image: images/details/hardware.png
 
-# Ogni sezione genera una pagina divisoria e poi una pagina per prodotto,
-# nell'ordine in cui compaiono qui sotto.
+# CATALOGO DONNA 
 sections:
   - name: Donna
     # SEGNAPOSTO: testo provvisorio, da rivedere.
     intro: >-
       Pedule nate sulle Dolomiti, pensate per la città. Pellami conciati in
       Toscana, suole Vibram e una costruzione artigianale che dura nel tempo.
-    products:
-      - name: Cortina Pelle Martellata
-        line: Cortina
-        description: Pelle martellata, look raffinato e versatile.
-        sizes: 36–43
-        # Al massimo due varianti per pagina. Senza `image` compare il segnaposto
-        # "Foto in arrivo"; per la foto aggiungi ad esempio:
-       
-        variants:
-          - color: Bianco
-            image: images/products/Cortina_Donna_Pelle_martellata_Bianca_spaiate.webp
-          - color: Nero
-            image: images/products/Cortina Donna Pelle martellata nera spaiate.webp
+    models:
+      - name: Cortina
+        # SEGNAPOSTO: descrizione provvisoria, da rivedere.
+        description: >-
+          La pedula classica MonPiz: tomaia in pelle conciata in Toscana, fodera
+          in pelle e suola Vibram.
+        #Foto principale del modello
+        image: images/products/Cortina.jpg
+        materials:
+          - name: Pelle martellata
+          - name: Suede
+          - name: Dakar
+        products:
+          - name: Cortina Pelle Martellata
+            description: Pelle martellata, look raffinato e versatile.
+            sizes: 36–43
+            # Al massimo due varianti per pagina. Senza `image` compare il segnaposto.
+            variants:
+              - color: Bianco
+                image: images/products/Cortina_Donna_Pelle_martellata_Bianca_spaiate.webp
+              - color: Nero
+                image: images/products/Cortina_Donna_Pelle_martellata_nera_spaiate.webp
+          - name: Cortina Suede
+            description: Suede morbido, il carattere della pedula in versione vellutata.
+            sizes: 36–43
+            variants:
+              - color: Aneto
+                image: images/products/Cortina_Donna_Aneto_spaiate.webp
+          - name: Cortina Dakar
+            description: Pelle Dakar dall'aspetto vissuto, calda e robusta.
+            sizes: 36–43
+            variants:
+              - color: Testa di moro 
+                image: images/products/Cortina_Donna_Dakar_Testa_di_moro_spaiate.webp  
+      - name: Falcade
+        # SEGNAPOSTO: descrizione provvisoria, da rivedere.
+        description: >-
+          Struttura solida e confortevole, per l'uso quotidiano tra città
+          e natura.
+        image: images/products/Falcade_Donna_Cavallino_Bianco_nera.webp
+        materials:
+          - name: Suede
+          - name: Pelle martellata
+          - name: Cavallino
+        products:
+          - name: Falcade Suede
+            description: Suede morbido su una struttura solida, per tutti i giorni.
+            sizes: 36–43
+            variants:
+              - color: Seminole
+                image: images/products/Falcade_Donna_Seminole_Spaiate.webp
+              - color: Albama
+                image: images/products/Falcade_Donna_Suede_Alabama Spaiate.webp
+              - color: Sabbia
+                image: images/products/Falcade_Donna_Tabacco_Spaiate.webp
+              - color: Saraceno
+                image: images/products/Falcade_Donna_Saraceno_Spaiate.webp
+          - name: Falcade Pelle Martellata 
+            description: Pelle martellata, look raffinato e versatile.
+            sizes: 36–43
+            variants:
+              - color: Bianco 
+                image: images/products/Falcade_Donna_Pelle_martellata_bianca_spaiate.webp  
+          - name: Falcade Cavallino
+            description: Pelle cavallino, texture ricercata e carattere deciso.
+            sizes: 36–43
+            variants:
+              - color: Bianco Nera
+                image: images/products/Falcade_Donna_Cavallino_Bianco_nera_Spaiate.webp
+              - color: Moka 
+                image: images/products/Falcade_Donna_Cavvalino_moka_Spaiate.webp
+              - color: Bianco testa di moro
+                image: images/products/Falcade_Donna_Cavallino_Bianco_Testa_di_moro_Spaiate.webp      
 
+# CATALOGO UOMO 
+  - name: Uomo
+    # SEGNAPOSTO: testo provvisorio, da rivedere.
+    intro: >-
+      Pedule nate sulle Dolomiti, pensate per la città. Pellami conciati in
+      Toscana, suole Vibram e una costruzione artigianale che dura nel tempo.
+    models:
+      - name: Falcade
+        # SEGNAPOSTO: descrizione provvisoria, da rivedere.
+        description: >-
+          La pedula classica MonPiz: tomaia in pelle conciata in Toscana, fodera
+          in pelle e suola Vibram.
+        #Foto principale del modello
+        image: images/products/Falcade_Uomo_Dakar_Testa_di_moro.webp
+        materials:
+          - name: Suede
+          - name: Dakar
+          - name : Pelle Martellata
+        products:
+           - name: Falcade Suede
+             description: Suede morbido su una struttura solida, per tutti i giorni.
+             sizes: 36–43
+             variants:
+              - color: Ambrato
+                image: images/products/Falcade_Uomo Ambrato_Spaiate.webp
+              - color: Aneto
+                image: images/products/Falcade_Uomo_Aneto_Spaiate.webp
+              - color: Pilota
+                image: images/products/Falcade_Uomo_Pilota_Spaiate.webp
+              - color: Tec
+                image: images/products/Falcade_Uomo_Suede Tex_spaiate.webp
 # Pagina rivenditori + contatti, al momento disattivata.
 # Per riattivarla togli il "# " davanti alle righe seguenti.
+
 retailers:
    eyebrow: Dove trovarci
    title: Dove trovare MonPiz
@@ -87,4 +176,5 @@ closing:
      - [monpiz.it, instagram.com/monpiz_]
 
 identity:
-  logo_mask: images/brand/logo-mask.png
+     logo: images/brand/logo.png
+     logo_mask: images/brand/logo-mask.png

@@ -12,7 +12,16 @@ from .content import load_lookbook
 from .fonts import register_fonts
 from .images import ImageLibrary
 from .models import Lookbook
-from .pages import BrandPage, CoverPage, Page, ProductPage, RenderContext, RetailersPage, SectionPage
+from .pages import (
+    BrandPage,
+    CoverPage,
+    ModelPage,
+    Page,
+    ProductPage,
+    RenderContext,
+    RetailersPage,
+    SectionPage,
+)
 from .surface import Surface
 from .theme import Font, Theme, default_theme
 
@@ -35,15 +44,17 @@ class BuildResult:
 
 
 def compose(lookbook: Lookbook) -> list[Page]:
-    """Cover, brand, each section (divider + one page per product), then retailers if present."""
+    """Cover, brand, each section (divider, then per model: intro + one page per product), retailers."""
     pages: list[Page] = [CoverPage(lookbook.cover), BrandPage(lookbook.brand)]
     for section in lookbook.sections:
         pages.append(SectionPage(section))
         total = len(section.products)
-        pages.extend(
-            ProductPage(section.name, product, index, total)
-            for index, product in enumerate(section.products, start=1)
-        )
+        index = 0
+        for model in section.models:
+            pages.append(ModelPage(section.name, model))
+            for product in model.products:
+                index += 1
+                pages.append(ProductPage(section.name, model.name, product, index, total))
     if lookbook.retailers is not None and lookbook.closing is not None:
         pages.append(RetailersPage(lookbook.retailers, lookbook.closing))
     return pages
@@ -71,7 +82,8 @@ def render(
     """
     theme = theme or default_theme()
     register_fonts(assets_dir / "fonts")
-    ctx = RenderContext(theme, ImageLibrary(assets_dir, dpi), lookbook.identity.logo_mask)
+    identity = lookbook.identity
+    ctx = RenderContext(theme, ImageLibrary(assets_dir, dpi), identity.logo, identity.logo_mask)
     pages = compose(lookbook)
 
     output.parent.mkdir(parents=True, exist_ok=True)

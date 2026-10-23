@@ -1,10 +1,11 @@
 """Product page: the photos are the protagonists.
 
-The colourways fill the upper part of the page edge to edge, stacked and
-separated by a hairline of paper; each photo keeps the whole shoe and extends
-its studio backdrop to the page edges, with the colour name on top. A compact text band at the
-bottom holds family, name, description and sizes. A variant without a photo
-gets a studio-grey placeholder, so the layout can be reviewed early.
+The colourways fill the upper part of the page edge to edge, in a grid that
+depends on how many there are (see ``_photo_slots``), separated by a paper
+hairline. Each photo keeps the whole shoe and extends its studio backdrop to
+fill its slot, with the colour name in its top-left corner. A compact text band at the bottom
+holds model, name, description and sizes. A variant without a photo gets a
+studio-grey placeholder, so the layout can be reviewed early.
 """
 
 from __future__ import annotations
@@ -15,12 +16,14 @@ from ..errors import LayoutError
 from ..geometry import Box
 from ..models import Product, Variant
 from ..surface import Align, Surface
-from .base import EYEBROW_BASELINE, RenderContext
+from .base import EYEBROW_BASELINE, RenderContext, draw_placeholder
 
 PHOTOS_BOTTOM = 664.0  # photos occupy the page from the top edge to here
 PHOTO_GAP = 4.0  # paper hairline between stacked photos
-LABEL_INSET = 22.0  # colour label distance from the photo's bottom edge
-PLACEHOLDER_TEXT = "Foto in arrivo"
+LABEL_INSET = 22.0  # colour label distance from the photo's edges
+LABEL_CAP = 6.0  # cap height of the label style, to measure the inset from its top
+HEADER_CLEARANCE = 22.0  # first-row labels sit this far below the running header
+HERO_ROW_HEIGHT = 380.0  # with three variants: height of the top photo
 
 LINE_BASELINE = 694.0  # model family eyebrow
 NAME_OFFSET = 34.0  # eyebrow -> name baseline
@@ -35,6 +38,7 @@ SPEC_GAP = 30.0  # last value baseline -> next label
 @dataclass(frozen=True, slots=True)
 class ProductPage:
     section_name: str
+    model_name: str
     product: Product
     index: int  # 1-based position within the section
     total: int
@@ -62,28 +66,53 @@ class ProductPage:
             )
 
     def _photo_slots(self, page_width: float) -> list[Box]:
-        """Full-bleed slots splitting the photo area evenly among the variants."""
-        count = len(self.product.variants)
-        height = (PHOTOS_BOTTOM - (count - 1) * PHOTO_GAP) / count
-        return [Box(0, i * (height + PHOTO_GAP), page_width, height) for i in range(count)]
+        """Full-bleed slots for the variants, laid out by how many there are.
+
+        1: the whole photo area; 2: stacked; 3: a hero on top and two side by
+        side below; 4: a 2 x 2 grid. Slots are separated by a paper hairline.
+        """
+        gap, bottom = PHOTO_GAP, PHOTOS_BOTTOM
+        half = (page_width - gap) / 2
+        match len(self.product.variants):
+            case 1:
+                return [Box(0, 0, page_width, bottom)]
+            case 2:
+                height = (bottom - gap) / 2
+                return [Box(0, 0, page_width, height), Box(0, height + gap, page_width, height)]
+            case 3:
+                low = HERO_ROW_HEIGHT + gap
+                height = bottom - low
+                return [
+                    Box(0, 0, page_width, HERO_ROW_HEIGHT),
+                    Box(0, low, half, height),
+                    Box(half + gap, low, half, height),
+                ]
+            case _:
+                height = (bottom - gap) / 2
+                return [
+                    Box(column * (half + gap), row * (height + gap), half, height)
+                    for row in range(2)
+                    for column in range(2)
+                ]
 
     @staticmethod
     def _draw_variant(surface: Surface, ctx: RenderContext, variant: Variant, slot: Box) -> None:
-        p, t, g = ctx.theme.palette, ctx.theme.type, ctx.theme.grid
+        t, g = ctx.theme.type, ctx.theme.grid
         if variant.image is None:
-            surface.rect(slot, fill=p.studio)
-            middle = slot.top + slot.height / 2
-            surface.text(PLACEHOLDER_TEXT, slot.x + slot.width / 2, middle, t.photo_label, Align.CENTER)
+            draw_placeholder(surface, ctx, slot)
         else:
             image = ctx.images.bled(variant.image, slot.width, slot.height)
             surface.image(image, slot)
-        surface.text(variant.color, g.margin_x, slot.bottom - LABEL_INSET, t.photo_label)
+        # Top-left corner: always free wall, whatever the layout. Slots on the
+        # top row keep clear of the running header.
+        label_x = max(slot.x + LABEL_INSET, g.margin_x)
+        label_baseline = max(slot.top + LABEL_INSET + LABEL_CAP, EYEBROW_BASELINE + HEADER_CLEARANCE)
+        surface.text(variant.color, label_x, label_baseline, t.photo_label)
 
     def _draw_story(self, surface: Surface, ctx: RenderContext) -> float:
         """Family, name and description; returns the last baseline."""
         t, x = ctx.theme.type, ctx.theme.grid.margin_x
-        if self.product.line:
-            surface.text(self.product.line, x, LINE_BASELINE, t.eyebrow)
+        surface.text(self.model_name, x, LINE_BASELINE, t.eyebrow)
         name_end = surface.paragraph(
             self.product.name, x, LINE_BASELINE + NAME_OFFSET, TEXT_COLUMN_WIDTH, t.product_name
         )

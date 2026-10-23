@@ -29,15 +29,15 @@ class Meta(_Model):
 
 
 class Identity(_Model):
-    logo_mask: Path
+    logo: Path  # full-colour logo, for light backgrounds
+    logo_mask: Path  # single-colour silhouette, tinted for dark backgrounds
 
 
 class Cover(_Model):
     tagline: Text
-    title: Text
     claim: Text
     highlights: list[Text] = Field(default_factory=list, max_length=4)
-    background_mask: Path
+    photo: Path  # product shot on a white backdrop
 
 
 class ImageRef(_Model):
@@ -70,19 +70,40 @@ class Variant(_Model):
 
 class Product(_Model):
     name: Text
-    line: Text | None = Field(None, description="Model family, e.g. Cortina")
     description: Text
     sizes: Text | None = None
-    variants: list[Variant] = Field(min_length=1, max_length=2)
+    variants: list[Variant] = Field(min_length=1, max_length=4)
+
+
+class Material(_Model):
+    """A material a model is offered in. Without ``image`` the page shows a placeholder."""
+
+    name: Text
+    image: Path | None = None
+
+
+class ShoeModel(_Model):
+    """A shoe model (Cortina, Falcade): an introduction page, then its products."""
+
+    name: Text
+    description: Text
+    image: Path | None = Field(None, description="Hero photo; a placeholder until provided")
+    materials: list[Material] = Field(default_factory=list, max_length=4)
+    products: list[Product] = Field(default_factory=list)
 
 
 class Section(_Model):
-    """A part of the lookbook (Donna, Uomo): a divider page, then one page per product."""
+    """A part of the lookbook (Donna, Uomo): a divider page, then its models."""
 
     name: Text
     eyebrow: Text = "Collezione"
     intro: str = ""
-    products: list[Product] = Field(min_length=1)
+    models: list[ShoeModel] = Field(min_length=1)
+
+    @property
+    def products(self) -> list[Product]:
+        """Every product of the section, in page order."""
+        return [product for model in self.models for product in model.products]
 
 
 class Store(_Model):
@@ -132,10 +153,15 @@ class Lookbook(_Model):
 
     def asset_paths(self) -> Iterator[Path]:
         """Yield every asset referenced by the content (relative paths)."""
+        yield self.identity.logo
         yield self.identity.logo_mask
-        yield self.cover.background_mask
+        yield self.cover.photo
         yield self.brand.banner.path
         yield from (detail.image for detail in self.brand.details)
         for section in self.sections:
-            for product in section.products:
-                yield from (v.image for v in product.variants if v.image is not None)
+            for model in section.models:
+                if model.image is not None:
+                    yield model.image
+                yield from (m.image for m in model.materials if m.image is not None)
+                for product in model.products:
+                    yield from (v.image for v in product.variants if v.image is not None)

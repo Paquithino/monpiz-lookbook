@@ -30,6 +30,11 @@ class Palette:
     faint: Color
     accent: Color
     paper: Color
+    white: Color
+    ridge: Color
+    tint_rock: Color
+    tint_lit: Color
+    tint_shadow: Color
     card: Color
     card_border: Color
     # Dark pages (cover and retailers)
@@ -41,7 +46,6 @@ class Palette:
     cover_accent: Color
     cover_highlight: Color
     olive_rule: Color
-    tree_shadow: Color
     studio: Color
 
 
@@ -66,7 +70,6 @@ class Typography:
     detail_title: TextStyle
     detail_text: TextStyle
     folio: TextStyle
-    cover_title: TextStyle
     cover_claim: TextStyle
     cover_label: TextStyle
     region: TextStyle
@@ -76,6 +79,7 @@ class Typography:
     closing_title: TextStyle
     section_title: TextStyle
     product_name: TextStyle
+    model_title: TextStyle
     photo_label: TextStyle
     spec_value: TextStyle
 
@@ -120,6 +124,11 @@ def default_theme() -> Theme:
         faint=HexColor("#8B8A76"),
         accent=HexColor("#6D6F2E"),
         paper=HexColor("#EFECE2"),
+        white=HexColor("#FFFFFF"),
+        ridge=HexColor("#757A10"),  # the olive of the logo arrow
+        tint_rock=HexColor("#E3E5D1"),
+        tint_lit=HexColor("#F2F3E9"),
+        tint_shadow=HexColor("#CBCFAE"),
         card=HexColor("#FFFDF8"),
         card_border=HexColor("#DDD8C6"),
         forest=HexColor("#24291F"),
@@ -130,7 +139,6 @@ def default_theme() -> Theme:
         cover_accent=HexColor("#A8AB5C"),
         cover_highlight=HexColor("#C9C6AC"),
         olive_rule=HexColor("#82835B"),
-        tree_shadow=HexColor("#10130D"),
         studio=HexColor("#C9C8C5"),  # photo backdrop, used for placeholders
     )
     t = Typography(
@@ -140,7 +148,6 @@ def default_theme() -> Theme:
         detail_title=TextStyle(Font.SERIF, 12.0, 15.0, p.ink),
         detail_text=TextStyle(Font.SANS, 9.7, 14.3, p.muted),
         folio=TextStyle(Font.SANS, 8.0, 10.0, p.faint, tracking=1.6, uppercase=True),
-        cover_title=TextStyle(Font.DISPLAY, 44.0, 48.0, p.on_dark),
         cover_claim=TextStyle(Font.SERIF, 16.8, 24.0, p.on_dark),
         cover_label=TextStyle(Font.SANS, 8.25, 10.0, p.cover_highlight, tracking=2.85, uppercase=True),
         region=TextStyle(Font.SERIF, 10.5, 12.0, p.on_dark_accent),
@@ -150,6 +157,7 @@ def default_theme() -> Theme:
         closing_title=TextStyle(Font.DISPLAY, 18.4, 22.0, p.on_dark),
         section_title=TextStyle(Font.DISPLAY, 112.0, 112.0, p.on_dark),
         product_name=TextStyle(Font.DISPLAY, 34.0, 38.0, p.ink),
+        model_title=TextStyle(Font.DISPLAY, 64.0, 64.0, p.ink),
         photo_label=TextStyle(Font.SANS, 8.25, 10.0, p.ink, tracking=2.3, uppercase=True),
         spec_value=TextStyle(Font.SANS, 10.85, 16.0, p.ink),
     )

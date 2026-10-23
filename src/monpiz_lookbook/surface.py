@@ -7,6 +7,7 @@ the layout spec instead of being littered with ``page_height - y``.
 
 from __future__ import annotations
 
+from collections.abc import Sequence
 from enum import StrEnum
 
 from reportlab.lib.colors import Color
@@ -80,11 +81,60 @@ class Surface:
         c.line(x0, self._y(top), x1, self._y(top))
         c.restoreState()
 
-    # -- images -------------------------------------------------------------
-
-    def image(self, image: ImageReader, box: Box, *, radius: float = 0.0) -> None:
+    def polyline(self, points: Sequence[tuple[float, float]], color: Color, width: float) -> None:
+        """Stroke an open polyline with round joins and caps (design coordinates)."""
+        if len(points) < 2:
+            return
         c = self._canvas
         c.saveState()
+        c.setStrokeColor(color)
+        c.setLineWidth(width)
+        c.setLineJoin(1)
+        c.setLineCap(1)
+        path = c.beginPath()
+        (x, y), *rest = points
+        path.moveTo(x, self._y(y))
+        for x, y in rest:
+            path.lineTo(x, self._y(y))
+        c.drawPath(path, stroke=1, fill=0)
+        c.restoreState()
+
+    def polygon(self, points: Sequence[tuple[float, float]], fill: Color) -> None:
+        """Fill the closed polygon through ``points`` (design coordinates)."""
+        c = self._canvas
+        c.saveState()
+        c.setFillColor(fill)
+        path = c.beginPath()
+        (x, y), *rest = points
+        path.moveTo(x, self._y(y))
+        for x, y in rest:
+            path.lineTo(x, self._y(y))
+        path.close()
+        c.drawPath(path, stroke=0, fill=1)
+        c.restoreState()
+
+    def vertical_gradient(self, box: Box, top: Color, bottom: Color) -> None:
+        """Fill ``box`` with a linear gradient from ``top`` to ``bottom`` colour."""
+        c = self._canvas
+        c.saveState()
+        path = c.beginPath()
+        path.rect(box.x, self._y(box.bottom), box.width, box.height)
+        c.clipPath(path, stroke=0, fill=0)
+        c.linearGradient(box.x, self._y(box.top), box.x, self._y(box.bottom), (top, bottom), extend=False)
+        c.restoreState()
+
+    # -- images -------------------------------------------------------------
+
+    def image(self, image: ImageReader, box: Box, *, radius: float = 0.0, multiply: bool = False) -> None:
+        """Draw ``image`` into ``box``.
+
+        ``multiply`` blends it with what is underneath: white becomes fully
+        transparent, so a product shot on white can sit over a drawing.
+        """
+        c = self._canvas
+        c.saveState()
+        if multiply:
+            c.setBlendMode("Multiply")
         if radius:
             path = c.beginPath()
             path.roundRect(box.x, self._y(box.bottom), box.width, box.height, radius)

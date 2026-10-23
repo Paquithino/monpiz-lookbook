@@ -10,10 +10,11 @@ from reportlab.lib.colors import Color
 
 from ..geometry import Box
 from ..images import ImageLibrary
-from ..surface import Surface
+from ..surface import Align, Surface
 from ..theme import Theme
 
 EYEBROW_BASELINE = 48.5
+PLACEHOLDER_TEXT = "Foto in arrivo"
 HEADING_BASELINE = 90.0
 
 
@@ -21,6 +22,7 @@ HEADING_BASELINE = 90.0
 class RenderContext:
     theme: Theme
     images: ImageLibrary
+    logo: Path
     logo_mask: Path
 
 
@@ -59,3 +61,11 @@ def draw_logo(surface: Surface, ctx: RenderContext, x: float, top: float, width:
     """Draw the logo, ``width`` points wide, tinted with ``color``."""
     height = logo_height(ctx, width)
     surface.image(ctx.images.tinted(ctx.logo_mask, color, width, height), Box(x, top, width, height))
+
+
+def draw_placeholder(surface: Surface, ctx: RenderContext, slot: Box) -> None:
+    """Studio-grey box standing in for a photo that has not arrived yet."""
+    t = ctx.theme.type
+    surface.rect(slot, fill=ctx.theme.palette.studio)
+    middle = slot.top + slot.height / 2
+    surface.text(PLACEHOLDER_TEXT, slot.x + slot.width / 2, middle, t.photo_label, Align.CENTER)

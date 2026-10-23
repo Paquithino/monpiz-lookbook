@@ -56,4 +56,4 @@ class SectionPage:
         surface.text(self.section.name, x, title_baseline, t.section_title)
         if intro_lines:
             surface.paragraph(self.section.intro, x, intro_first, INTRO_WIDTH, t.cover_claim)
-        surface.text(models_label(len(self.section.products)), x, COUNT_BASELINE, t.cover_label)
+        surface.text(models_label(len(self.section.models)), x, COUNT_BASELINE, t.cover_label)

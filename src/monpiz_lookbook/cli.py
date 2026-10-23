@@ -64,7 +64,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     try:
         if args.command == "check":
             lookbook = load_lookbook(args.content, args.assets)
-            summary = ", ".join(f"{s.name} ({models_label(len(s.products))})" for s in lookbook.sections)
+            summary = ", ".join(f"{s.name} ({models_label(len(s.models))})" for s in lookbook.sections)
             print(f"Contenuti validi: {summary}.")
         elif args.command == "watch":
             watch(_options(args))
