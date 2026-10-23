@@ -10,22 +10,26 @@ from reportlab.pdfgen.canvas import Canvas
 from . import __version__
 from .content import load_lookbook
 from .fonts import register_fonts
+from .geometry import Box
 from .images import ImageLibrary
 from .models import Lookbook
 from .pages import (
     BrandPage,
+    ClosingPage,
     CoverPage,
     ModelPage,
     Page,
     ProductPage,
     RenderContext,
-    RetailersPage,
     SectionPage,
+    retailer_pages,
 )
 from .surface import Surface
 from .theme import Font, Theme, default_theme
 
 FOLIO_SEPARATOR = " · "
+FOOTER_LOGO_WIDTH = 40.0
+FOOTER_LOGO_DROP = 3.0  # the script letters sit slightly below the folio baseline
 
 
 @dataclass(frozen=True, slots=True)
@@ -43,8 +47,9 @@ class BuildResult:
     size_bytes: int
 
 
-def compose(lookbook: Lookbook) -> list[Page]:
-    """Cover, brand, each section (divider, then per model: intro + one page per product), retailers."""
+def compose(lookbook: Lookbook, theme: Theme) -> list[Page]:
+    """Cover, brand, each section (divider, then per model: intro + one page per product),
+    retailers (as many pages as needed) and the back cover."""
     pages: list[Page] = [CoverPage(lookbook.cover), BrandPage(lookbook.brand)]
     for section in lookbook.sections:
         pages.append(SectionPage(section))
@@ -55,14 +60,26 @@ def compose(lookbook: Lookbook) -> list[Page]:
             for product in model.products:
                 index += 1
                 pages.append(ProductPage(section.name, model.name, product, index, total))
-    if lookbook.retailers is not None and lookbook.closing is not None:
-        pages.append(RetailersPage(lookbook.retailers, lookbook.closing))
+    if lookbook.retailers is not None:
+        pages.extend(retailer_pages(lookbook.retailers, theme, folio=lookbook.brand.folio))
+    if lookbook.closing is not None:
+        pages.append(ClosingPage(lookbook.closing))
     return pages
 
 
-def _draw_folio(surface: Surface, ctx: RenderContext, label: str, number: int) -> None:
+def _draw_footer(surface: Surface, ctx: RenderContext, label: str, number: int) -> None:
+    """Folio on the left, small logo on the right, on the same baseline.
+
+    Only pages with a folio get it: cover, dividers and back cover already
+    show the logo large.
+    """
     g = ctx.theme.grid
     surface.text(f"{label}{FOLIO_SEPARATOR}{number:02d}", g.margin_x, g.folio_baseline, ctx.theme.type.folio)
+    width = FOOTER_LOGO_WIDTH
+    px_w, px_h = ctx.images.size(ctx.logo)
+    height = width * px_h / px_w
+    logo = Box(g.width - g.margin_x - width, g.folio_baseline + FOOTER_LOGO_DROP - height, width, height)
+    surface.image(ctx.images.fitted(ctx.logo, width, height), logo)
 
 
 def render(
@@ -84,7 +101,7 @@ def render(
     register_fonts(assets_dir / "fonts")
     identity = lookbook.identity
     ctx = RenderContext(theme, ImageLibrary(assets_dir, dpi), identity.logo, identity.logo_mask)
-    pages = compose(lookbook)
+    pages = compose(lookbook, theme)
 
     output.parent.mkdir(parents=True, exist_ok=True)
     partial = output.with_name(f".{output.name}.partial")
@@ -104,7 +121,7 @@ def render(
             surface = Surface(canvas, theme.grid.height)
             page.draw(surface, ctx)
             if page.folio:
-                _draw_folio(surface, ctx, page.folio, number)
+                _draw_footer(surface, ctx, page.folio, number)
             canvas.showPage()
         canvas.save()
         partial.replace(output)

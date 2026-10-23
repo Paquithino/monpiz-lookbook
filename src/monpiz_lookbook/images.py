@@ -11,7 +11,7 @@ from __future__ import annotations
 import io
 from pathlib import Path
 
-from PIL import Image, ImageFilter
+from PIL import Image, ImageChops, ImageFilter
 from reportlab.lib.colors import Color
 from reportlab.lib.utils import ImageReader
 
@@ -37,21 +37,50 @@ class ImageLibrary:
         with Image.open(self._assets_dir / path) as image:
             return image.size
 
-    def fitted(
-        self, path: Path, width_pt: float, height_pt: float, *, white_point: int | None = None
-    ) -> ImageReader:
-        """The whole image, resampled for a ``width_pt`` x ``height_pt`` slot.
+    def fitted(self, path: Path, width_pt: float, height_pt: float) -> ImageReader:
+        """The whole image, resampled for a ``width_pt`` x ``height_pt`` slot."""
+        with Image.open(self._assets_dir / path) as image:
+            return self._encode(self._resample(image, width_pt, height_pt))
 
-        ``white_point`` stretches the levels so that every grey at or above it
-        becomes pure white: a studio backdrop that is almost white turns fully
-        white, which matters when the image is blended in multiply mode.
+    def on_white(
+        self,
+        path: Path,
+        width_pt: float,
+        height_pt: float,
+        *,
+        region: tuple[float, float, float, float] = (0.0, 0.0, 1.0, 1.0),
+        white_point: int = 238,
+        feather: float = 0.12,
+    ) -> ImageReader:
+        """A product shot prepared to be blended in multiply mode on a white page.
+
+        Two steps make the studio backdrop vanish without a trace:
+        - levels: every grey at or above ``white_point`` becomes pure white;
+        - feather: the borders fade to white over ``feather`` of the shorter
+          side, so a backdrop that is greyer near the edges (the studio floor)
+          cannot reveal the rectangle of the photo.
+
+        ``region`` (fractions l, t, r, b) crops the photo first, typically to
+        the subject plus a margin: less flat backdrop to hide, lighter file.
         """
         with Image.open(self._assets_dir / path) as image:
-            resampled = self._resample(image, width_pt, height_pt)
-        if white_point is not None:
-            scale = 255 / white_point
-            resampled = resampled.convert("RGB").point(lambda v: min(255, round(v * scale)))
-        return self._encode(resampled)
+            left, top, right, bottom = region
+            box = (
+                round(left * image.width),
+                round(top * image.height),
+                round(right * image.width),
+                round(bottom * image.height),
+            )
+            photo = self._resample(image.crop(box), width_pt, height_pt).convert("RGB")
+        scale = 255 / white_point
+        photo = photo.point(lambda v: min(255, round(v * scale)))
+        band = max(1, round(min(photo.size) * feather))
+        mask = ImageChops.multiply(
+            _edge_ramp(photo.width, band).resize(photo.size),
+            _edge_ramp(photo.height, band).transpose(Image.Transpose.ROTATE_90).resize(photo.size),
+        )
+        white = Image.new("RGB", photo.size, (255, 255, 255))
+        return self._encode(Image.composite(photo, white, mask))
 
     def cropped(self, path: Path, width_pt: float, height_pt: float, focus_y: float = 0.5) -> ImageReader:
         """The image cropped to fill a ``width_pt`` x ``height_pt`` slot entirely."""
@@ -178,3 +207,15 @@ def _ramp(width: int, height: int, blend: int, *, fade_right: bool) -> Image.Ima
     mask = Image.new("L", (width, 1))
     mask.putdata(row)
     return mask.resize((width, height), Image.Resampling.NEAREST)
+
+
+def _edge_ramp(length: int, band: int) -> Image.Image:
+    """A ``length`` x 1 mask: 0 at both ends, rising smoothly to 255 over ``band`` px."""
+
+    def level(i: int) -> int:
+        t = min(1.0, min(i, length - 1 - i) / band)
+        return round(255 * t * t * (3 - 2 * t))  # smoothstep: no visible start of the fade
+
+    ramp = Image.new("L", (length, 1))
+    ramp.putdata([level(i) for i in range(length)])
+    return ramp

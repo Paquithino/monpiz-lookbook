@@ -6,12 +6,13 @@ meta:
   title: Lookbook MonPiz — Collezione Inverno
   author: MonPiz
   subject: Pedule urban fashion, made in Italy
-
+#COPERTINA
 cover:
   tagline: Pedule urban fashion
   claim: Una storia italiana. Qualità ed eccellenza che si guardano, si toccano e si indossano.
   highlights: [Collezione F.W.2026/2027, Made in Italy, Suole Vibram]
   photo: images/products/FALCADE MARTELLATO DOPPIO LACCIO3.jpg
+# IL BRAND MONPIZ 
 brand:
   eyebrow: Il marchio
   title: Tra tradizione ed innovazione
@@ -28,7 +29,7 @@ brand:
       senza compromettere la qualità. Un twist urbano, a proprio agio su qualsiasi
       terreno.
   banner:
-    path: images/brand/heritage.jpg
+    path: images/brand/heritage.webp
     focus_y: 0.5
   details_title: Qualità nei dettagli
   details:
@@ -52,6 +53,7 @@ sections:
     intro: >-
       Pedule nate sulle Dolomiti, pensate per la città. Pellami conciati in
       Toscana, suole Vibram e una costruzione artigianale che dura nel tempo.
+    # CORTINA 
     models:
       - name: Cortina
         # SEGNAPOSTO: descrizione provvisoria, da rivedere.
@@ -86,6 +88,7 @@ sections:
             variants:
               - color: Testa di moro 
                 image: images/products/Cortina_Donna_Dakar_Testa_di_moro_spaiate.webp  
+      # FALCADE 
       - name: Falcade
         # SEGNAPOSTO: descrizione provvisoria, da rivedere.
         description: >-
@@ -124,7 +127,25 @@ sections:
               - color: Moka 
                 image: images/products/Falcade_Donna_Cavvalino_moka_Spaiate.webp
               - color: Bianco testa di moro
-                image: images/products/Falcade_Donna_Cavallino_Bianco_Testa_di_moro_Spaiate.webp      
+                image: images/products/Falcade_Donna_Cavallino_Bianco_Testa_di_moro_Spaiate.webp   
+      #LAGAZUOI
+      - name: Lagazuoi 
+        # SEGNAPOSTO: descrizione provvisoria, da rivedere.
+        description: >-
+          La pedula classica MonPiz: tomaia in pelle conciata in Toscana, fodera
+          in pelle e suola Vibram.
+        #Foto principale del modello
+        image: images/products/Lagazuo_ Donna_Suede_Cavallino .webp
+        materials:
+          - name: Pelle martellata
+        products:
+          - name: Lagazuoi
+            description: Pelle martellata, look raffinato e versatile.
+            sizes: 36–43
+            # Al massimo due varianti per pagina. Senza `image` compare il segnaposto.
+            variants:
+              - color: Cavallino Bianco Testa di moro
+                image: images/products/Lagazuoi_Donna_Suede_Cavallino_Spaiate.webp
 
 # CATALOGO UOMO 
   - name: Uomo
@@ -132,6 +153,7 @@ sections:
     intro: >-
       Pedule nate sulle Dolomiti, pensate per la città. Pellami conciati in
       Toscana, suole Vibram e una costruzione artigianale che dura nel tempo.
+    # FALCADE 
     models:
       - name: Falcade
         # SEGNAPOSTO: descrizione provvisoria, da rivedere.
@@ -157,15 +179,44 @@ sections:
                 image: images/products/Falcade_Uomo_Pilota_Spaiate.webp
               - color: Tec
                 image: images/products/Falcade_Uomo_Suede Tex_spaiate.webp
-# Pagina rivenditori + contatti, al momento disattivata.
-# Per riattivarla togli il "# " davanti alle righe seguenti.
-
+      # CORTINA 
+      - name: Cortina
+        # SEGNAPOSTO: descrizione provvisoria, da rivedere.
+        description: >-
+          La pedula classica MonPiz: tomaia in pelle conciata in Toscana, fodera
+          in pelle e suola Vibram.
+        #Foto principale del modello
+        image: 
+        materials:
+          - name: Pelle martellata
+          - name: Suede
+          - name: Dakar     
+      # CORVARA
+      - name: Corvara
+        # SEGNAPOSTO: descrizione provvisoria, da rivedere.
+        description: >-
+          La pedula classica MonPiz: tomaia in pelle conciata in Toscana, fodera
+          in pelle e suola Vibram.
+        #Foto principale del modello
+        image: images/products/Corvara_Nabuk_Suede_Testa_di_moro.webp
+        materials:
+          - name: Pelle martellata
+        products:
+          - name: Corvara
+            description: Pelle martellata, look raffinato e versatile.
+            sizes: 36–43
+            # Al massimo due varianti per pagina. Senza `image` compare il segnaposto.
+            variants:
+              - color: Testa di moro
+                image: images/products/Corvara_Nabuk_Suede_Testa_di_moro_Spaiate.webp  
+      
+#RIVENDITORI 
 retailers:
    eyebrow: Dove trovarci
    title: Dove trovare MonPiz
    intro: >-
-    I nostri rivenditori autorizzati, regione per regione. L’elenco completo,
-    con indirizzi e mappe, è consultabile su monpiz.it.
+    I nostri rivenditori autorizzati, regione per regione. Tocca «Mappa» per
+    raggiungere il negozio o «Negozio online» per acquistare subito.
    source: retailers.yaml
 
 closing:

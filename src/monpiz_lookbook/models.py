@@ -12,8 +12,9 @@ from __future__ import annotations
 from collections.abc import Iterator
 from pathlib import Path
 from typing import Annotated
+from urllib.parse import quote
 
-from pydantic import BaseModel, ConfigDict, Field, StringConstraints, model_validator
+from pydantic import BaseModel, ConfigDict, Field, StringConstraints
 
 Text = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1)]
 
@@ -108,13 +109,14 @@ class Section(_Model):
 
 class Store(_Model):
     name: Text
-    city: Text
-    province: Text | None = None
+    address: Text  # full postal address, or just the country for stores abroad
+    phone: Text | None = None
+    shop: Text | None = None  # URL of the store's online shop
 
     @property
-    def label(self) -> str:
-        place = f"{self.city} {self.province}" if self.province else self.city
-        return f"{self.name} — {place}"
+    def maps_url(self) -> str:
+        query = quote(f"{self.name} {self.address}")
+        return f"https://www.google.com/maps/search/?api=1&query={query}"
 
 
 class Region(_Model):
@@ -143,13 +145,6 @@ class Lookbook(_Model):
     sections: list[Section] = Field(min_length=1)
     retailers: Retailers | None = None
     closing: Closing | None = None
-
-    @model_validator(mode="after")
-    def _retailers_and_closing_together(self) -> Lookbook:
-        # They share the last page: one without the other has nowhere to go.
-        if (self.retailers is None) != (self.closing is None):
-            raise ValueError("retailers e closing vanno indicati insieme (stessa pagina)")
-        return self
 
     def asset_paths(self) -> Iterator[Path]:
         """Yield every asset referenced by the content (relative paths)."""

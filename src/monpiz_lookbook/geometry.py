@@ -6,9 +6,8 @@ the page, y growing downwards, units in points.
 
 from __future__ import annotations
 
-from collections.abc import Callable, Sequence
+from collections.abc import Callable
 from dataclasses import dataclass
-from itertools import combinations_with_replacement, pairwise
 
 
 @dataclass(frozen=True, slots=True)
@@ -78,25 +77,3 @@ def wrap_text(text: str, measure: Callable[[str], float], width: float) -> list[
                 current = candidate
         lines.append(current)
     return lines
-
-
-def balance_columns(heights: Sequence[float], columns: int) -> list[range]:
-    """Split ordered blocks into ``columns`` contiguous groups minimising the tallest.
-
-    Returns one ``range`` of block indices per column (possibly empty).
-    Exhaustive search over split points: the number of blocks on a page is
-    small enough that an optimal answer costs nothing.
-    """
-    if columns < 1:
-        raise ValueError("columns must be >= 1")
-    count = len(heights)
-    best: list[range] | None = None
-    best_height = float("inf")
-    for cuts in combinations_with_replacement(range(count + 1), columns - 1):
-        bounds = (0, *cuts, count)
-        groups = [range(a, b) for a, b in pairwise(bounds)]
-        tallest = max(sum(heights[i] for i in group) for group in groups)
-        if tallest < best_height:
-            best, best_height = groups, tallest
-    assert best is not None
-    return best

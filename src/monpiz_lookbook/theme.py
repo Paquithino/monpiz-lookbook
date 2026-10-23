@@ -30,14 +30,10 @@ class Palette:
     faint: Color
     accent: Color
     paper: Color
-    white: Color
-    ridge: Color
-    tint_rock: Color
-    tint_lit: Color
-    tint_shadow: Color
     card: Color
-    card_border: Color
-    # Dark pages (cover and retailers)
+    rule: Color
+    button: Color
+    # Dark pages
     forest: Color
     olive: Color
     on_dark: Color
@@ -73,7 +69,10 @@ class Typography:
     cover_claim: TextStyle
     cover_label: TextStyle
     region: TextStyle
-    store: TextStyle
+    region_count: TextStyle
+    store_name: TextStyle
+    store_text: TextStyle
+    store_button: TextStyle
     lead: TextStyle
     contact: TextStyle
     closing_title: TextStyle
@@ -124,13 +123,9 @@ def default_theme() -> Theme:
         faint=HexColor("#8B8A76"),
         accent=HexColor("#6D6F2E"),
         paper=HexColor("#EFECE2"),
-        white=HexColor("#FFFFFF"),
-        ridge=HexColor("#757A10"),  # the olive of the logo arrow
-        tint_rock=HexColor("#E3E5D1"),
-        tint_lit=HexColor("#F2F3E9"),
-        tint_shadow=HexColor("#CBCFAE"),
         card=HexColor("#FFFDF8"),
-        card_border=HexColor("#DDD8C6"),
+        rule=HexColor("#DDD8C6"),
+        button=HexColor("#888A3A"),
         forest=HexColor("#24291F"),
         olive=HexColor("#52541F"),
         on_dark=HexColor("#FFFDF8"),
@@ -150,8 +145,11 @@ def default_theme() -> Theme:
         folio=TextStyle(Font.SANS, 8.0, 10.0, p.faint, tracking=1.6, uppercase=True),
         cover_claim=TextStyle(Font.SERIF, 16.8, 24.0, p.on_dark),
         cover_label=TextStyle(Font.SANS, 8.25, 10.0, p.cover_highlight, tracking=2.85, uppercase=True),
-        region=TextStyle(Font.SERIF, 10.5, 12.0, p.on_dark_accent),
-        store=TextStyle(Font.SANS, 8.55, 14.5, p.on_dark),
+        region=TextStyle(Font.SERIF, 14.0, 17.0, p.ink),
+        region_count=TextStyle(Font.SANS, 7.6, 9.0, p.faint, tracking=0.3),
+        store_name=TextStyle(Font.SERIF, 10.5, 12.6, p.ink),
+        store_text=TextStyle(Font.SANS, 7.8, 10.6, p.muted),
+        store_button=TextStyle(Font.SANS, 7.0, 8.4, p.ink, tracking=0.2),
         lead=TextStyle(Font.SANS, 10.05, 15.7, p.on_dark_muted),
         contact=TextStyle(Font.SANS, 10.05, 18.0, p.on_dark),
         closing_title=TextStyle(Font.DISPLAY, 18.4, 22.0, p.on_dark),

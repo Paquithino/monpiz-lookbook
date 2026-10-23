@@ -99,30 +99,6 @@ class Surface:
         c.drawPath(path, stroke=1, fill=0)
         c.restoreState()
 
-    def polygon(self, points: Sequence[tuple[float, float]], fill: Color) -> None:
-        """Fill the closed polygon through ``points`` (design coordinates)."""
-        c = self._canvas
-        c.saveState()
-        c.setFillColor(fill)
-        path = c.beginPath()
-        (x, y), *rest = points
-        path.moveTo(x, self._y(y))
-        for x, y in rest:
-            path.lineTo(x, self._y(y))
-        path.close()
-        c.drawPath(path, stroke=0, fill=1)
-        c.restoreState()
-
-    def vertical_gradient(self, box: Box, top: Color, bottom: Color) -> None:
-        """Fill ``box`` with a linear gradient from ``top`` to ``bottom`` colour."""
-        c = self._canvas
-        c.saveState()
-        path = c.beginPath()
-        path.rect(box.x, self._y(box.bottom), box.width, box.height)
-        c.clipPath(path, stroke=0, fill=0)
-        c.linearGradient(box.x, self._y(box.top), box.x, self._y(box.bottom), (top, bottom), extend=False)
-        c.restoreState()
-
     # -- images -------------------------------------------------------------
 
     def image(self, image: ImageReader, box: Box, *, radius: float = 0.0, multiply: bool = False) -> None:
@@ -141,6 +117,13 @@ class Surface:
             c.clipPath(path, stroke=0, fill=0)
         c.drawImage(image, box.x, self._y(box.bottom), box.width, box.height, mask="auto")
         c.restoreState()
+
+    # -- links --------------------------------------------------------------
+
+    def link(self, url: str, box: Box) -> None:
+        """Make ``box`` a clickable area opening ``url`` in PDF viewers."""
+        rect = (box.x, self._y(box.bottom), box.right, self._y(box.top))
+        self._canvas.linkURL(url, rect, relative=0, thickness=0)
 
     # -- text ---------------------------------------------------------------
 

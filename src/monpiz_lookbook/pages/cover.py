@@ -1,55 +1,42 @@
-"""Cover: logo, the boots in front of a line-drawn Dolomite range, claim.
+"""Cover: logo, the boots in front of a Dolomite skyline, claim.
 
-A white page that matches the product shot's backdrop. The massif is drawn
-in flat facets of pale olive tints, outlined by a ridge line in the logo's
-olive, with snowfields at its foot. The photo is blended in multiply mode, so
-its white backdrop disappears and the boots stand on the snow at the foot of
-the mountains. The boots are placed by the
-box of the subject inside the photo, not by the photo frame.
+A paper-coloured page. The mountains are ink lines only: an outline with
+pointed spires and thin spines down their faces. The product shot is blended
+in multiply mode: its white backdrop takes the colour of the paper, so the
+boots stand in front of the mountains without any frame. The boots are placed
+by the box of the subject inside the photo, not by the photo frame.
+Everything is centred.
 """
 
 from __future__ import annotations
 
 from dataclasses import dataclass
 
-from reportlab.lib.colors import Color
-
 from ..geometry import Box
 from ..models import Cover
-from ..mountain import MASSIF, Tone, place
+from ..mountain import SKYLINE, SPINES, place
 from ..surface import Align, Surface, text_width
-from ..theme import Palette
 from .base import RenderContext
 
 LOGO_TOP = 70.0
 LOGO_WIDTH = 220.0
 TAGLINE_GAP = 30.0  # logo bottom -> tagline baseline
 
-# Placement of the 1000 x 700 design box of ``mountain.MASSIF``.
-MASSIF_X = -20.0
-MASSIF_TOP = 236.0
-MASSIF_SCALE = 0.64
-RIDGE_WIDTH = 1.2
-PHOTO_WHITE_POINT = 238  # backdrop greys at or above this become pure white
+# Placement of the 1000 x 700 design box of ``mountain.SKYLINE``.
+SKYLINE_X = -20.0
+SKYLINE_TOP = 236.0
+SKYLINE_SCALE = 0.64
+SKYLINE_WIDTH = 1.2
+SPINE_WIDTH = 0.6
 
 BOOTS_WIDTH = 330.0  # width of the subject (the pair of boots) on the page
 SOLES_Y = 700.0  # where the bottom of the subject sits
+SUBJECT_MARGIN = 0.06  # photo kept around the subject, as a fraction of the photo
 
 CLAIM_BASELINE = 738.0
 CLAIM_WIDTH = 380.0
 LABELS_BASELINE = 797.7
 LABELS_GAP = 29.5
-
-
-def _tone_color(palette: Palette, tone: Tone) -> Color:
-    """Monochrome olive tints: the massif reads as a drawing behind the photo."""
-    return {
-        Tone.ROCK: palette.tint_rock,
-        Tone.LIT: palette.tint_lit,
-        Tone.SHADOW: palette.tint_shadow,
-        Tone.SNOW: palette.white,
-        Tone.SNOW_SHADE: palette.white,  # snow melts into the page: no bottom edge
-    }[tone]
 
 
 @dataclass(frozen=True, slots=True)
@@ -60,18 +47,15 @@ class CoverPage:
     def draw(self, surface: Surface, ctx: RenderContext) -> None:
         p, t, g = ctx.theme.palette, ctx.theme.type, ctx.theme.grid
         centre = g.width / 2
-        surface.fill_page(p.white, g.width)
+        surface.fill_page(p.paper, g.width)
 
-        facets = place(MASSIF, MASSIF_X, MASSIF_TOP, MASSIF_SCALE)
-        for facet in facets:
-            surface.polygon(facet.points, _tone_color(p, facet.tone))
-        skyline = facets[0].points[:-2]  # the silhouette without its closing bottom edge
-        surface.polyline(skyline, p.ridge, RIDGE_WIDTH)
+        surface.polyline(place(SKYLINE, SKYLINE_X, SKYLINE_TOP, SKYLINE_SCALE), p.ink, SKYLINE_WIDTH)
+        for spine in SPINES:
+            surface.polyline(place(spine, SKYLINE_X, SKYLINE_TOP, SKYLINE_SCALE), p.ink, SPINE_WIDTH)
         self._draw_boots(surface, ctx)
 
         logo_w, logo_h = ctx.images.size(ctx.logo)
-        logo_height = LOGO_WIDTH * logo_h / logo_w
-        logo_box = Box(centre - LOGO_WIDTH / 2, LOGO_TOP, LOGO_WIDTH, logo_height)
+        logo_box = Box(centre - LOGO_WIDTH / 2, LOGO_TOP, LOGO_WIDTH, LOGO_WIDTH * logo_h / logo_w)
         surface.image(ctx.images.fitted(ctx.logo, logo_box.width, logo_box.height), logo_box)
         tagline_style = t.cover_label.with_color(p.ink)
         surface.text(self.cover.tagline, centre, logo_box.bottom + TAGLINE_GAP, tagline_style, Align.CENTER)
@@ -83,21 +67,34 @@ class CoverPage:
         self._draw_highlights(surface, ctx, centre)
 
     def _draw_boots(self, surface: Surface, ctx: RenderContext) -> None:
+        """Scale the photo so the subject is BOOTS_WIDTH wide and centred, soles on SOLES_Y.
+
+        Only the subject plus a margin is embedded, with feathered borders.
+        """
         g = ctx.theme.grid
-        left, _, right, bottom = ctx.images.subject_bounds(self.cover.photo)
+        left, top, right, bottom = ctx.images.subject_bounds(self.cover.photo)
         px_w, px_h = ctx.images.size(self.cover.photo)
-        width = BOOTS_WIDTH / (right - left)
+        width = BOOTS_WIDTH / (right - left)  # page width of the whole photo
         height = width * px_h / px_w
-        box = Box(g.width / 2 - (left + right) / 2 * width, SOLES_Y - bottom * height, width, height)
-        photo = ctx.images.fitted(self.cover.photo, box.width, box.height, white_point=PHOTO_WHITE_POINT)
+        origin_x = g.width / 2 - (left + right) / 2 * width
+        origin_y = SOLES_Y - bottom * height
+
+        m = SUBJECT_MARGIN
+        region = (max(0.0, left - m), max(0.0, top - m), min(1.0, right + m), min(1.0, bottom + m))
+        box = Box(
+            origin_x + region[0] * width,
+            origin_y + region[1] * height,
+            (region[2] - region[0]) * width,
+            (region[3] - region[1]) * height,
+        )
+        photo = ctx.images.on_white(self.cover.photo, box.width, box.height, region=region)
         surface.image(photo, box, multiply=True)
 
     def _draw_highlights(self, surface: Surface, ctx: RenderContext, centre: float) -> None:
-        t = ctx.theme.type
-        style = t.cover_label.with_color(ctx.theme.palette.faint)
         labels = self.cover.highlights
         if not labels:
             return
+        style = ctx.theme.type.cover_label.with_color(ctx.theme.palette.faint)
         widths = [text_width(label, style) for label in labels]
         x = centre - (sum(widths) + LABELS_GAP * (len(labels) - 1)) / 2
         for label, width in zip(labels, widths, strict=True):
