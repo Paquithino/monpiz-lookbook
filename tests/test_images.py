@@ -65,3 +65,15 @@ def test_a_photo_taken_outdoors_is_cropped_not_extended(tmp_path: Path) -> None:
     assert not library.has_plain_backdrop(Path("outdoor.png"))
     width, height = library.filled(Path("outdoor.png"), 600.0, 200.0).getSize()
     assert width / height == pytest.approx(3.0, rel=0.01)
+
+
+def test_only_the_edges_that_grow_are_inspected(tmp_path: Path) -> None:
+    # Studio shot whose subject touches the right edge: fine when only the top is extended.
+    image = Image.new("RGB", (300, 200), (200, 200, 200))
+    image.paste(Image.effect_noise((60, 120), 60).convert("RGB"), (240, 80))
+    image.save(tmp_path / "wide.png")
+    library = ImageLibrary(tmp_path, dpi=72)
+    assert not library.has_plain_backdrop(Path("wide.png"))  # all edges: the right one is busy
+    width, height = library.filled(Path("wide.png"), 300.0, 300.0).getSize()  # taller slot: top grows
+    assert width / height == pytest.approx(1.0, rel=0.01)
+    assert (width, height) == (300, 300)  # extended (bled), not cropped down to 200 x 200

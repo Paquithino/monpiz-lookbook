@@ -9,6 +9,7 @@ visible loss.
 from __future__ import annotations
 
 import io
+from enum import Enum
 from pathlib import Path
 
 from PIL import Image, ImageChops, ImageFilter
@@ -27,6 +28,15 @@ SEAM_BLEND_RATIO = 0.06  # share of the photo width blended into the extension, 
 BACKDROP_PROBE_WIDTH = 300  # px: the test runs on a small copy
 BACKDROP_EDGE = 0.04  # share of the photo inspected along each edge
 BACKDROP_MAX_DETAIL = 4.0
+
+
+class Edge(Enum):
+    LEFT = "left"
+    RIGHT = "right"
+    TOP = "top"
+
+
+ALL_EDGES = frozenset(Edge)
 
 
 class ImageLibrary:
@@ -124,13 +134,15 @@ class ImageLibrary:
         Studio shots keep the whole subject and get their backdrop extended
         (``bled``); photos taken in a real setting are cropped instead
         (``cropped``), since repeating rock or grass would show as streaks.
+        Only the edges that ``bled`` would extend are inspected: a sole
+        touching the right edge does not matter when only the top grows.
         """
-        if self.has_plain_backdrop(path):
+        if self.has_plain_backdrop(path, self._extended_edges(path, width_pt / height_pt)):
             return self.bled(path, width_pt, height_pt)
         return self.cropped(path, width_pt, height_pt, focus_y)
 
-    def has_plain_backdrop(self, path: Path) -> bool:
-        """Whether the left, right and top edges are a smooth, seamless backdrop."""
+    def has_plain_backdrop(self, path: Path, edges: frozenset[Edge] = ALL_EDGES) -> bool:
+        """Whether the given edges of the photo are a smooth, seamless backdrop."""
         with Image.open(self._assets_dir / path) as source:
             ratio = source.height / source.width
             grey = source.convert("L").resize(
@@ -139,12 +151,19 @@ class ImageLibrary:
         detail = ImageChops.difference(grey, grey.filter(ImageFilter.GaussianBlur(3)))
         w = max(1, round(grey.width * BACKDROP_EDGE))
         h = max(1, round(grey.height * BACKDROP_EDGE))
-        edges = (
-            (0, 0, w, grey.height),
-            (grey.width - w, 0, grey.width, grey.height),
-            (0, 0, grey.width, h),
-        )
-        return all(_mean(detail.crop(box)) <= BACKDROP_MAX_DETAIL for box in edges)
+        strips = {
+            Edge.LEFT: (0, 0, w, grey.height),
+            Edge.RIGHT: (grey.width - w, 0, grey.width, grey.height),
+            Edge.TOP: (0, 0, grey.width, h),
+        }
+        return all(_mean(detail.crop(strips[edge])) <= BACKDROP_MAX_DETAIL for edge in edges)
+
+    def _extended_edges(self, path: Path, slot_ratio: float) -> frozenset[Edge]:
+        """The edges ``bled`` extends to reach ``slot_ratio`` (see its two cases)."""
+        width, height = self.size(path)
+        if round(height * slot_ratio) >= width:
+            return frozenset({Edge.LEFT, Edge.RIGHT})
+        return frozenset({Edge.TOP})
 
     def luminance(self, path: Path, region: tuple[float, float, float, float]) -> float:
         """Mean grey level (0-255) of ``region`` (fractions l, t, r, b) of the photo."""

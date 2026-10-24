@@ -30,6 +30,29 @@
       address: "Vicolo dei Bar, 1/A, 31020 San Vendemiano TV"
       phone: "0438 369085"
 
+- region: Friuli-Venezia Giulia
+  stores:
+    - name: "Bravi Calzature"
+      address: "Via Taboga, 180/182, 33013 Gemona UD"
+      phone: "0432 980110"
+    - name: "Donnapiù"
+      address: "Via Giobatta Morgagni, 7, 33028 Tolmezzo UD"
+      phone: "0433 467071"
+    - name: "Lui & Lei Abbigliamento"
+      address: "Borgata Bach 22, Sappada"
+    - name: "Morassi Sport"
+      address: "Via Monte Zoncolan, 1, 33020 Ravascletto UD"
+      phone: "0433 66233"
+    - name: "Reporter's Abbigliamento"
+      address: "Via Roma, 15, 33018 Tarvisio UD"
+      phone: "0428 2542"
+    - name: "Sorella Ramonda Reana del Rojale"
+      address: "Via Nazionale, 9, 33010 Reana del Rojale UD"
+      phone: "0432 880154"
+    - name: "Taurus"
+      address: "Via S. Nicolò, 19/B, 34122 Trieste TS"
+      phone: "040 2419027"
+
 - region: Trentino-Alto Adige
   stores:
     - name: "Boteghes Lagazoi"
@@ -71,28 +94,6 @@
       address: "Via Centrale, 24, 39031 Brunico BZ"
       phone: "0474 555141"
 
-- region: Friuli-Venezia Giulia
-  stores:
-    - name: "Bravi Calzature"
-      address: "Via Taboga, 180/182, 33013 Gemona UD"
-      phone: "0432 980110"
-    - name: "Donnapiù"
-      address: "Via Giobatta Morgagni, 7, 33028 Tolmezzo UD"
-      phone: "0433 467071"
-    - name: "Lui & Lei Abbigliamento"
-      address: "Borgata Bach 22, Sappada"
-    - name: "Morassi Sport"
-      address: "Via Monte Zoncolan, 1, 33020 Ravascletto UD"
-      phone: "0433 66233"
-    - name: "Reporter's Abbigliamento"
-      address: "Via Roma, 15, 33018 Tarvisio UD"
-      phone: "0428 2542"
-    - name: "Sorella Ramonda Reana del Rojale"
-      address: "Via Nazionale, 9, 33010 Reana del Rojale UD"
-      phone: "0432 880154"
-    - name: "Taurus"
-      address: "Via S. Nicolò, 19/B, 34122 Trieste TS"
-      phone: "040 2419027"
 
 - region: Lombardia
   stores:
