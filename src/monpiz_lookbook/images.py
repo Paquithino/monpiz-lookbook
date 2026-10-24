@@ -22,6 +22,11 @@ SUBJECT_THRESHOLD = 200  # grey level below which a pixel belongs to the subject
 EDGE_SAMPLE_COLUMNS = 8  # backdrop columns averaged when extending a photo
 EDGE_SMOOTHING = 6  # px of blur along the averaged edge, to remove grain
 SEAM_BLEND_RATIO = 0.06  # share of the photo width blended into the extension, per side
+# Plain-backdrop test: mean detail (difference from a blurred copy, in grey levels)
+# along the edges. Studio shots measure below 1, photos taken outdoors above 14.
+BACKDROP_PROBE_WIDTH = 300  # px: the test runs on a small copy
+BACKDROP_EDGE = 0.04  # share of the photo inspected along each edge
+BACKDROP_MAX_DETAIL = 4.0
 
 
 class ImageLibrary:
@@ -113,6 +118,50 @@ class ImageLibrary:
             )
         return self._encode(self._resample(canvas, width_pt, height_pt))
 
+    def filled(self, path: Path, width_pt: float, height_pt: float, focus_y: float = 0.5) -> ImageReader:
+        """A photo filling a slot of any shape, whatever kind of photo it is.
+
+        Studio shots keep the whole subject and get their backdrop extended
+        (``bled``); photos taken in a real setting are cropped instead
+        (``cropped``), since repeating rock or grass would show as streaks.
+        """
+        if self.has_plain_backdrop(path):
+            return self.bled(path, width_pt, height_pt)
+        return self.cropped(path, width_pt, height_pt, focus_y)
+
+    def has_plain_backdrop(self, path: Path) -> bool:
+        """Whether the left, right and top edges are a smooth, seamless backdrop."""
+        with Image.open(self._assets_dir / path) as source:
+            ratio = source.height / source.width
+            grey = source.convert("L").resize(
+                (BACKDROP_PROBE_WIDTH, max(1, round(BACKDROP_PROBE_WIDTH * ratio)))
+            )
+        detail = ImageChops.difference(grey, grey.filter(ImageFilter.GaussianBlur(3)))
+        w = max(1, round(grey.width * BACKDROP_EDGE))
+        h = max(1, round(grey.height * BACKDROP_EDGE))
+        edges = (
+            (0, 0, w, grey.height),
+            (grey.width - w, 0, grey.width, grey.height),
+            (0, 0, grey.width, h),
+        )
+        return all(_mean(detail.crop(box)) <= BACKDROP_MAX_DETAIL for box in edges)
+
+    def luminance(self, path: Path, region: tuple[float, float, float, float]) -> float:
+        """Mean grey level (0-255) of ``region`` (fractions l, t, r, b) of the photo."""
+        with Image.open(self._assets_dir / path) as source:
+            ratio = source.height / source.width
+            grey = source.convert("L").resize(
+                (BACKDROP_PROBE_WIDTH, max(1, round(BACKDROP_PROBE_WIDTH * ratio)))
+            )
+        left, top, right, bottom = region
+        box = (
+            round(left * grey.width),
+            round(top * grey.height),
+            max(round(right * grey.width), round(left * grey.width) + 1),
+            max(round(bottom * grey.height), round(top * grey.height) + 1),
+        )
+        return _mean(grey.crop(box))
+
     def subject_bounds(self, path: Path) -> tuple[float, float, float, float]:
         """Box of the subject of a photo on a white backdrop, as fractions (l, t, r, b).
 
@@ -155,6 +204,11 @@ class ImageLibrary:
             image.convert("RGB").save(buffer, format="JPEG", quality=self._jpeg_quality, optimize=True)
         buffer.seek(0)
         return ImageReader(buffer)
+
+
+def _mean(image: Image.Image) -> float:
+    histogram = image.histogram()
+    return sum(level * count for level, count in enumerate(histogram)) / max(1, sum(histogram))
 
 
 def _extend_sideways(image: Image.Image, target_width: int, first_share: float) -> Image.Image:

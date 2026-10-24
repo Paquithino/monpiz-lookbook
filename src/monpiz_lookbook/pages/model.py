@@ -13,7 +13,7 @@ from ..errors import LayoutError
 from ..geometry import Box
 from ..models import ShoeModel
 from ..surface import Surface
-from .base import EYEBROW_BASELINE, RenderContext, draw_placeholder
+from .base import EYEBROW_BASELINE, RenderContext, draw_placeholder, photo_label_style
 
 HERO_BOTTOM = 400.0
 HERO_LABEL = "Il modello"
@@ -48,8 +48,9 @@ class ModelPage:
         if self.model.image is None:
             draw_placeholder(surface, ctx, hero)
         else:
-            surface.image(ctx.images.bled(self.model.image, hero.width, hero.height), hero)
-        surface.text(self.section_name, g.margin_x, EYEBROW_BASELINE, t.photo_label)
+            surface.image(ctx.images.filled(self.model.image, hero.width, hero.height), hero)
+        label = photo_label_style(ctx, self.model.image)
+        surface.text(self.section_name, g.margin_x, EYEBROW_BASELINE, label)
 
         x = g.margin_x
         surface.text(HERO_LABEL, x, EYEBROW_TOP_BASELINE, t.eyebrow)

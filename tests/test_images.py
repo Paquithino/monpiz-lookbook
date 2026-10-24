@@ -51,3 +51,17 @@ def test_on_white_turns_a_grey_backdrop_white_and_keeps_the_subject(tmp_path: Pa
     assert isinstance(corner, tuple) and isinstance(subject, tuple)
     assert min(corner) >= 253  # backdrop and borders vanish in multiply mode
     assert max(subject) <= 40  # the product itself is untouched
+
+
+def test_a_studio_shot_has_a_plain_backdrop(tmp_path: Path, studio_photo: Path) -> None:
+    assert ImageLibrary(tmp_path, dpi=72).has_plain_backdrop(studio_photo)
+
+
+def test_a_photo_taken_outdoors_is_cropped_not_extended(tmp_path: Path) -> None:
+    # Random grain all the way to the edges, like rock or grass.
+    noise = Image.effect_noise((300, 200), 60).convert("RGB")
+    noise.save(tmp_path / "outdoor.png")
+    library = ImageLibrary(tmp_path, dpi=72)
+    assert not library.has_plain_backdrop(Path("outdoor.png"))
+    width, height = library.filled(Path("outdoor.png"), 600.0, 200.0).getSize()
+    assert width / height == pytest.approx(3.0, rel=0.01)

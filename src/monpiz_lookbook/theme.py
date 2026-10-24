@@ -81,6 +81,7 @@ class Typography:
     model_title: TextStyle
     photo_label: TextStyle
     spec_value: TextStyle
+    swatch_name: TextStyle
 
 
 @dataclass(frozen=True, slots=True)
@@ -158,5 +159,6 @@ def default_theme() -> Theme:
         model_title=TextStyle(Font.DISPLAY, 64.0, 64.0, p.ink),
         photo_label=TextStyle(Font.SANS, 8.25, 10.0, p.ink, tracking=2.3, uppercase=True),
         spec_value=TextStyle(Font.SANS, 10.85, 16.0, p.ink),
+        swatch_name=TextStyle(Font.SANS, 7.8, 9.0, p.muted),
     )
     return Theme(palette=p, type=t, grid=Grid())

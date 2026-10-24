@@ -11,11 +11,13 @@ from reportlab.lib.colors import Color
 from ..geometry import Box
 from ..images import ImageLibrary
 from ..surface import Align, Surface
-from ..theme import Theme
+from ..theme import TextStyle, Theme
 
 EYEBROW_BASELINE = 48.5
 PLACEHOLDER_TEXT = "Foto in arrivo"
 HEADING_BASELINE = 90.0
+LABEL_PROBE = (0.0, 0.0, 0.35, 0.15)  # top-left corner of a photo, where labels sit
+DARK_PHOTO = 120.0  # mean grey level below which labels on a photo turn light
 
 
 @dataclass(frozen=True, slots=True)
@@ -50,6 +52,17 @@ def draw_header(
     heading_style = t.heading.with_color(title_color) if title_color else t.heading
     surface.text(eyebrow, g.margin_x, EYEBROW_BASELINE, eyebrow_style)
     return surface.paragraph(title, g.margin_x, HEADING_BASELINE, g.content_width, heading_style)
+
+
+def photo_label_style(ctx: RenderContext, photo: Path | None) -> TextStyle:
+    """Label style for text over the top-left corner of ``photo``: dark, or light on dark photos.
+
+    Studio shots are light, but a photo taken outdoors can be dark there.
+    """
+    style = ctx.theme.type.photo_label
+    if photo is not None and ctx.images.luminance(photo, LABEL_PROBE) < DARK_PHOTO:
+        return style.with_color(ctx.theme.palette.on_dark)
+    return style
 
 
 def logo_height(ctx: RenderContext, width: float) -> float:

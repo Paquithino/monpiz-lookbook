@@ -14,7 +14,7 @@ from pathlib import Path
 from typing import Annotated
 from urllib.parse import quote
 
-from pydantic import BaseModel, ConfigDict, Field, StringConstraints
+from pydantic import BaseModel, ConfigDict, Field, StringConstraints, model_validator
 
 Text = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1)]
 
@@ -69,11 +69,34 @@ class Variant(_Model):
     image: Path | None = None
 
 
+class Swatch(_Model):
+    """A colour of the colour card. Without ``image`` the page shows a placeholder."""
+
+    name: Text
+    image: Path | None = None
+
+
+MAX_COLORS = 14  # two rows of seven swatches
+
+
 class Product(_Model):
     name: Text
     description: Text
     sizes: Text | None = None
     variants: list[Variant] = Field(min_length=1, max_length=4)
+    colors: list[Swatch] = Field(default_factory=list, max_length=MAX_COLORS)
+
+    @model_validator(mode="after")
+    def _colors_need_a_single_master_photo(self) -> Product:
+        # The colour card takes the space of the other photos: the page shows
+        # one master photo and every colour as a swatch below it.
+        if self.colors and len(self.variants) != 1:
+            raise ValueError("con `colors` va indicata una sola variante: la foto master")
+        return self
+
+    @property
+    def master(self) -> Variant:
+        return self.variants[0]
 
 
 class Material(_Model):
@@ -160,3 +183,4 @@ class Lookbook(_Model):
                 yield from (m.image for m in model.materials if m.image is not None)
                 for product in model.products:
                     yield from (v.image for v in product.variants if v.image is not None)
+                    yield from (c.image for c in product.colors if c.image is not None)
