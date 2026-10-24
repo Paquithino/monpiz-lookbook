@@ -222,8 +222,9 @@ sections:
                 image: images/products/Lagazuoi_Donna_Suede_Cavallino_Spaiate.webp
             colors:
               - {name: Camouflage, image: images/texture/Cavallino_Camuflage.png}
-              - {name: Moka , image: }
-
+              - {name: Moka , image: images/texture/cavallino-moka.webp }
+              - {name: Bianco e Nero , image: images/texture/cavallino.webp }
+              
 
          
 
@@ -269,7 +270,42 @@ sections:
         image: images/products/Ortisei_Donna_Cavallino_Pelle_Moka_Spaiate.webp
         materials:
           - name: Cavallino 
+            image: images/texture/cavallino-moka.webp 
+          - name: Suola Vibram 
+            image : images/details/sole.png
+          - name: Doppia Cucitura 
+            image: 
+          - name: Bordatura in pelle Dakar
+            image:    
+#ORTISEI ##########################################################################################
+      - name: Ortisei
+        # SEGNAPOSTO: descrizione provvisoria, da rivedere.
+        description: >-
+          La pedula classica MonPiz: tomaia in pelle conciata in Toscana, fodera
+          in pelle e suola Vibram.
+        #Foto principale del modello
+        image: images/products/Ortisei_Donna_Cavallino_Pelle_Moka_Spaiate.webp
+        materials:
+          - name: Cavallino 
             image: images/texture/cavallino.webp  
+          - name: Suola Vibram 
+            image : images/details/sole.png
+          - name: Doppia Cucitura 
+            image: 
+          - name: Bordatura in pelle Dakar
+            image:    
+
+#URBAN ##########################################################################################
+      - name: Urban
+        # SEGNAPOSTO: descrizione provvisoria, da rivedere.
+        description: >-
+          La pedula classica MonPiz: tomaia in pelle conciata in Toscana, fodera
+          in pelle e suola Vibram.
+        #Foto principale del modello
+        image: images/products/Urban_Donna_cavallino.webp
+        materials:
+          - name: Cavallino 
+            image: images/texture/Cavallino_double_mucca.png  
           - name: Suola Vibram 
             image : images/details/sole.png
           - name: Doppia Cucitura 
