@@ -7,6 +7,10 @@ fill its slot, with the colour name in its top-left corner. A compact text band 
 holds model, name, description and sizes. A variant without a photo gets a
 studio-grey placeholder, so the layout can be reviewed early.
 
+A product can also show a close-up (``closeup``), e.g. a special toe finish:
+it takes a column on the right of the photo area, beside the master photo,
+with its name in the bottom-left corner.
+
 A product with a colour card (``colors``) is laid out differently: one master
 photo on the upper half, the text band, then every colour as a named swatch.
 The swatch of the master photo's colour is outlined, so the reader sees which
@@ -19,7 +23,7 @@ from dataclasses import dataclass
 
 from ..errors import LayoutError
 from ..geometry import Box
-from ..models import MAX_COLORS, Product, Swatch, Variant
+from ..models import MAX_COLORS, Closeup, Product, Swatch, Variant
 from ..surface import Align, Surface
 from .base import EYEBROW_BASELINE, RenderContext, draw_placeholder, photo_label_style
 
@@ -46,6 +50,9 @@ CONTENT_BOTTOM = 780.0
 
 SPEC_LABEL_TO_VALUE = 18.0
 SPEC_GAP = 30.0  # last value baseline -> next label
+
+CLOSEUP_WIDTH = 220.0  # right column of the photo area
+CLOSEUP_LABEL_PROBE = (0.0, 0.85, 0.7, 1.0)  # bottom-left corner of the close-up, where its name sits
 
 COLORS_LABEL = "Colori disponibili"
 COLORS_EYEBROW_BASELINE = 622.0
@@ -76,14 +83,25 @@ class ProductPage:
         p, g = ctx.theme.palette, ctx.theme.grid
         surface.fill_page(p.paper, g.width)
 
-        for slot, variant in zip(self._photo_slots(g.width), self.product.variants, strict=True):
+        closeup = self.product.closeup
+        photos_width = g.width - CLOSEUP_WIDTH - PHOTO_GAP if closeup else g.width
+        for slot, variant in zip(self._photo_slots(photos_width), self.product.variants, strict=True):
             self._draw_variant(surface, ctx, variant, slot)
+        if closeup:
+            self._draw_closeup(
+                surface,
+                ctx,
+                closeup,
+                Box(g.width - CLOSEUP_WIDTH, 0, CLOSEUP_WIDTH, self.layout.photos_bottom),
+            )
 
-        # Running header sits on the first photo: dark on studio shots, light on dark photos.
+        # Running header sits on the photos: dark on studio shots, light on dark photos.
         header = photo_label_style(ctx, self.product.variants[0].image)
         surface.text(self.section_name, g.margin_x, EYEBROW_BASELINE, header)
         counter = f"{self.index:02d} / {self.total:02d}"
-        surface.text(counter, g.width - g.margin_x, EYEBROW_BASELINE, header, Align.RIGHT)
+        right_photo = closeup.image if closeup else self.product.variants[0].image
+        counter_style = photo_label_style(ctx, right_photo, (0.6, 0.0, 1.0, 0.15))
+        surface.text(counter, g.width - g.margin_x, EYEBROW_BASELINE, counter_style, Align.RIGHT)
 
         bottom = max(self._draw_story(surface, ctx), self._draw_specs(surface, ctx))
         limit = COLORS_EYEBROW_BASELINE - MIN_GAP_ABOVE_COLORS if self.product.colors else CONTENT_BOTTOM
@@ -127,6 +145,12 @@ class ProductPage:
                     for row in range(2)
                     for column in range(2)
                 ]
+
+    @staticmethod
+    def _draw_closeup(surface: Surface, ctx: RenderContext, closeup: Closeup, slot: Box) -> None:
+        surface.image(ctx.images.filled(closeup.image, slot.width, slot.height), slot)
+        style = photo_label_style(ctx, closeup.image, CLOSEUP_LABEL_PROBE)
+        surface.text(closeup.label, slot.x + LABEL_INSET, slot.bottom - LABEL_INSET, style)
 
     @staticmethod
     def _draw_variant(surface: Surface, ctx: RenderContext, variant: Variant, slot: Box) -> None:

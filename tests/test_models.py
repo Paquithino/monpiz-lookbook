@@ -30,3 +30,14 @@ def test_a_colour_card_rejects_several_photos() -> None:
 def test_the_colour_card_has_a_maximum() -> None:
     with pytest.raises(ValidationError):
         _product(variants=1, colors=MAX_COLORS + 1)
+
+
+def test_a_closeup_goes_with_one_master_photo() -> None:
+    data = {
+        "name": "Falcade Heritage",
+        "description": "Suede.",
+        "variants": [{"color": "Ossido"}, {"color": "Tex"}],
+        "closeup": {"label": "Punta Heritage", "image": "punta.webp"},
+    }
+    with pytest.raises(ValidationError, match="foto master"):
+        Product.model_validate(data)

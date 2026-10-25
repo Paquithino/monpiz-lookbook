@@ -54,13 +54,16 @@ def draw_header(
     return surface.paragraph(title, g.margin_x, HEADING_BASELINE, g.content_width, heading_style)
 
 
-def photo_label_style(ctx: RenderContext, photo: Path | None) -> TextStyle:
-    """Label style for text over the top-left corner of ``photo``: dark, or light on dark photos.
+def photo_label_style(
+    ctx: RenderContext, photo: Path | None, probe: tuple[float, float, float, float] = LABEL_PROBE
+) -> TextStyle:
+    """Label style for text over the ``probe`` region of ``photo``: dark, or light on dark photos.
 
     Studio shots are light, but a photo taken outdoors can be dark there.
+    By default the probe is the top-left corner, where labels usually sit.
     """
     style = ctx.theme.type.photo_label
-    if photo is not None and ctx.images.luminance(photo, LABEL_PROBE) < DARK_PHOTO:
+    if photo is not None and ctx.images.luminance(photo, probe) < DARK_PHOTO:
         return style.with_color(ctx.theme.palette.on_dark)
     return style
 
