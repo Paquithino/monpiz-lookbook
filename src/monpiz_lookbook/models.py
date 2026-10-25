@@ -39,6 +39,7 @@ class Cover(_Model):
     claim: Text
     highlights: list[Text] = Field(default_factory=list, max_length=4)
     photo: Path  # product shot on a white backdrop
+    banner: Path | None = None  # full-bleed photo across the top of the cover
 
 
 class ImageRef(_Model):
@@ -189,6 +190,8 @@ class Lookbook(_Model):
         yield self.identity.logo
         yield self.identity.logo_mask
         yield self.cover.photo
+        if self.cover.banner is not None:
+            yield self.cover.banner
         yield self.brand.banner.path
         yield from (detail.image for detail in self.brand.details)
         for section in self.sections:

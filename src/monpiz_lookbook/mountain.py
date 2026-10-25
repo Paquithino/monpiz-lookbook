@@ -44,6 +44,7 @@ SPINES: tuple[Stroke, ...] = (
 )  # fmt: skip
 
 
-def place(points: Stroke, x: float, top: float, scale: float) -> list[Point]:
-    """Map points from the design box onto the page."""
-    return [(x + px * scale, top + py * scale) for px, py in points]
+def place(points: Stroke, x: float, top: float, scale: float, scale_y: float | None = None) -> list[Point]:
+    """Map points from the design box onto the page; ``scale_y`` flattens the peaks."""
+    sy = scale if scale_y is None else scale_y
+    return [(x + px * scale, top + py * sy) for px, py in points]

@@ -101,11 +101,20 @@ class Surface:
 
     # -- images -------------------------------------------------------------
 
-    def image(self, image: ImageReader, box: Box, *, radius: float = 0.0, multiply: bool = False) -> None:
+    def image(
+        self,
+        image: ImageReader,
+        box: Box,
+        *,
+        radius: float = 0.0,
+        multiply: bool = False,
+        clip: Sequence[tuple[float, float]] | None = None,
+    ) -> None:
         """Draw ``image`` into ``box``.
 
         ``multiply`` blends it with what is underneath: white becomes fully
         transparent, so a product shot on white can sit over a drawing.
+        ``clip`` (a closed polygon) keeps only the part of the image inside it.
         """
         c = self._canvas
         c.saveState()
@@ -114,6 +123,14 @@ class Surface:
         if radius:
             path = c.beginPath()
             path.roundRect(box.x, self._y(box.bottom), box.width, box.height, radius)
+            c.clipPath(path, stroke=0, fill=0)
+        if clip:
+            path = c.beginPath()
+            (x0, y0), *rest = clip
+            path.moveTo(x0, self._y(y0))
+            for x, y in rest:
+                path.lineTo(x, self._y(y))
+            path.close()
             c.clipPath(path, stroke=0, fill=0)
         c.drawImage(image, box.x, self._y(box.bottom), box.width, box.height, mask="auto")
         c.restoreState()
