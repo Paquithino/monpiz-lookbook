@@ -13,7 +13,6 @@ cover:
   highlights: [Collezione F.W.2026/2027, Made in Italy, Suole Vibram]
   photo: images/products/FALCADE MARTELLATO DOPPIO LACCIO3.jpg
   banner: images/brand/cover-banner.jpg
-
 # IL BRAND MONPIZ #########################################################################################
 brand:
   eyebrow: Il marchio
@@ -61,8 +60,8 @@ sections:
       - name: Cortina
         # SEGNAPOSTO: descrizione provvisoria, da rivedere.
         description: >-
-          La pedula classica MonPiz: tomaia in pelle conciata in Toscana, fodera
-          in pelle e suola Vibram.
+          La pedula classica MonPiz, con apertura a soffietto per una calzata
+          più facile e suola Vibram per ogni terreno, tra montagna e città.
         #Foto principale del modello
         image: images/products/Cortina.jpg
         materials:
@@ -75,8 +74,11 @@ sections:
         products:
         #CORTINA PELLE MARTELLATA 
           - name: Cortina Pelle Martellata
-            description: Pelle martellata, look raffinato e versatile.
-            sizes: 36–43
+            description: >-
+              Una pelle dalla grana pronunciata, morbida al tatto e dall'aspetto
+              naturale. Versatile e resistente, mantiene nel tempo la forma e
+              l'intensità del colore.
+            sizes: 36–41
             # Al massimo due varianti per pagina. Senza `image` compare il segnaposto.
             variants:
               - color: Bianco
@@ -87,8 +89,11 @@ sections:
           
           #CORTINA DAKAR
           - name: Cortina Dakar
-            description: Pelle Dakar dall'aspetto vissuto, calda e robusta.
-            sizes: 36–43
+            description: >-
+              Pelle dall'aspetto vissuto, calda e dal carattere deciso. Ai segni
+              dell'uso si schiarisce con naturali velature, sviluppando nel tempo
+              una patina unica per ogni paio.
+            sizes: 36–42
             variants:
               - color: Testa di moro 
                 image: images/products/Cortina_Donna_Dakar_Testa_di_moro_spaiate.webp 
