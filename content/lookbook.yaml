@@ -125,7 +125,7 @@ sections:
         description: >-
           Struttura solida e confortevole, per l'uso quotidiano tra città
           e natura.
-        image: images/products/pilota-ceppo.webp
+        image: images/products/falcade_donna_copertina.webp
         materials:
            - name: Pelle martellata
              image: images/texture/Pelle_Martellata.webp
