@@ -125,7 +125,7 @@ def paginate(retailers: Retailers, theme: Theme) -> list[list[Line]]:
                 y += HEAD_TO_FIRST
                 header_due = False
             for number, text in enumerate(lines):
-                url = store.maps_url if number == 0 else None
+                url = store.link if number == 0 else None
                 pages[-1].append(Line(text, x(), y, head=False, url=url))
                 y += LINE_PITCH
         y += REGION_GAP

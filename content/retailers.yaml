@@ -1,7 +1,8 @@
-# Rivenditori autorizzati MonPiz, raggruppati per regione.
+# Rivenditori autorizzati MonPiz, raggruppati per regione (database 2026).
 # L'ordine delle regioni e dei negozi è quello di stampa.
-# `phone` e `shop` (negozio online) sono opzionali; il link alla mappa
-# viene generato da nome e indirizzo. `at` ([latitudine, longitudine]) mette
+# `phone` e `shop` (negozio online) sono opzionali. Nel PDF il nome del
+# negozio apre lo shop online quando c'è `shop`, altrimenti Google Maps
+# (generato da nome e indirizzo). `at` ([latitudine, longitudine]) mette
 # il negozio sulla mappa della pagina rivenditori.
 
 - region: Veneto
@@ -14,17 +15,21 @@
       address: "P.za dei Martiri, 29, 32100 Belluno BL"
       at: [46.14, 12.22]
       phone: "0437 482041"
+      shop: "https://stimm.com/search?type=product&q=monpiz"
     - name: "Stimm Pieve di Soligo"
       address: "Via Montello, 8, 31053 Pieve di Soligo TV"
       at: [45.9, 12.17]
       phone: "0438 980185"
+      shop: "https://stimm.com/search?type=product&q=monpiz"
     - name: "Stimm San Vendemiano"
       address: "Vicolo dei Bar, 1/A, 31020 San Vendemiano TV"
       at: [45.89, 12.35]
-      phone: "0438 369085"  
+      phone: "0438 369085"
+      shop: "https://stimm.com/search?type=product&q=monpiz"
     - name: "Sartoria Meccanica"
       address: "Vicolo Canevone, 3, 45100 Rovigo RO"
-      at: [45.07, 11.79]  
+      at: [45.07, 11.79]
+      phone: "0425 28875"
     - name: "Sorelle Ramonda Vicenza"
       address: "Viale Trieste, 45, 36075 Montecchio Maggiore VI"
       at: [45.5, 11.39]
@@ -35,8 +40,8 @@
       phone: "0422 910104"
     - name: "Calzature Pelletterie Paludetti"
       address: "Via Sant'Antonio da Padova, 19, 31029 Vittorio Veneto TV"
-      at: [45.99, 12.3]  
-    
+      at: [45.99, 12.3]
+      phone: "0438 501401"
 
 - region: Trentino-Alto Adige
   stores:
@@ -54,7 +59,7 @@
       address: "Piaz de Sotegrava, 9, 38035 Moena TN"
       at: [46.38, 11.66]
       phone: "0462 573368"
-      shop: "https://www.liviosport.it/it/ricerca?controller=search&s=mon+piz+"  
+      shop: "https://www.liviosport.it/it/ricerca?controller=search&s=mon+piz+"
     - name: "Boteghes Lagazoi"
       address: "Strada Micurà de Rü, 48, 39036 San Cassiano BZ"
       at: [46.57, 11.93]
@@ -63,25 +68,24 @@
     - name: "Bulli e Pupe"
       address: "Piazza Dante Alighieri, 12, 38027 Malé TN"
       at: [46.35, 10.91]
-      phone: "0436 421198"  
+      phone: "0436 421198"
     - name: "Calzature Rabanser"
       address: "Strada Rezia, 28, 39046 Ortisei BZ"
       at: [46.57, 11.67]
       phone: "0471 797934"
-      shop: "https://www.rabanser.com/it/-ricerca-monpiz/" 
+      shop: "https://www.rabanser.com/it/-ricerca-monpiz/"
     - name: "Sport Kostner"
       address: "Str. Col Alt, 97, 39033 Corvara in Badia BZ"
       at: [46.55, 11.87]
-      phone: "0471 836933" 
+      phone: "0471 836933"
     - name: "Sport Mode Schönhuber"
       address: "Via Centrale, 24, 39031 Brunico BZ"
       at: [46.8, 11.94]
-      phone: "0474 555141"  
+      phone: "0474 555141"
     - name: "Oberrauch-Zitt"
       address: "Via dei Portici, 67, 39100 Bolzano BZ"
       at: [46.5, 11.35]
       phone: "0471 972121"
-        
     - name: "Bottamedi Sport Calzature"
       address: "Viale Trento, 3, 38010 Andalo TN"
       at: [46.17, 11.0]
@@ -90,7 +94,6 @@
       address: "Via Fratelli Bronzetti, 19, 38033 Cavalese TN"
       at: [46.29, 11.46]
       phone: "0462 230266"
-    
 
 - region: Friuli-Venezia Giulia
   stores:
@@ -101,8 +104,11 @@
     - name: "Reporter's Abbigliamento"
       address: "Via Roma, 15, 33018 Tarvisio UD"
       at: [46.5, 13.58]
-      phone: "0428 2542"  
-    #K2
+      phone: "0428 2542"
+    - name: "K2 Sport"
+      address: "Via Poscolle, 43, 33100 Udine UD"
+      at: [46.06, 13.23]
+      phone: "0432 510066"
     - name: "Bravi Calzature"
       address: "Via Taboga, 180/182, 33013 Gemona UD"
       at: [46.28, 13.14]
@@ -121,7 +127,10 @@
 
 - region: Lombardia
   stores:
-   #la stua 
+    - name: "Abbigliamento La Stua"
+      address: "Via Luigi Einaudi, 5, 25030 Roncadelle BS"
+      at: [45.53, 10.15]
+      phone: "0364 91975"
     - name: "Bordoni 1962 Calzature"
       address: "Via Ezio Vanoni, 37, 23017 Morbegno SO"
       at: [46.13, 9.57]
@@ -137,5 +146,3 @@
       address: "Via Veneto, 96, 29121 Piacenza PC"
       at: [45.05, 9.69]
       phone: "0523 456207"
-
-

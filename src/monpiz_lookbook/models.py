@@ -204,6 +204,11 @@ class Store(_Model):
         query = quote(f"{self.name} {self.address}")
         return f"https://www.google.com/maps/search/?api=1&query={query}"
 
+    @property
+    def link(self) -> str:
+        """Where the store name points: its online shop when it has one, else the map."""
+        return self.shop or self.maps_url
+
 
 class Region(_Model):
     region: Text

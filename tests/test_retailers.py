@@ -96,6 +96,23 @@ def test_store_town_comes_from_the_address(address: str, town: str) -> None:
     assert Store(name="Negozio", address=address).town == town
 
 
+def test_the_store_name_opens_the_online_shop_when_there_is_one() -> None:
+    shop = "https://example.com/monpiz"
+    with_shop = Store(name="Negozio", address="Via Roma, 1, 31044 Montebelluna TV", shop=shop)
+    without_shop = Store(name="Negozio", address="Via Roma, 1, 31044 Montebelluna TV")
+    assert with_shop.link == shop
+    assert without_shop.link == without_shop.maps_url
+    lines = paginate(
+        Retailers(
+            eyebrow="Dove trovarci",
+            title="Dove trovare MonPiz",
+            regions=[Region(region="Veneto", stores=[with_shop])],
+        ),
+        default_theme(),
+    )
+    assert [line.url for page in lines for line in page if line.url] == [shop]
+
+
 def test_maps_url_encodes_name_and_address() -> None:
     store = Store(name="Lui & Lei", address="Borgata Bach 22, Sappada")
     assert store.maps_url.endswith("query=Lui%20%26%20Lei%20Borgata%20Bach%2022%2C%20Sappada")

@@ -88,6 +88,8 @@ sections:
               Una pelle dalla grana pronunciata, morbida al tatto e dall'aspetto
               naturale. Versatile e resistente, mantiene nel tempo la forma e
               l'intensità del colore.
+            specs:
+              - {label: Incluso, value: Doppio laccio}
             sizes: 35–42
             # Al massimo due varianti per pagina. Senza `image` compare il segnaposto.
             variants:
@@ -104,6 +106,7 @@ sections:
               effetto vintage dall'aspetto naturale. Con l'uso si schiarisce in
               velature morbide e sviluppa una patina unica per ogni paio.
             specs:
+              - {label: Incluso, value: Doppio laccio}
               - {label: Incluso, value: Grasso naturale}  
             sizes: 35–42
             variants:
@@ -120,6 +123,8 @@ sections:
              Il suede è la pelle scamosciata, una superficie morbida, vellutata
              e leggermente ruvida al tatto, che dà alla pedula un carattere
              caldo e raffinato.
+            specs:
+              - {label: Incluso, value: Doppio laccio}
             sizes: 35–42
             variants:
               - color: Aneto
@@ -164,6 +169,8 @@ sections:
               Una pelle dalla grana pronunciata, morbida al tatto e dall'aspetto
               naturale. Versatile e resistente, mantiene nel tempo la forma e
               l'intensità del colore.
+            specs:
+              - {label: Incluso, value: Doppio laccio}
             sizes: 35–42
             variants:
               - color: Bianco 
@@ -179,6 +186,7 @@ sections:
              effetto vintage dall'aspetto naturale. Con l'uso si schiarisce in
              velature morbide e sviluppa una patina unica per ogni paio.
             specs:
+              - {label: Incluso, value: Doppio laccio}
               - {label: Incluso, value: Grasso naturale}  
             variants:
               - color: Bianco 
@@ -194,6 +202,8 @@ sections:
              Il suede è la pelle scamosciata, una superficie morbida, vellutata
              e leggermente ruvida al tatto, che dà alla pedula un carattere
              caldo e raffinato.
+            specs:
+              - {label: Incluso, value: Doppio laccio}
             sizes: 35–42
             variants:
               - color: Saraceno
@@ -215,6 +225,8 @@ sections:
            #FALCADE CAVALLINO bianco  
           - name: Falcade Cavallino
             description: Pelle cavallino, texture ricercata e carattere deciso.
+            specs:
+              - {label: Incluso, value: Doppio laccio}
             sizes: 35–42
             variants:
               - color: Bianco Nera
@@ -224,6 +236,8 @@ sections:
           #FALCADE CAVALLINO mokka e nuttela
           - name: Falcade Cavallino
             description: Pelle cavallino, texture ricercata e carattere deciso.
+            specs:
+              - {label: Incluso, value: Doppio laccio}
             sizes: 35–42
             variants:
               - color: Moka 
@@ -254,6 +268,8 @@ sections:
             description:             
               Tre varianti di cavallino tra cui scegliere, per adattare la pedula al
               proprio stile dal camouflage al moka, fino al bianco e nero.
+            specs:
+              - {label: Incluso, value: Doppio laccio}
             sizes: 35–42
             variants:
               - color: Bianco Testa di Moro 
@@ -284,6 +300,8 @@ sections:
             description: >-
              Disponibile in due varianti di cavallino: moka, calda e avvolgente,
              oppure bianco e nero, per un contrasto più deciso.
+            specs:
+              - {label: Incluso, value: Doppio laccio}
             sizes: 35–42
             variants:
               - color: Moka 
@@ -299,6 +317,8 @@ sections:
           La novità di MonPiz: una scarpa diversa da tutte le altre, che nasce
           da un'idea tecnica e la veste di un gusto fashion, senza rinunciare
           alla comodità.
+        specs:
+          - {label: Taglie, value: 35–42}
         #sizes: 35–42
         image: images/products/Orma_Zoom_punta.webp
         materials:
@@ -318,6 +338,8 @@ sections:
          Lo stile MonPiz, senza lacci. Un beatle in cavallino con due bande
          elastiche laterali che lo rendono comodo da infilare, su una suola
          Vibram.
+        specs:
+          - {label: Taglie, value: 35–42}
         #sizes: 35–42
         image: images/products/Urban_Donna_cavallino.webp
         materials:
@@ -335,6 +357,8 @@ sections:
           Completamente diverso, pensato per chi osa. L'anfibio stringato MonPiz
           porta il cavallino e la suola Vibram fuori da ogni schema, con una zip
           laterale per una calzata comoda e immediata.
+        specs:
+          - {label: Taglie, value: 35–42}
         #sizes: 35–42
         image: images/products/Anfibio_Donna_Cavallino_Bianco_nero_Spaiate.webp
         materials:
@@ -388,6 +412,8 @@ sections:
              Una pelle dalla grana pronunciata, morbida al tatto e dall'aspetto
              naturale. Versatile e resistente, mantiene nel tempo la forma e
              l'intensità del colore.
+            specs:
+              - {label: Incluso, value: Doppio laccio}
             sizes: 36–43
             variants:
               - color: Nero 
@@ -403,6 +429,7 @@ sections:
               effetto vintage dall'aspetto naturale. Con l'uso si schiarisce in
               velature morbide e sviluppa una patina unica per ogni paio.
             specs:
+              - {label: Incluso, value: Doppio laccio}
               - {label: Incluso, value: Grasso naturale}
             sizes: 36–43
             variants:
@@ -419,6 +446,8 @@ sections:
              Il suede è la pelle scamosciata, una superficie morbida, vellutata
              e leggermente ruvida al tatto, che dà alla pedula un carattere
              caldo e raffinato.
+            specs:
+              - {label: Incluso, value: Doppio laccio}
             sizes: 36–43
             variants:
               - color: Pilota
@@ -462,6 +491,8 @@ sections:
               Una pelle dalla grana pronunciata, morbida al tatto e dall'aspetto
               naturale. Versatile e resistente, mantiene nel tempo la forma e
               l'intensità del colore.
+             specs:
+               - {label: Incluso, value: Doppio laccio}
              sizes: 40–46
              variants:
               - color: Testa di Moro
@@ -477,6 +508,7 @@ sections:
               effetto vintage dall'aspetto naturale. Con l'uso si schiarisce in
               velature morbide e sviluppa una patina unica per ogni paio.
              specs:
+              - {label: Incluso, value: Doppio laccio}
               - {label: Incluso, value: Grasso naturale}  
              sizes: 40-46
              variants:
@@ -493,6 +525,8 @@ sections:
               Il suede è la pelle scamosciata, una superficie morbida, vellutata
               e leggermente ruvida al tatto, che dà alla pedula un carattere
               caldo e raffinato.
+             specs:
+               - {label: Incluso, value: Doppio laccio}
              sizes: 40-46
              variants:
               - color: Rhum
@@ -516,6 +550,8 @@ sections:
              description: >-
               Suede trattato a mano per dare un aspetto vissuto, come se avesse già
               una storia. Ogni paio è diverso dall'altro: è questo a renderlo unico.
+             specs:
+               - {label: Incluso, value: Doppio laccio}
              sizes: 40-46
              variants:
               - color: Ossido
@@ -555,10 +591,12 @@ sections:
           - name: Lussari
             description: >- 
              Disponibile in tutte le varianti colori del suede. 
+            specs:
+              - {label: Incluso, value: Doppio laccio}
             sizes: 40-46
             variants:
               - color: Aneto
-                image: images/products/Lussari_Uomo_Aneto_Spaiate.webp
+                image: images/products/lussari-verde-suola-bianca.webp
             colors:
              - {name: Alabama, image: images/texture/suede/suede-alabama.webp}
              - {name: Apache, image: images/texture/suede/suede-apache-esterno.webp}
@@ -580,6 +618,9 @@ sections:
           Pedula in nabuk, una pelle pregiata ricavata dal lato fiore, la parte
           più esterna e compatta. Levigata finemente fino a diventare vellutata,
           morbida e calda al tatto, è più robusta e duratura dello scamosciato.
+        specs:
+          - {label: Taglie, value: 40–46}
+          - {label: Incluso, value: Doppio laccio}
         image: images/products/Corvara_Nabuk_Suede_Testa_di_moro_Spaiate.webp 
         materials:
           - name: Nabuk
@@ -599,6 +640,9 @@ sections:
           scuro, leggera come una scarpa sportiva. Nabuk suede in due
           colori, puntale in gomma e una bordatura in gomma porosa effetto roccia.
         #Foto principale del modello
+        specs:
+          - {label: Taglie, value: 40–46}
+          - {label: Incluso, value: Doppio laccio}
         image: images/products/Lagazuoi_Uomo_Nabuck_Gommata_Spaiate.webp
         materials:
           - name: Nabuk
@@ -618,6 +662,9 @@ sections:
           waterproof si stringe con un laccetto di chiusura, su una suola Vibram
           pronta a ogni terreno.
         #Foto principale del modello
+        specs:
+          - {label: Taglie, value: 40–46}
+          - {label: Incluso, value: Doppio laccio}
         image: images/products/Grooste_Uomo_Verde_Spaiate.webp
         materials:
           - name: Pelle Dakar
@@ -644,6 +691,8 @@ sections:
         products:
           - name: City
             description: Disponibile in tre colori di Suede.
+            specs:
+              - {label: Incluso, value: Doppio laccio}
             sizes: 40–46
             variants:
               - color: Corvino
