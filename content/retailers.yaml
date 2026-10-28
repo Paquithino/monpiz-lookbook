@@ -6,35 +6,10 @@
 
 - region: Veneto
   stores:
-    - name: "Calzature Pelletterie Paludetti"
-      address: "Via Sant'Antonio da Padova, 19, 31029 Vittorio Veneto TV"
-      at: [45.99, 12.3]
-      phone: "0438 501401"
     - name: "Marinotti"
       address: "Corso Italia, 160, 32043 Cortina d'Ampezzo BL"
       at: [46.54, 12.14]
       phone: "0436 3320"
-    - name: "Pellizzari Negozi Moda"
-      address: "Via Roma, 97, 31050 Vedelago TV"
-      at: [45.69, 12.02]
-      phone: "0423 400145"
-      shop: "https://www.negozipellizzari.it/"
-    - name: "Public"
-      address: "Via Caterino Davila, 12, 35137 Padova PD"
-      at: [45.41, 11.88]
-      phone: "352 0008770"
-    - name: "Sartoria Meccanica"
-      address: "Vicolo Canevone, 3, 45100 Rovigo RO"
-      at: [45.07, 11.79]
-      phone: "0425 28875"
-    - name: "Sorelle Ramonda Vicenza"
-      address: "Viale Trieste, 45, 36075 Montecchio Maggiore VI"
-      at: [45.5, 11.39]
-      phone: "0444 491777"
-    - name: "Sorelle Ramonda Villorba"
-      address: "V. Roma, 182/D, 31020 Castrette, TV"
-      at: [45.73, 12.25]
-      phone: "0422 910104"
     - name: "Stimm Belluno"
       address: "P.za dei Martiri, 29, 32100 Belluno BL"
       at: [46.14, 12.22]
@@ -46,70 +21,92 @@
     - name: "Stimm San Vendemiano"
       address: "Vicolo dei Bar, 1/A, 31020 San Vendemiano TV"
       at: [45.89, 12.35]
-      phone: "0438 369085"
+      phone: "0438 369085"  
+    - name: "Sartoria Meccanica"
+      address: "Vicolo Canevone, 3, 45100 Rovigo RO"
+      at: [45.07, 11.79]  
+    - name: "Sorelle Ramonda Vicenza"
+      address: "Viale Trieste, 45, 36075 Montecchio Maggiore VI"
+      at: [45.5, 11.39]
+      phone: "0444 491777"
+    - name: "Sorelle Ramonda Villorba"
+      address: "V. Roma, 182/D, 31020 Castrette, TV"
+      at: [45.73, 12.25]
+      phone: "0422 910104"
+    - name: "Calzature Pelletterie Paludetti"
+      address: "Via Sant'Antonio da Padova, 19, 31029 Vittorio Veneto TV"
+      at: [45.99, 12.3]  
+    
 
 - region: Trentino-Alto Adige
   stores:
-    - name: "Boteghes Lagazoi"
-      address: "Strada Micurà de Rü, 48, 39036 San Cassiano BZ"
-      at: [46.57, 11.93]
-      phone: "0471 849554"
-      shop: "https://shop-lagazoi.it/search?q=mon+piz+"
-    - name: "Bottamedi Sport Calzature"
-      address: "Viale Trento, 3, 38010 Andalo TN"
-      at: [46.17, 11.0]
-      phone: "0461 585716"
-    - name: "Bulli e Pupe"
-      address: "Piazza Dante Alighieri, 12, 38027 Malé TN"
-      at: [46.35, 10.91]
-      phone: "0436 421198"
-    - name: "Calzature Rabanser"
-      address: "Strada Rezia, 28, 39046 Ortisei BZ"
-      at: [46.57, 11.67]
-      phone: "0471 797934"
-      shop: "https://www.rabanser.com/it/-ricerca-monpiz/"
-    - name: "Caneppele"
-      address: "Via Gianantonio Manci, 80, 38122 Trento TN"
-      at: [46.07, 11.12]
-      phone: "0461 986709"
-      shop: "https://www.caneppele.it/it/brand/262-monpiz"
-    - name: "Giga Store"
-      address: "Via Fratelli Bronzetti, 19, 38033 Cavalese TN"
-      at: [46.29, 11.46]
-      phone: "0462 230266"
-    - name: "Livio Sport"
-      address: "Piaz de Sotegrava, 9, 38035 Moena TN"
-      at: [46.38, 11.66]
-      phone: "0462 573368"
-      shop: "https://www.liviosport.it/it/ricerca?controller=search&s=mon+piz+"
     - name: "Lorenzetti Luxury"
       address: "Via Pradalago, 2, 38086 Madonna di Campiglio TN"
       at: [46.23, 10.83]
       phone: "0465 441339"
       shop: "https://www.lorenzetti.com/it-IT/products/search?searchKey=mon%2Bpiz%2B"
+    - name: "Caneppele"
+      address: "Via Gianantonio Manci, 80, 38122 Trento TN"
+      at: [46.07, 11.12]
+      phone: "0461 986709"
+      shop: "https://www.caneppele.it/it/brand/262-monpiz"
+    - name: "Livio Sport"
+      address: "Piaz de Sotegrava, 9, 38035 Moena TN"
+      at: [46.38, 11.66]
+      phone: "0462 573368"
+      shop: "https://www.liviosport.it/it/ricerca?controller=search&s=mon+piz+"  
+    - name: "Boteghes Lagazoi"
+      address: "Strada Micurà de Rü, 48, 39036 San Cassiano BZ"
+      at: [46.57, 11.93]
+      phone: "0471 849554"
+      shop: "https://shop-lagazoi.it/search?q=mon+piz+"
+    - name: "Bulli e Pupe"
+      address: "Piazza Dante Alighieri, 12, 38027 Malé TN"
+      at: [46.35, 10.91]
+      phone: "0436 421198"  
+    - name: "Calzature Rabanser"
+      address: "Strada Rezia, 28, 39046 Ortisei BZ"
+      at: [46.57, 11.67]
+      phone: "0471 797934"
+      shop: "https://www.rabanser.com/it/-ricerca-monpiz/" 
+    - name: "Sport Kostner"
+      address: "Str. Col Alt, 97, 39033 Corvara in Badia BZ"
+      at: [46.55, 11.87]
+      phone: "0471 836933" 
+    - name: "Sport Mode Schönhuber"
+      address: "Via Centrale, 24, 39031 Brunico BZ"
+      at: [46.8, 11.94]
+      phone: "0474 555141"  
     - name: "Oberrauch-Zitt"
       address: "Via dei Portici, 67, 39100 Bolzano BZ"
       at: [46.5, 11.35]
       phone: "0471 972121"
-    - name: "Sport Kostner"
-      address: "Str. Col Alt, 97, 39033 Corvara in Badia BZ"
-      at: [46.55, 11.87]
-      phone: "0471 836933"
-    - name: "Sport Mode Schönhuber"
-      address: "Via Centrale, 24, 39031 Brunico BZ"
-      at: [46.8, 11.94]
-      phone: "0474 555141"
+        
+    - name: "Bottamedi Sport Calzature"
+      address: "Viale Trento, 3, 38010 Andalo TN"
+      at: [46.17, 11.0]
+      phone: "0461 585716"
+    - name: "Giga Store"
+      address: "Via Fratelli Bronzetti, 19, 38033 Cavalese TN"
+      at: [46.29, 11.46]
+      phone: "0462 230266"
+    
 
 - region: Friuli-Venezia Giulia
   stores:
+    - name: "Sorella Ramonda Reana del Rojale"
+      address: "Via Nazionale, 9, 33010 Reana del Rojale UD"
+      at: [46.15, 13.22]
+      phone: "0432 880154"
+    - name: "Reporter's Abbigliamento"
+      address: "Via Roma, 15, 33018 Tarvisio UD"
+      at: [46.5, 13.58]
+      phone: "0428 2542"  
+    #K2
     - name: "Bravi Calzature"
       address: "Via Taboga, 180/182, 33013 Gemona UD"
       at: [46.28, 13.14]
       phone: "0432 980110"
-    - name: "Dodo Sport"
-      address: "Piazza della Vittoria, 7, 33050 Percoto UD"
-      at: [45.97, 13.32]
-      phone: "0432 676217"
     - name: "Donnapiù"
       address: "Via Giobatta Morgagni, 7, 33028 Tolmezzo UD"
       at: [46.4, 13.02]
@@ -121,26 +118,10 @@
       address: "Via Monte Zoncolan, 1, 33020 Ravascletto UD"
       at: [46.53, 12.92]
       phone: "0433 66233"
-    - name: "Piazza Sport"
-      address: "Via Umberto I, 26, 33085 Maniago PN"
-      at: [46.17, 12.71]
-      phone: "0427 71439"
-      shop: "https://www.piazza-sport.it/k/it/eur/products/mma/1?q=mon+piz+"
-    - name: "Reporter's Abbigliamento"
-      address: "Via Roma, 15, 33018 Tarvisio UD"
-      at: [46.5, 13.58]
-      phone: "0428 2542"
-    - name: "Sorella Ramonda Reana del Rojale"
-      address: "Via Nazionale, 9, 33010 Reana del Rojale UD"
-      at: [46.15, 13.22]
-      phone: "0432 880154"
-    - name: "Taurus"
-      address: "Via S. Nicolò, 19/B, 34122 Trieste TS"
-      at: [45.65, 13.78]
-      phone: "040 2419027"
 
 - region: Lombardia
   stores:
+   #la stua 
     - name: "Bordoni 1962 Calzature"
       address: "Via Ezio Vanoni, 37, 23017 Morbegno SO"
       at: [46.13, 9.57]
@@ -149,11 +130,6 @@
       address: "Via Cesura, 15, 23100 Sondrio"
       at: [46.17, 9.87]
       phone: "0342 214148"
-    - name: "Pellizzari Negozi Moda"
-      address: "Via Luigi Einaudi, 5, 25030 Roncadelle BS"
-      at: [45.53, 10.15]
-      phone: "030 2583216"
-      shop: "https://www.negozipellizzari.it/"
 
 - region: Emilia-Romagna
   stores:
@@ -162,16 +138,4 @@
       at: [45.05, 9.69]
       phone: "0523 456207"
 
-- region: Lazio
-  stores:
-    - name: "Pellizzari Negozi Moda"
-      address: "Galleria Commerciale, Via Alberto Lionello, Porta di Roma, 201/int.125, 00139 Roma RM"
-      at: [41.93, 12.53]
-      phone: "06 87074325"
-      shop: "https://www.negozipellizzari.it/"
 
-- region: Estero
-  stores:
-    - name: "Montesport"
-      address: "Andorra"
-      at: [42.51, 1.52]
