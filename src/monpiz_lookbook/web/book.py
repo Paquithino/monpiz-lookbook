@@ -1,14 +1,7 @@
-"""The digital edition as a book: the sequence of pages and how they pair into spreads.
+"""The digital edition as a sequence of pages, read by scrolling down like a PDF.
 
-Every page fills the screen and the reader turns them one by one. On a phone
-(or any portrait screen) one page is shown at a time; on a landscape screen two
-pages sit side by side like an open magazine, and some pages (the cover, the
-section openers) take the whole spread.
-
-Pairing is decided here, not in the browser: when a full spread would start on
-the right-hand page, a blank "filler" page closes the previous spread, as in
-a printed magazine. Fillers exist only for wide screens and are hidden on
-phones.
+Each page is a sheet of its own (cover, model, product, retailers ...) with a
+number, a running head and a thumbnail in the overview of all pages.
 """
 
 from __future__ import annotations
@@ -31,11 +24,8 @@ class Page:
     title: str  # shown in the page overview
     section: str  # running head
     thumb: Path | None = None  # photo of the page overview
-    span: int = 1  # 2: takes a whole spread on wide screens
     data: dict[str, Any] = field(default_factory=dict)
     number: int = 0  # 1-based, counting only real pages
-    spread_start: bool = False  # first page of a spread on wide screens
-    filler: bool = False
 
 
 @dataclass(frozen=True, slots=True)
@@ -51,12 +41,12 @@ def book_pages(lookbook: Lookbook, ids: Anchors) -> list[Page]:
     pages = list(_sequence(lookbook, ids))
     for number, page in enumerate(pages, start=1):
         page.number = number
-    return _pair(pages)
+    return pages
 
 
 def _sequence(lb: Lookbook, ids: Anchors) -> Iterator[Page]:
     brand = lb.brand
-    yield Page("cover", "top", "Copertina", "", thumb=lb.cover.banner or lb.cover.photo, span=2)
+    yield Page("cover", "top", "Copertina", "", thumb=lb.cover.banner or lb.cover.photo)
     yield Page("brand", "marchio", brand.eyebrow, brand.eyebrow)
     yield Page("details", "dettagli", brand.details_title, brand.eyebrow, thumb=brand.banner.path)
     yield Page("contents", "indice", lb.index.title if lb.index else "Indice", "Indice")
@@ -70,7 +60,6 @@ def _sequence(lb: Lookbook, ids: Anchors) -> Iterator[Page]:
             section.name,
             section.name,
             thumb=section.photo,
-            span=2,
             data={"section": section, "number": s + 1},
         )
         for m, model in enumerate(section.models):
@@ -131,26 +120,3 @@ def _chunks(regions: list[Region]) -> Iterator[list[RegionChunk]]:
             continued = True
     if page:
         yield page
-
-
-def _pair(pages: list[Page]) -> list[Page]:
-    """Insert fillers so that full spreads start on the left, and mark where spreads begin."""
-    paired: list[Page] = []
-    left_open = False  # a left-hand page waits for its right-hand neighbour
-    for page in pages:
-        if page.span == 2:
-            if left_open:
-                paired.append(_filler(len(paired)))
-            page.spread_start, left_open = True, False
-        elif left_open:
-            left_open = False
-        else:
-            page.spread_start, left_open = True, True
-        paired.append(page)
-    if left_open:
-        paired.append(_filler(len(paired)))
-    return paired
-
-
-def _filler(position: int) -> Page:
-    return Page("filler", f"vuota-{position}", "", "", filler=True)

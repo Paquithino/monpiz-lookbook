@@ -19,6 +19,7 @@ from PIL import Image
 from ..content import load_lookbook
 from ..images import ImageLibrary, whitened
 from ..models import Lookbook
+from ..pages.model import SWATCH_GAP, SWATCH_HEIGHT
 from ..pages.product import short_name
 from ..pages.section import models_label
 from ..theme import default_theme
@@ -26,7 +27,16 @@ from .book import book_pages
 from .fonts import build_fonts
 from .media import Picture, WebImages
 from .text import phone_href
-from .view import anchors, contact, contents, retailers_map, ridge_clip, ridge_path, store_id
+from .view import (
+    RIDGE_DEPTH_WIDE,
+    anchors,
+    contact,
+    contents,
+    retailers_map,
+    ridge_clip,
+    ridge_path,
+    store_id,
+)
 
 HERE = Path(__file__).resolve().parent
 SHARE_SIZE = (1200, 630)  # Open Graph preview
@@ -46,7 +56,7 @@ class SiteOptions:
 @dataclass(frozen=True, slots=True)
 class SiteResult:
     output_dir: Path
-    pages: int  # pages of the book, fillers included
+    pages: int  # pages of the digital edition
     images: int
     size_bytes: int
 
@@ -59,7 +69,9 @@ def build_site(options: SiteOptions) -> SiteResult:
 
     static = _publish_static(out)
     html = render(lookbook, images, options.assets_dir, out, static)
-    (out / "index.html").write_text(html, encoding="utf-8")
+    partial = out / ".index.html.partial"  # never serve a half-written page
+    partial.write_text(html, encoding="utf-8")
+    partial.replace(out / "index.html")
     (out / ".nojekyll").write_text("")  # GitHub Pages: publish the files as they are
     if lookbook.web.url:
         host = lookbook.web.url.split("://", 1)[-1].strip("/")
@@ -71,9 +83,7 @@ def build_site(options: SiteOptions) -> SiteResult:
     return SiteResult(out, pages, len(images.written), size)
 
 
-def render(
-    lookbook: Lookbook, images: WebImages, assets_dir: Path, out: Path, static: dict[str, str]
-) -> str:
+def render(lookbook: Lookbook, images: WebImages, assets_dir: Path, out: Path, static: dict[str, str]) -> str:
     env = Environment(
         loader=FileSystemLoader(HERE / "templates"),
         autoescape=select_autoescape(["j2", "html"]),
@@ -94,13 +104,15 @@ def render(
         ids=ids,
         pages=pages,
         static=static,
-        total=sum(1 for page in pages if not page.filler),
+        total=len(pages),
         menu=contents(lookbook, ids),
         map=retailers_map(lookbook.retailers) if lookbook.retailers else None,
         colors=colors,
         fonts=build_fonts(assets_dir, out),
         ridge_clip=ridge_clip(),
         ridge_path=ridge_path(),
+        ridge_clip_wide=ridge_clip(RIDGE_DEPTH_WIDE),
+        ridge_path_wide=ridge_path(RIDGE_DEPTH_WIDE),
         logo=images.picture(lookbook.identity.logo, widths=(280, 560)),
         boots=_cover_boots(lookbook, images, assets_dir),
         share=_share_image(lookbook, assets_dir, out),
@@ -109,6 +121,7 @@ def render(
         pic=images.picture,
         SMALL=SMALL,
         MEDIUM=MEDIUM,
+        material_ratio=material_ratio,
         short_name=short_name,
         models_label=models_label,
         contact=contact,
@@ -117,23 +130,31 @@ def render(
     )
 
 
-def _publish_static(out: Path) -> dict[str, str]:
-    """Copy CSS and JavaScript with a hash of their content in the name (``site.3f2a91c0.css``).
+def material_ratio(count: int) -> float:
+    """Width / height of a material swatch on the printed model page with ``count`` materials.
 
-    Browsers and GitHub Pages cache these files: a new name after every change
-    guarantees that readers always get the stylesheet and script of the page they see.
+    The web uses the same proportions, so the detail photos cropped for print
+    (seams, rubber toe caps, soles) show exactly the same thing online.
     """
-    names = {}
+    grid = default_theme().grid
+    return grid.column_width(count, SWATCH_GAP) / SWATCH_HEIGHT
+
+
+def _publish_static(out: Path) -> dict[str, str]:
+    """Copy CSS and JavaScript; return their URLs with a hash of the content (``site.css?v=3f2a91c0``).
+
+    The query changes with the content, so browsers fetch a stylesheet or script
+    as soon as it changes. The file name stays the same: a page still cached from
+    an earlier build finds its files instead of a 404.
+    """
+    urls = {}
     for source in sorted((HERE / "static").iterdir()):
         data = source.read_bytes()
-        name = f"{source.stem}.{hashlib.sha1(data).hexdigest()[:8]}{source.suffix}"
-        (out / name).write_bytes(data)
-        names[source.name] = name
-        for old in out.glob(f"{source.stem}.*{source.suffix}"):
-            if old.name != name:
-                old.unlink()
-        (out / source.name).unlink(missing_ok=True)  # unversioned copy of earlier builds
-    return names
+        (out / source.name).write_bytes(data)
+        urls[source.name] = f"{source.name}?v={hashlib.sha1(data).hexdigest()[:8]}"
+        for old in out.glob(f"{source.stem}.*{source.suffix}"):  # versioned names of earlier builds
+            old.unlink()
+    return urls
 
 
 def _cover_boots(lookbook: Lookbook, images: WebImages, assets_dir: Path) -> Picture:

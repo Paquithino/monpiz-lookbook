@@ -140,18 +140,7 @@ class ImageLibrary:
         """
         with Image.open(self._assets_dir / path) as source:
             image = source.convert("RGB")
-        ratio = width_pt / height_pt
-        target_width = round(image.height * ratio)
-        if target_width >= image.width:
-            canvas = _extend_sideways(image, target_width, first_share=0.5)
-        else:
-            # Same operation on the photo turned on its side: the top edge
-            # becomes the left one, and all the new space goes there.
-            turned = image.transpose(Image.Transpose.ROTATE_90)
-            target_height = round(image.width / ratio)
-            canvas = _extend_sideways(turned, target_height, first_share=1.0).transpose(
-                Image.Transpose.ROTATE_270
-            )
+        canvas = extended(image, width_pt / height_pt)
         return self._encode(self._resample(canvas, width_pt, height_pt))
 
     def filled(self, path: Path, width_pt: float, height_pt: float, focus_y: float = 0.5) -> ImageReader:
@@ -263,6 +252,19 @@ def whitened(photo: Image.Image, *, white_point: int = 238, feather: float = 0.1
     )
     white = Image.new("RGB", photo.size, (255, 255, 255))
     return Image.composite(photo, white, mask)
+
+
+def extended(image: Image.Image, ratio: float) -> Image.Image:
+    """A studio shot brought to ``ratio`` (width / height) by extending its backdrop (see ``bled``)."""
+    image = image.convert("RGB")
+    target_width = round(image.height * ratio)
+    if target_width >= image.width:
+        return _extend_sideways(image, target_width, first_share=0.5)
+    # Same operation on the photo turned on its side: the top edge
+    # becomes the left one, and all the new space goes there.
+    turned = image.transpose(Image.Transpose.ROTATE_90)
+    target_height = round(image.width / ratio)
+    return _extend_sideways(turned, target_height, first_share=1.0).transpose(Image.Transpose.ROTATE_270)
 
 
 def _mean(image: Image.Image) -> float:

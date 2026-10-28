@@ -31,6 +31,7 @@
 :root {
 {% for name, value in colors.items() %}  --{{ name }}: {{ value }};
 {% endfor %}  --ridge-clip: {{ ridge_clip }};
+  --ridge-clip-wide: {{ ridge_clip_wide }};
 }
 </style>
 <link rel="stylesheet" href="{{ static['site.css'] }}">
@@ -39,10 +40,10 @@
 <body>
 <div class="progress" aria-hidden="true"><span data-progress></span></div>
 
-<main class="book" data-book tabindex="-1" aria-label="{{ lb.meta.title }}">
+<main class="book" aria-label="{{ lb.meta.title }}">
 {% for page in pages %}
-  <section class="page page--{{ page.kind }}{% if page.span == 2 %} page--wide{% endif %}{% if page.spread_start %} is-spread-start{% endif %}"
-           id="{{ page.id }}"{% if not page.filler %} data-page="{{ page.number }}" aria-label="Pagina {{ page.number }}{% if page.title %}: {{ page.title }}{% endif %}"{% else %} aria-hidden="true"{% endif %}>
+  <section class="page page--{{ page.kind }}" id="{{ page.id }}" data-page="{{ page.number }}"
+           aria-label="Pagina {{ page.number }}{% if page.title %}: {{ page.title }}{% endif %}">
     <div class="sheet">
       {{ pages_[page.kind](page) }}
     </div>
@@ -50,7 +51,7 @@
 {% endfor %}
 </main>
 
-<nav class="dock" aria-label="Sfoglia">
+<nav class="dock" aria-label="Pagine">
   <button type="button" class="dock__turn" data-prev aria-label="Pagina precedente"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
   <button type="button" class="dock__count" data-overview-toggle aria-expanded="false" aria-controls="overview">
     <span data-count>1</span><span class="dock__total"> / {{ total }}</span><span class="dock__label">Pagine</span>
@@ -64,7 +65,7 @@
     <button type="button" class="overview__close" data-overview-close>Chiudi</button>
   </div>
   <ol class="overview__grid">
-    {% for page in pages if not page.filler %}
+    {% for page in pages %}
     <li>
       <a class="thumb" href="#{{ page.id }}" data-goto>
         {% if page.thumb %}{{ m.img(pic(page.thumb, widths=(320,), ratio=0.75), "", "(orientation: landscape) 12vw, 30vw") }}

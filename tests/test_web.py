@@ -61,7 +61,7 @@ def test_the_map_places_only_the_stores_inside_its_area() -> None:
     )
     view = retailers_map(retailers)
     assert view is not None
-    assert [d.store.name for d in view.dots] == ["A"]
+    assert [s.name for d in view.dots for s in d.stores] == ["A"]
     assert view.outside == ["Lazio"]
 
 
@@ -134,8 +134,8 @@ def test_the_site_is_built_from_the_content(lookbook: SiteOptions) -> None:
     assert (result.output_dir / "CNAME").read_text().strip() == "lookbook.monpiz.it"
     for name in ("share.jpg", "apple-touch-icon.png", ".nojekyll"):
         assert (result.output_dir / name).is_file()
-    css = next(result.output_dir.glob("site.*.css"))  # versioned: never stale in a browser cache
-    assert f'href="{css.name}"' in html
+    assert (result.output_dir / "site.css").is_file()
+    assert 'href="site.css?v=' in html  # versioned URL: never stale in a browser cache
 
 
 def test_a_rebuild_reuses_the_images_and_drops_the_unused_ones(lookbook: SiteOptions) -> None:
@@ -149,20 +149,32 @@ def test_a_rebuild_reuses_the_images_and_drops_the_unused_ones(lookbook: SiteOpt
     assert after == before
 
 
-def test_full_spreads_always_start_on_a_left_hand_page(lookbook: SiteOptions) -> None:
+def test_pages_are_numbered_in_order(lookbook: SiteOptions) -> None:
     from monpiz_lookbook.content import load_lookbook
     from monpiz_lookbook.web.book import book_pages
     from monpiz_lookbook.web.view import anchors
 
     lb = load_lookbook(lookbook.content_file, lookbook.assets_dir)
     pages = book_pages(lb, anchors(lb))
-    position = 0  # 0: left-hand page, 1: right-hand page
-    for page in pages:
-        if page.span == 2:
-            assert position == 0 and page.spread_start
-            continue
-        assert page.spread_start == (position == 0)
-        position = 1 - position
-    assert position == 0  # the book ends with a complete spread
-    real = [p.number for p in pages if not p.filler]
-    assert real == list(range(1, len(real) + 1))
+    assert [p.number for p in pages] == list(range(1, len(pages) + 1))
+    assert [p.kind for p in pages][:2] == ["cover", "brand"]
+    assert len({p.id for p in pages}) == len(pages)
+
+
+def test_material_swatches_have_the_print_proportions() -> None:
+    from monpiz_lookbook.web.site import material_ratio
+
+    assert material_ratio(4) == pytest.approx(1.92, abs=0.01)
+    assert material_ratio(3) == pytest.approx(2.62, abs=0.01)
+
+
+def test_stores_too_close_to_tell_apart_share_one_point() -> None:
+    stores = [
+        Store(name="A", address="Bolzano", at=(46.50, 11.35)),
+        Store(name="B", address="Bolzano", at=(46.51, 11.36)),
+        Store(name="C", address="Udine", at=(46.06, 13.23)),
+    ]
+    retailers = Retailers(eyebrow="Dove", title="Rivenditori", regions=[Region(region="Nord", stores=stores)])
+    view = retailers_map(retailers)
+    assert view is not None
+    assert sorted(len(d.stores) for d in view.dots) == [1, 2]

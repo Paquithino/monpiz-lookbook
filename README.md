@@ -129,12 +129,11 @@ YAML (es. `colours` invece di `colors`) viene segnalato, non ignorato.
 tablet e computer: una pagina HTML statica in `site/`, senza server né database.
 Il PDF non viene pubblicato: la rivista si consulta, non si scarica.
 
-- **Un libro da sfogliare**: ogni pagina occupa lo schermo e si gira con lo swipe, le
-  frecce in basso, la tastiera o la rotella del mouse, con l'effetto della pagina che
-  ruota sul dorso. Sul telefono si vede una pagina alla volta; sugli schermi orizzontali
-  due pagine affiancate come una rivista aperta (copertina e aperture di sezione
-  occupano la doppia pagina; `web/book.py` inserisce le pagine di raccordo necessarie).
-  Il contatore in basso apre la panoramica di tutte le pagine.
+- **Pagine da scorrere**: la rivista si legge scorrendo verso il basso, come un PDF:
+  ogni pagina (copertina, modello, prodotto, rivenditori…) è un foglio a sé, numerato.
+  Sul telefono i fogli occupano tutta la larghezza; su schermi grandi sono centrati
+  su fondo scuro. Le foto mantengono le loro proporzioni. In basso le frecce passano
+  alla pagina precedente o successiva e il numero apre la panoramica di tutte le pagine.
 - **Pagine**: modello con foto grande e materiali in una riga di piccoli tondi; prodotto
   con foto, specifiche e colori come pastiglie da toccare (mostrano il nome).
   Colori, caratteri e logo sono quelli della stampa.

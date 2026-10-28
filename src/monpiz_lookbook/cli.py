@@ -136,6 +136,10 @@ def _serve(folder: Path) -> None:
 
 
 class _QuietHandler(http.server.SimpleHTTPRequestHandler):
+    def end_headers(self) -> None:
+        self.send_header("Cache-Control", "no-store")  # the preview always shows the last build
+        super().end_headers()
+
     def log_message(self, format: str, *args: object) -> None:
         pass
 

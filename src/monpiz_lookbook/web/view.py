@@ -7,6 +7,7 @@ plain data computed in Python, so the templates only lay it out.
 
 from __future__ import annotations
 
+import math
 import re
 from dataclasses import dataclass, field
 
@@ -57,26 +58,27 @@ def contents(lookbook: Lookbook, ids: Anchors) -> list[Entry]:
 
 # --- cover --------------------------------------------------------------------------------------
 
-RIDGE_DEPTH = 0.26  # share of the banner height taken by the mountain edge
+RIDGE_DEPTH = 0.26  # share of the banner height taken by the mountain edge (phone)
+RIDGE_DEPTH_WIDE = 0.55  # on a computer the banner is wider than tall: deeper peaks keep the same profile
 
 
-def ridge_points() -> list[tuple[float, float]]:
+def ridge_points(depth: float = RIDGE_DEPTH) -> list[tuple[float, float]]:
     """The skyline in a 100 x 100 box: x across the banner, the peaks in its lowest band."""
     high = min(y for _, y in SKYLINE)
     low = max(y for _, y in SKYLINE)
-    return [(x / BOX_WIDTH * 100, 100 - RIDGE_DEPTH * 100 * (low - y) / (low - high)) for x, y in SKYLINE]
+    return [(x / BOX_WIDTH * 100, 100 - depth * 100 * (low - y) / (low - high)) for x, y in SKYLINE]
 
 
-def ridge_clip() -> str:
+def ridge_clip(depth: float = RIDGE_DEPTH) -> str:
     """CSS ``clip-path`` of the cover banner: its lower edge follows the mountains."""
-    points = ridge_points()
+    points = ridge_points(depth)
     edge = ", ".join(f"{x:.2f}% {y:.2f}%" for x, y in reversed(points))
     return f"polygon(0 0, 100% 0, {edge})"
 
 
-def ridge_path() -> str:
+def ridge_path(depth: float = RIDGE_DEPTH) -> str:
     """SVG path of the same edge, in the 100 x 100 viewBox of the ridge line."""
-    points = ridge_points()
+    points = ridge_points(depth)
     return "M" + " L".join(f"{x:.2f} {y:.2f}" for x, y in points)
 
 
@@ -86,15 +88,21 @@ MAP_WIDTH = 600.0
 MAP_HEIGHT = MAP_WIDTH * 304 / 511  # proportions of the printed map
 SKY_BAND = 46.0  # room above the map for the mountain line
 CITY_OFFSET = (7.0, 4.0)
-REGION_DROP = 20.0
-RIGHT_EDGE = 0.85  # share of the map width beyond which a city name goes left of its point
+CLUSTER = 30.0  # map units: closer stores share one point
+DOT_RADIUS = 6.0
+GROUP_RADIUS = 11.0
+CHAR_WIDTH = 8.6  # average width of a city name character at the map's label size
+LABEL_HEIGHT = 16.0
+CITY_REACH = 24.0  # a city name is shown only with a store point this close
 
 
 @dataclass(frozen=True, slots=True)
 class Dot:
+    """A point of the map: one store, or several stores too close to tell apart."""
+
     x: float
     y: float
-    store: Store
+    stores: list[Store]
 
 
 @dataclass(frozen=True, slots=True)
@@ -112,7 +120,6 @@ class MapView:
     skyline: str
     dots: list[Dot]
     cities: list[Label]
-    regions: list[Label]
     outside: list[str]  # regions with stores outside the drawn area
 
 
@@ -133,29 +140,84 @@ def retailers_map(retailers: Retailers) -> MapView | None:
             SKY_BAND + (area.north - lat) / (area.north - area.south) * MAP_HEIGHT,
         )
 
-    dots, regions, outside = [], [], []
+    singles: list[Dot] = []
+    outside: list[str] = []
     for region in retailers.regions:
-        placed = [Dot(*point(s.at), s) for s in region.stores if s.at is not None and _inside(area, s)]
+        placed = [Dot(*point(s.at), [s]) for s in region.stores if s.at is not None and _inside(area, s)]
         if len(placed) < len(region.stores):
             outside.append(region.region)
         if not placed:
             continue
-        dots.extend(placed)
-        cx = sum(d.x for d in placed) / len(placed)
-        regions.append(Label(cx, max(d.y for d in placed) + REGION_DROP, region.region))
-    if not dots:
+        singles.extend(placed)
+    if not singles:
         return None
-    cities = [_city(c.name, *point(c.at)) for c in area.labels]
+    dots = _clusters(singles)
+    # Only the names of places with a store nearby: a name alone reads as a missing store.
+    cities: list[Label] = []
+    taken: list[Box] = [_dot_box(d) for d in dots]
+    for c in area.labels:
+        x, y = point(c.at)
+        if any(math.dist((x, y), (d.x, d.y)) <= CITY_REACH for d in dots):
+            label = _place_city(c.name, x, y, taken)
+            if label is not None:
+                cities.append(label)
     sky = place(SKYLINE, -8.0, 4.0, (MAP_WIDTH + 16) / BOX_WIDTH, 0.09)
     skyline = "M" + " L".join(f"{x:.1f} {y:.1f}" for x, y in sky)
-    return MapView(MAP_WIDTH, SKY_BAND + MAP_HEIGHT + 30, skyline, dots, cities, regions, outside)
+    return MapView(MAP_WIDTH, SKY_BAND + MAP_HEIGHT + 30, skyline, dots, cities, outside)
 
 
-def _city(name: str, x: float, y: float) -> Label:
-    """City names sit right of their point, or left of it near the right edge of the map."""
-    if x > MAP_WIDTH * RIGHT_EDGE:
-        return Label(x - CITY_OFFSET[0], y + CITY_OFFSET[1], name, "end")
-    return Label(x + CITY_OFFSET[0], y + CITY_OFFSET[1], name)
+def _clusters(dots: list[Dot]) -> list[Dot]:
+    """Merge points closer than ``CLUSTER`` into one, placed at their centre (shown with a count)."""
+    groups: list[list[Dot]] = []
+    for dot in dots:
+        for group in groups:
+            cx = sum(d.x for d in group) / len(group)
+            cy = sum(d.y for d in group) / len(group)
+            if math.dist((dot.x, dot.y), (cx, cy)) < CLUSTER:
+                group.append(dot)
+                break
+        else:
+            groups.append([dot])
+    return [
+        Dot(
+            sum(d.x for d in group) / len(group),
+            sum(d.y for d in group) / len(group),
+            [store for d in group for store in d.stores],
+        )
+        for group in groups
+    ]
+
+
+Box = tuple[float, float, float, float]  # left, top, right, bottom in map units
+
+
+def _dot_box(dot: Dot) -> Box:
+    r = DOT_RADIUS if len(dot.stores) == 1 else GROUP_RADIUS
+    return (dot.x - r, dot.y - r, dot.x + r, dot.y + r)
+
+
+def _place_city(name: str, x: float, y: float, taken: list[Box]) -> Label | None:
+    """The first free spot around the point (right, left, above, below), or None when all overlap."""
+    width, height = len(name) * CHAR_WIDTH, LABEL_HEIGHT
+    gap = CITY_OFFSET[0]
+    half = height / 2
+    w2 = width / 2
+    spots = [
+        (Label(x + gap, y + height / 3, name), (x + gap, y - half, x + gap + width, y + half)),
+        (Label(x - gap, y + height / 3, name, "end"), (x - gap - width, y - half, x - gap, y + half)),
+        (Label(x, y - gap - 2, name, "middle"), (x - w2, y - gap - height, x + w2, y - gap)),
+        (Label(x, y + gap + height, name, "middle"), (x - w2, y + gap, x + w2, y + gap + height)),
+    ]
+    for label, box in spots:
+        inside = box[0] >= 0 and box[2] <= MAP_WIDTH
+        if inside and not any(_overlap(box, other) for other in taken):
+            taken.append(box)
+            return label
+    return None
+
+
+def _overlap(a: Box, b: Box) -> bool:
+    return a[0] < b[2] and b[0] < a[2] and a[1] < b[3] and b[1] < a[3]
 
 
 # --- contacts -----------------------------------------------------------------------------------

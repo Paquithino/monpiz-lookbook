@@ -2,7 +2,10 @@
 {% import "macros.j2" as m with context %}
 
 {% macro folio(page) -%}
-<header class="folio"><span>{{ page.section }}</span><span>{{ page.number }}</span></header>
+<header class="folio">
+  <span class="folio__head">{{ page.section }}{% if page.kind != "contents" %}<a class="folio__index" href="#indice" data-goto>Indice</a>{% endif %}</span>
+  <span>{{ page.number }}</span>
+</header>
 {%- endmacro %}
 
 {% macro cover(page) -%}
@@ -11,17 +14,18 @@
 <div class="cover__top">
   <div class="cover__banner">{{ m.img(pic(c.banner), "", "100vw", eager=True) }}</div>
   <svg class="cover__ridge" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-    <path d="{{ ridge_path }}" vector-effect="non-scaling-stroke"/>
+    <path class="ridge--phone" d="{{ ridge_path }}" vector-effect="non-scaling-stroke"/>
+    <path class="ridge--wide" d="{{ ridge_path_wide }}" vector-effect="non-scaling-stroke"/>
   </svg>
 </div>
 {% endif %}
 <div class="cover__body">
-  <h1 class="cover__logo">{{ m.img(logo, lb.meta.author, "(orientation: landscape) 22vw, 46vw", eager=True) }}</h1>
+  <h1 class="cover__logo">{{ m.img(logo, lb.meta.author, "(min-width: 960px) 260px, 46vw", eager=True) }}</h1>
   <p class="cover__tagline">{{ c.tagline }}</p>
-  <div class="cover__boots">{{ m.img(boots, "", "(orientation: landscape) 40vw, 80vw", eager=True) }}</div>
+  <div class="cover__boots">{{ m.img(boots, "", "(min-width: 960px) 600px, 80vw", eager=True) }}</div>
   <p class="cover__claim">{{ c.claim }}</p>
   {% if c.highlights %}<ul class="cover__highlights">{% for h in c.highlights %}<li>{{ h }}</li>{% endfor %}</ul>{% endif %}
-  <p class="cover__hint" aria-hidden="true"><span class="hint--touch">Scorri per sfogliare</span><span class="hint--keys">Sfoglia con le frecce o con la rotella</span></p>
+  <a class="cover__hint" href="#marchio" data-goto>Scorri per sfogliare</a>
 </div>
 {%- endmacro %}
 
@@ -32,7 +36,7 @@
   <h2 class="title">{{ b.title }}</h2>
   {% for paragraph in b.paragraphs %}<p class="lead">{{ paragraph }}</p>{% endfor %}
 </div>
-<figure class="fill">{{ m.img(pic(b.banner.path, focus=(0.5, b.banner.focus_y)), "", "(orientation: landscape) 50vw, 100vw", style="object-position: 50%% %d%%" % (b.banner.focus_y * 100)) }}</figure>
+<figure class="wide">{{ m.img(pic(b.banner.path), "", "(min-width: 960px) 920px, 100vw") }}</figure>
 {%- endmacro %}
 
 {% macro details(page) -%}
@@ -42,7 +46,7 @@
 <ul class="details">
   {% for d in b.details %}
   <li>
-    {{ m.img(pic(d.image, widths=SMALL, ratio=1.0), "", "(orientation: landscape) 14vw, 30vw") }}
+    {{ m.img(pic(d.image, widths=SMALL, ratio=1.0), "", "(min-width: 960px) 200px, 40vw") }}
     <h3>{{ d.name }}</h3>
     <p>{{ d.description }}</p>
   </li>
@@ -66,12 +70,12 @@
 {%- endmacro %}
 
 {% macro photo(page) -%}
-<figure class="bleed">{{ m.img(pic(page.data.photo), "", "(orientation: landscape) 50vw, 100vw") }}</figure>
+<figure class="wide wide--photo">{{ m.img(pic(page.data.photo), "", "(min-width: 960px) 920px, 100vw") }}</figure>
 {%- endmacro %}
 
 {% macro opener(page) -%}
 {% set s = page.data.section %}
-{% if s.photo %}<figure class="bleed">{{ m.img(pic(s.photo), "", "100vw") }}</figure>{% endif %}
+{% if s.photo %}<figure class="bleed">{{ m.img(pic(s.photo), "", "(min-width: 960px) 920px, 100vw") }}</figure>{% endif %}
 <div class="opener__text">
   <p class="opener__number">{{ "%02d" % page.data.number }}<span>{{ s.eyebrow }}</span></p>
   <h2 class="opener__name">{{ s.name }}</h2>
@@ -83,8 +87,8 @@
 {% macro model(page) -%}
 {% set mo = page.data.model %}
 {{ folio(page) }}
-<figure class="fill model__hero">
-  {% if mo.image %}{{ m.img(pic(mo.image), mo.name, "(orientation: landscape) 50vw, 100vw") }}{% else %}{{ m.placeholder() }}{% endif %}
+<figure class="wide model__hero">
+  {% if mo.image %}{{ m.img(pic(mo.image), mo.name, "(min-width: 960px) 920px, 100vw") }}{% else %}{{ m.placeholder() }}{% endif %}
 </figure>
 <div class="model__text">
   <p class="kicker">{{ page.data.section.name }}, modello {{ page.data.index }} di {{ page.data.count }}</p>
@@ -92,10 +96,11 @@
   <p class="body">{{ mo.description }}</p>
   {% if mo.specs %}<dl class="specs specs--inline">{% for s in mo.specs %}<div><dt>{{ s.label }}</dt><dd>{{ s.value }}</dd></div>{% endfor %}</dl>{% endif %}
   {% if mo.materials %}
-  <ol class="materials" aria-label="Materiali">
+  {% set ratio = material_ratio(mo.materials|length) %}
+  <ol class="materials" aria-label="Materiali" style="--count: {{ mo.materials|length }}; --ratio: {{ '%.3f' % ratio }}">
     {% for mat in mo.materials %}
     <li>
-      {% if mat.image %}{{ m.img(pic(mat.image, widths=SMALL, ratio=1.0), "", "(orientation: landscape) 8vw, 20vw") }}
+      {% if mat.image %}{{ m.img(pic(mat.image, widths=SMALL, ratio=ratio), "", "(min-width: 960px) 210px, 26vw") }}
       {% else %}<span class="materials__empty" aria-hidden="true"></span>{% endif %}
       <span class="materials__name">{{ mat.name }}</span>
     </li>
@@ -107,7 +112,7 @@
 
 {% macro feature(page) -%}
 {% set f = page.data.feature %}
-<figure class="bleed">{{ m.img(pic(f.image), "", "(orientation: landscape) 50vw, 100vw", style="object-position: %d%% %d%%" % (f.focus_x * 100, f.focus_y * 100)) }}</figure>
+<figure class="bleed">{{ m.img(pic(f.image), "", "(min-width: 960px) 920px, 100vw", style="object-position: %d%% %d%%" % (f.focus_x * 100, f.focus_y * 100)) }}</figure>
 <div class="feature__text">
   <p class="feature__label">{{ f.label }}</p>
   <h3 class="feature__title">{{ f.title }}</h3>
@@ -119,16 +124,16 @@
 {% set p = page.data.product %}
 {% set mo = page.data.model %}
 {{ folio(page) }}
-<div class="fill shots shots--{{ p.variants|length }}">
+<div class="wide shots shots--{{ p.variants|length }}">
   {% for v in p.variants %}
   <figure class="shot">
-    {{ m.studio(v.image, p.name ~ ", " ~ v.color, "(orientation: landscape) 50vw, 100vw") }}
+    {{ m.studio(v.image, p.name ~ ", " ~ v.color, "100vw") }}
     <figcaption>{{ v.color }}</figcaption>
   </figure>
   {% endfor %}
   {% if p.closeup %}
   <figure class="closeup">
-    {{ m.img(pic(p.closeup.image, widths=SMALL, ratio=1.0), p.closeup.label, "(orientation: landscape) 12vw, 30vw") }}
+    {{ m.img(pic(p.closeup.image, widths=SMALL, ratio=1.0), p.closeup.label, "(min-width: 960px) 240px, 30vw") }}
     <figcaption>{{ p.closeup.label }}</figcaption>
   </figure>
   {% endif %}
@@ -166,17 +171,22 @@
 <h2 class="title">{{ r.title }}</h2>
 {% if r.intro %}<p class="body">{{ r.intro }}</p>{% endif %}
 {% if map %}
-<figure class="fill map">
+<figure class="map">
   <svg viewBox="0 0 {{ map.width }} {{ map.height }}" role="img" aria-label="Mappa dei rivenditori" preserveAspectRatio="xMidYMid meet">
     <path class="map__sky" d="{{ map.skyline }}"/>
-    {% for label in map.regions %}<text class="map__region" x="{{ '%.1f' % label.x }}" y="{{ '%.1f' % label.y }}">{{ label.text }}</text>{% endfor %}
-    {% for d in map.dots %}<a href="{{ d.store.link }}" target="_blank" rel="noopener" aria-label="{{ d.store.name }}, {{ d.store.town }}"><circle cx="{{ '%.1f' % d.x }}" cy="{{ '%.1f' % d.y }}" r="5"/></a>{% endfor %}
+    {% for d in map.dots %}
+    {% if d.stores|length == 1 %}{% set s = d.stores[0] %}
+    <a class="map__dot" href="{{ s.link }}" target="_blank" rel="noopener" aria-label="{{ s.name }}, {{ s.town }}"><title>{{ s.name }}, {{ s.town }}</title><circle cx="{{ '%.1f' % d.x }}" cy="{{ '%.1f' % d.y }}"/></a>
+    {% else %}
+    <a class="map__dot map__dot--group" href="#{{ store_id(d.stores[0]) }}" data-goto aria-label="{{ d.stores|length }} negozi: {{ d.stores|map(attribute='name')|join(', ') }}"><title>{{ d.stores|map(attribute='name')|join(', ') }}</title><circle cx="{{ '%.1f' % d.x }}" cy="{{ '%.1f' % d.y }}"/><text x="{{ '%.1f' % d.x }}" y="{{ '%.1f' % d.y }}">{{ d.stores|length }}</text></a>
+    {% endif %}
+    {% endfor %}
     {% for label in map.cities %}<text class="map__city" x="{{ '%.1f' % label.x }}" y="{{ '%.1f' % label.y }}" text-anchor="{{ label.anchor }}">{{ label.text }}</text>{% endfor %}
   </svg>
   {% if map.outside %}<figcaption>Anche in: {{ map.outside | join(", ") }}</figcaption>{% endif %}
 </figure>
 {% endif %}
-<p class="map__hint">Tocca un punto per aprire il negozio. L'elenco completo è nelle pagine successive.</p>
+<p class="map__hint">Tocca un punto per aprire il negozio; i numeri raccolgono i negozi vicini. L'elenco completo è qui sotto.</p>
 {%- endmacro %}
 
 {% macro retailers_list(page) -%}
@@ -186,7 +196,7 @@
   <h3 class="region__name">{{ chunk.region.region }}{% if chunk.continued %} <span>(segue)</span>{% endif %}</h3>
   <ul>
     {% for s in chunk.stores %}
-    <li class="store">
+    <li class="store" id="{{ store_id(s) }}">
       <a class="store__name" href="{{ s.link }}" target="_blank" rel="noopener">{{ s.name }}</a>
       <span class="store__town">{{ s.town }}</span>
       <span class="store__links">
@@ -213,11 +223,5 @@
     {% endfor %}
   </div>
   <p class="closing__legal">© {{ year }} {{ lb.meta.author }}</p>
-</div>
-{%- endmacro %}
-
-{% macro filler(page) -%}
-<div class="filler">
-  <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d="{{ ridge_path }}" vector-effect="non-scaling-stroke"/></svg>
 </div>
 {%- endmacro %}
