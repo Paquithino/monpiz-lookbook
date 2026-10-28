@@ -1,0 +1,308 @@
+{% import "macros.j2" as m with context %}
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>{{ lb.meta.title }}</title>
+<meta name="description" content="{{ lb.cover.claim }}">
+<meta name="theme-color" content="{{ colors.paper }}">
+{% if lb.web.url %}<link rel="canonical" href="{{ lb.web.url }}">{% endif %}
+<meta property="og:type" content="website">
+<meta property="og:locale" content="it_IT">
+<meta property="og:title" content="{{ lb.meta.title }}">
+<meta property="og:description" content="{{ lb.cover.claim }}">
+<meta property="og:image" content="{{ share }}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+{% if lb.web.url %}<meta property="og:url" content="{{ lb.web.url }}">{% endif %}
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="{{ icons['favicon-32.png'] }}" sizes="32x32">
+<link rel="icon" href="{{ icons['icon-192.png'] }}" sizes="192x192">
+<link rel="apple-touch-icon" href="{{ icons['apple-touch-icon.png'] }}">
+{% for f in fonts %}
+<link rel="preload" href="{{ f.url }}" as="font" type="font/{{ f.format }}" crossorigin>
+{% endfor %}
+<style>
+{% for f in fonts %}
+@font-face { font-family: "{{ f.family }}"; src: url("{{ f.url }}") format("{{ f.format }}"); font-display: swap; }
+{% endfor %}
+:root {
+{% for name, value in colors.items() %}  --{{ name }}: {{ value }};
+{% endfor %}}
+.cover__banner { clip-path: {{ ridge_clip }}; }
+</style>
+<link rel="stylesheet" href="site.css">
+<script src="site.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#indice">Vai all'indice</a>
+
+<header class="bar" data-bar>
+  <a class="bar__logo" href="#top" aria-label="{{ lb.meta.author }}, torna alla copertina">{{ m.img(logo, lb.meta.author, "120px", eager=True) }}</a>
+  <button class="bar__menu" type="button" aria-expanded="false" aria-controls="menu" data-menu-toggle>Indice</button>
+</header>
+
+<nav class="menu" id="menu" aria-label="Indice" hidden data-menu>
+  <ol class="menu__list">
+    {% for entry in menu %}
+    <li>
+      <a class="menu__entry" href="#{{ entry.anchor }}">{{ entry.title }}</a>
+      {% if entry.children %}
+      <ol class="menu__children">
+        {% for child in entry.children %}<li><a href="#{{ child.anchor }}">{{ child.title }}</a></li>{% endfor %}
+      </ol>
+      {% endif %}
+    </li>
+    {% endfor %}
+  </ol>
+</nav>
+
+<main>
+
+{# ------------------------------------------------------------------ cover #}
+{% set cover = lb.cover %}
+<section class="cover" id="top" data-cover>
+  {% if cover.banner %}
+  <div class="cover__top">
+    <div class="cover__banner">{{ m.img(pic(cover.banner), "", "100vw", eager=True) }}</div>
+    <svg class="cover__ridge" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+      <path d="{{ ridge_path }}" vector-effect="non-scaling-stroke"/>
+    </svg>
+  </div>
+  {% endif %}
+  <div class="cover__body">
+    <h1 class="cover__logo">{{ m.img(logo, lb.meta.author, "(min-width: 900px) 260px, 46vw", eager=True) }}</h1>
+    <p class="cover__tagline">{{ cover.tagline }}</p>
+    {{ m.img(boots, "", "(min-width: 900px) 560px, 92vw", cls="cover__boots", eager=True) }}
+    <p class="cover__claim">{{ cover.claim }}</p>
+    {% if cover.highlights %}
+    <ul class="cover__highlights">{% for h in cover.highlights %}<li>{{ h }}</li>{% endfor %}</ul>
+    {% endif %}
+    <a class="cover__open" href="#marchio">Sfoglia il lookbook</a>
+  </div>
+</section>
+
+{# ------------------------------------------------------------------ brand #}
+{% set brand = lb.brand %}
+<section class="brand" id="marchio">
+  <div class="brand__text">
+    <p class="kicker">{{ brand.eyebrow }}</p>
+    <h2 class="title">{{ brand.title }}</h2>
+    {% for paragraph in brand.paragraphs %}<p class="lead">{{ paragraph }}</p>{% endfor %}
+  </div>
+  <figure class="brand__banner">
+    {{ m.img(pic(brand.banner.path, ratio=16/9, focus=(0.5, brand.banner.focus_y)), "", "100vw") }}
+  </figure>
+  <div class="brand__details">
+    <h3 class="subtitle">{{ brand.details_title }}</h3>
+    <ul class="details">
+      {% for d in brand.details %}
+      <li class="detail">
+        {{ m.img(pic(d.image, widths=SMALL, ratio=1.0), "", "(min-width: 900px) 18vw, 40vw") }}
+        <h4>{{ d.name }}</h4>
+        <p>{{ d.description }}</p>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+
+{# ------------------------------------------------------------------ contents #}
+<section class="contents" id="indice">
+  {% if lb.index and lb.index.photo %}
+  <figure class="contents__photo">{{ m.img(pic(lb.index.photo, ratio=4/5), "", "(min-width: 900px) 40vw, 100vw") }}</figure>
+  {% endif %}
+  <div class="contents__body">
+    <h2 class="title">{{ lb.index.title if lb.index else "Indice" }}</h2>
+    <ol class="contents__list">
+      {% for s in lb.sections %}
+      <li>
+        <a class="contents__section" href="#{{ ids.sections[loop.index0] }}"><span>{{ "%02d" % loop.index }}</span>{{ s.name }}</a>
+        <ol>
+          {% set si = loop.index0 %}
+          {% for model in s.models %}<li><a href="#{{ ids.models[(si, loop.index0)] }}">{{ model.name }}</a></li>{% endfor %}
+        </ol>
+      </li>
+      {% endfor %}
+      {% if lb.retailers %}<li><a class="contents__section" href="#rivenditori"><span>{{ "%02d" % (lb.sections|length + 1) }}</span>{{ lb.retailers.eyebrow }}</a></li>{% endif %}
+    </ol>
+  </div>
+</section>
+
+{# ------------------------------------------------------------------ sections #}
+{% for section in lb.sections %}
+{% set si = loop.index0 %}
+<section class="opener" id="{{ ids.sections[si] }}" {% if not section.photo %}data-plain{% endif %}>
+  {% if section.photo %}{{ m.img(pic(section.photo), "", "100vw", cls="opener__photo") }}{% endif %}
+  <div class="opener__text">
+    <p class="opener__number">{{ "%02d" % loop.index }}<span>{{ section.eyebrow }}</span></p>
+    <h2 class="opener__name">{{ section.name }}</h2>
+    {% if section.intro %}<p class="opener__intro">{{ section.intro }}</p>{% endif %}
+    <p class="opener__count">{{ models_label(section.models|length) }}</p>
+  </div>
+</section>
+
+{% for model in section.models %}
+{% set mi = loop.index0 %}
+<article class="model" id="{{ ids.models[(si, mi)] }}">
+  <figure class="model__hero">
+    {% if model.image %}{{ m.img(pic(model.image, ratio=5/4), model.name, "(min-width: 900px) 58vw, 100vw") }}
+    {% else %}{{ m.placeholder() }}{% endif %}
+  </figure>
+  <div class="model__text">
+    <p class="kicker">{{ section.name }}, modello {{ loop.index }} di {{ loop.length }}</p>
+    <h2 class="model__name">{{ model.name }}</h2>
+    <p class="body">{{ model.description }}</p>
+    {% if model.specs %}
+    <dl class="specs">{% for s in model.specs %}<div><dt>{{ s.label }}</dt><dd>{{ s.value }}</dd></div>{% endfor %}</dl>
+    {% endif %}
+    {% if model.materials %}
+    <h3 class="subtitle">Materiali</h3>
+    <ol class="materials">
+      {% for mat in model.materials %}
+      <li>
+        {% if mat.image %}{{ m.img(pic(mat.image, widths=SMALL + (800,), ratio=1.9), "", "(min-width: 900px) 18vw, 45vw") }}
+        {% else %}<div class="materials__empty" aria-hidden="true"></div>{% endif %}
+        <span>{{ mat.name }}</span>
+      </li>
+      {% endfor %}
+    </ol>
+    {% endif %}
+  </div>
+</article>
+
+{% if model.feature %}
+{% set f = model.feature %}
+<figure class="feature">
+  {{ m.img(pic(f.image, focus=(f.focus_x, f.focus_y)), "", "100vw", style="object-position: %d%% %d%%" % (f.focus_x * 100, f.focus_y * 100)) }}
+  <figcaption>
+    <p class="feature__label">{{ f.label }}</p>
+    <h3 class="feature__title">{{ f.title }}</h3>
+    {% if f.text %}<p class="feature__text">{{ f.text }}</p>{% endif %}
+  </figcaption>
+</figure>
+{% endif %}
+
+{% for product in model.products %}
+{% set pid = ids.products[(si, mi, loop.index0)] %}
+{% set slides = product.variants | list %}
+<article class="product" id="{{ pid }}">
+  <div class="product__photos">
+    {% if slides|length == 1 and not product.closeup %}
+      <figure class="product__single">
+        {{ m.studio(product.master.image, product.name ~ ", " ~ product.master.color, "(min-width: 900px) 58vw, 100vw") }}
+        <figcaption>{{ product.master.color }}</figcaption>
+      </figure>
+    {% else %}
+    <div class="carousel" data-carousel>
+      <div class="carousel__track" tabindex="0" aria-label="Foto di {{ product.name }}">
+        {% for v in slides %}
+        <figure class="carousel__slide">
+          {{ m.studio(v.image, product.name ~ ", " ~ v.color, "(min-width: 900px) 58vw, 100vw") }}
+          <figcaption>{{ v.color }}</figcaption>
+        </figure>
+        {% endfor %}
+        {% if product.closeup %}
+        <figure class="carousel__slide">
+          <div class="closeup">{{ m.img(pic(product.closeup.image, ratio=4/3), product.closeup.label, "(min-width: 900px) 58vw, 100vw") }}</div>
+          <figcaption>{{ product.closeup.label }}</figcaption>
+        </figure>
+        {% endif %}
+      </div>
+      <div class="carousel__dots" aria-hidden="true">{% for _ in range(slides|length + (1 if product.closeup else 0)) %}<span></span>{% endfor %}</div>
+    </div>
+    {% endif %}
+  </div>
+  <div class="product__text">
+    <p class="kicker">{{ model.name }}</p>
+    <h3 class="product__name">{{ short_name(product.name, model.name) }}</h3>
+    <p class="body">{{ product.description }}</p>
+    <dl class="specs">
+      {% for s in product.specs %}<div><dt>{{ s.label }}</dt><dd>{{ s.value }}</dd></div>{% endfor %}
+      {% if product.sizes %}<div><dt>Taglie</dt><dd>{{ product.sizes }}</dd></div>{% endif %}
+      {% if product.colors %}<div><dt>Colori</dt><dd>{{ product.colors|length }}</dd></div>{% endif %}
+    </dl>
+    {% if product.colors %}
+    <ul class="swatches" aria-label="Colori disponibili">
+      {% for c in product.colors %}
+      <li {% if c.name|trim|lower == product.master.color|trim|lower %}class="is-shown" aria-current="true"{% endif %}>
+        {{ m.swatch(c.image, c.name) }}
+      </li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+  </div>
+</article>
+{% endfor %}
+{% endfor %}
+{% endfor %}
+
+{# ------------------------------------------------------------------ retailers #}
+{% if lb.retailers %}
+{% set r = lb.retailers %}
+<section class="retailers" id="rivenditori">
+  <p class="kicker">{{ r.eyebrow }}</p>
+  <h2 class="title">{{ r.title }}</h2>
+  {% if r.intro %}<p class="lead">{{ r.intro }}</p>{% endif %}
+  {% if map %}
+  <figure class="map">
+    <svg viewBox="0 0 {{ map.width }} {{ map.height }}" role="img" aria-label="Mappa dei rivenditori">
+      <path class="map__sky" d="{{ map.skyline }}"/>
+      {% for label in map.regions %}<text class="map__region" x="{{ '%.1f' % label.x }}" y="{{ '%.1f' % label.y }}">{{ label.text }}</text>{% endfor %}
+      {% for d in map.dots %}
+      <a href="#{{ store_id(d.store) }}" aria-label="{{ d.store.name }}, {{ d.store.town }}"><circle cx="{{ '%.1f' % d.x }}" cy="{{ '%.1f' % d.y }}" r="5"/></a>
+      {% endfor %}
+      {% for label in map.cities %}<text class="map__city" x="{{ '%.1f' % label.x }}" y="{{ '%.1f' % label.y }}" text-anchor="{{ label.anchor }}">{{ label.text }}</text>{% endfor %}
+    </svg>
+    {% if map.outside %}<figcaption>Anche in: {{ map.outside | join(", ") }}</figcaption>{% endif %}
+  </figure>
+  {% endif %}
+  <div class="regions">
+    {% for region in r.regions %}
+    <section class="region">
+      <h3 class="region__name">{{ region.region }}</h3>
+      <ul>
+        {% for s in region.stores %}
+        <li class="store" id="{{ store_id(s) }}">
+          <a class="store__name" href="{{ s.link }}" target="_blank" rel="noopener">{{ s.name }}</a>
+          <span class="store__town">{{ s.town }}</span>
+          <span class="store__links">
+            {% if s.shop %}<a href="{{ s.shop }}" target="_blank" rel="noopener">Shop online</a>{% endif %}
+            <a href="{{ s.maps_url }}" target="_blank" rel="noopener">Mappa</a>
+            {% if s.phone %}<a href="{{ phone_href(s.phone) }}">{{ s.phone }}</a>{% endif %}
+          </span>
+        </li>
+        {% endfor %}
+      </ul>
+    </section>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+{# ------------------------------------------------------------------ closing #}
+{% if lb.closing %}
+{% set c = lb.closing %}
+<section class="closing" id="contatti">
+  {% if c.photo %}<figure class="closing__photo">{{ m.img(pic(c.photo), "", "100vw") }}</figure>{% endif %}
+  <div class="closing__body">
+    {{ m.img(logo, lb.meta.author, "200px", cls="closing__logo") }}
+    <h2 class="closing__title">{{ c.title }}</h2>
+    <p class="body">{{ c.text }}</p>
+    {% for row in c.contacts %}
+    <p class="closing__contacts">
+      {% for item in row %}{% set k = contact(item) %}{% if k.href %}<a href="{{ k.href }}"{% if k.href.startswith("http") %} target="_blank" rel="noopener"{% endif %}>{{ k.text }}</a>{% else %}<span>{{ k.text }}</span>{% endif %}{% endfor %}
+    </p>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+</main>
+
+<footer class="footer">
+  <p>© {{ year }} {{ lb.meta.author }}. {{ lb.meta.subject }}.</p>
+</footer>
+</body>
+</html>

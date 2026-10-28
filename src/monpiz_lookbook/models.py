@@ -245,6 +245,13 @@ class Closing(_Model):
     photo: Path | None = None  # back cover photo; a plain olive page without it
 
 
+class Web(_Model):
+    """Settings of the digital edition (``monpiz-lookbook web``)."""
+
+    url: Text | None = None  # public address, e.g. https://lookbook.monpiz.it
+    share_image: Path | None = None  # preview image for Instagram/WhatsApp; the cover banner by default
+
+
 class Lookbook(_Model):
     meta: Meta
     identity: Identity
@@ -254,6 +261,7 @@ class Lookbook(_Model):
     sections: list[Section] = Field(min_length=1)
     retailers: Retailers | None = None
     closing: Closing | None = None
+    web: Web = Field(default_factory=Web)
 
     def asset_paths(self) -> Iterator[Path]:
         """Yield every asset referenced by the content (relative paths)."""
@@ -268,6 +276,8 @@ class Lookbook(_Model):
             yield self.index.photo
         if self.closing is not None and self.closing.photo is not None:
             yield self.closing.photo
+        if self.web.share_image is not None:
+            yield self.web.share_image
         for section in self.sections:
             if section.photo is not None:
                 yield section.photo

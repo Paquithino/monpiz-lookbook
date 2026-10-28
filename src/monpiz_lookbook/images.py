@@ -86,16 +86,8 @@ class ImageLibrary:
                 round(right * image.width),
                 round(bottom * image.height),
             )
-            photo = self._resample(image.crop(box), width_pt, height_pt).convert("RGB")
-        scale = 255 / white_point
-        photo = photo.point(lambda v: min(255, round(v * scale)))
-        band = max(1, round(min(photo.size) * feather))
-        mask = ImageChops.multiply(
-            _edge_ramp(photo.width, band).resize(photo.size),
-            _edge_ramp(photo.height, band).transpose(Image.Transpose.ROTATE_90).resize(photo.size),
-        )
-        white = Image.new("RGB", photo.size, (255, 255, 255))
-        return self._encode(Image.composite(photo, white, mask))
+            photo = self._resample(image.crop(box), width_pt, height_pt)
+        return self._encode(whitened(photo, white_point=white_point, feather=feather))
 
     def cropped(
         self, path: Path, width_pt: float, height_pt: float, focus_y: float = 0.5, focus_x: float = 0.5
@@ -257,6 +249,20 @@ class ImageLibrary:
             image.convert("RGB").save(buffer, format="JPEG", quality=self._jpeg_quality, optimize=True)
         buffer.seek(0)
         return ImageReader(buffer)
+
+
+def whitened(photo: Image.Image, *, white_point: int = 238, feather: float = 0.12) -> Image.Image:
+    """A studio shot whose backdrop becomes pure white, borders feathered to white (see ``on_white``)."""
+    photo = photo.convert("RGB")
+    scale = 255 / white_point
+    photo = photo.point(lambda v: min(255, round(v * scale)))
+    band = max(1, round(min(photo.size) * feather))
+    mask = ImageChops.multiply(
+        _edge_ramp(photo.width, band).resize(photo.size),
+        _edge_ramp(photo.height, band).transpose(Image.Transpose.ROTATE_90).resize(photo.size),
+    )
+    white = Image.new("RGB", photo.size, (255, 255, 255))
+    return Image.composite(photo, white, mask)
 
 
 def _mean(image: Image.Image) -> float:

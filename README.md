@@ -11,6 +11,8 @@ monpiz-lookbook build --crop-marks         # come sopra, con i segni di taglio
 monpiz-lookbook build --no-bleed --dpi 150 -o dist/MonPiz-Lookbook-web.pdf   # versione per email/online
 monpiz-lookbook check                      # valida contenuti e immagini senza generare
 monpiz-lookbook watch                      # anteprima live: rigenera a ogni salvataggio (150 dpi)
+monpiz-lookbook web                        # rivista digitale in site/ (sito statico)
+monpiz-lookbook web --watch                # anteprima su http://localhost:8000, rigenerata a ogni modifica
 ```
 
 ### Anteprima live
@@ -41,6 +43,7 @@ src/monpiz_lookbook/
   images.py            ricampionamento al DPI di uscita, ritaglio, tinta delle maschere
   pages/               una classe per tipo di pagina
   builder.py           sequenza delle pagine, numerazione, scrittura del PDF
+  web/                 rivista digitale: template HTML, CSS, immagini responsive, font web
   cli.py               comandi build e check
 scripts/
   instance_fonts.py    rigenera i TTF statici dai variable font di Google Fonts
@@ -119,6 +122,35 @@ closing:
 Se un contenuto non entra nella pagina la build si ferma con un errore esplicito,
 invece di tagliare il testo in silenzio. Un errore di battitura in una chiave
 YAML (es. `colours` invece di `colors`) viene segnalato, non ignorato.
+
+## Rivista digitale
+
+`monpiz-lookbook web` genera dagli stessi YAML una rivista da sfogliare su telefono,
+tablet e computer: una pagina HTML statica in `site/`, senza server né database.
+Il PDF non viene pubblicato: la rivista si consulta, non si scarica.
+
+- **Impaginazione**: sul telefono si scorre in verticale, con aperture e foto a tutto
+  schermo; da 900 px in su ogni modello e prodotto diventa una doppia pagina (foto
+  fissa a sinistra, testo a destra). Colori, caratteri e logo sono quelli della stampa.
+- **Immagini**: ogni foto è pubblicata in WebP a più larghezze (480–1800 px); il
+  browser scarica solo quella adatta allo schermo. I file hanno nel nome un'impronta
+  del contenuto: una foto cambiata non resta mai vecchia nella cache del browser.
+  La prima build ridimensiona tutto (circa un minuto e mezzo), le successive
+  rigenerano solo ciò che è cambiato.
+- **Rivenditori**: mappa con i punti toccabili; il nome del negozio apre lo shop online
+  se c'è, altrimenti Google Maps; il telefono si chiama con un tocco.
+- **Condivisione**: titolo, descrizione e immagine di anteprima (`share.jpg`) per
+  Instagram e WhatsApp; icone per la schermata Home.
+
+### Pubblicazione su GitHub Pages
+
+1. Su GitHub: *Settings → Pages → Source: GitHub Actions* (una volta sola).
+2. A ogni push il workflow `.github/workflows/rivista.yml` rigenera e pubblica il sito
+   su `https://<utente>.github.io/monpiz-lookbook/`.
+3. Dominio: su Aruba (DNS di monpiz.it) aggiungere un record **CNAME** `lookbook` →
+   `<utente>.github.io`; poi in `lookbook.yaml` attivare
+   `web: {url: https://lookbook.monpiz.it}` e, su GitHub, in *Settings → Pages* indicare
+   lo stesso dominio e spuntare *Enforce HTTPS*.
 
 ## Scelte tecniche
 

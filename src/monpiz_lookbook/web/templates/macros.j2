@@ -1,0 +1,30 @@
+{# Shared pieces of markup. `p` is a media.Picture. #}
+
+{% macro img(p, alt, sizes="100vw", cls="", eager=False, style="") -%}
+<img class="{{ cls }}" src="{{ p.src }}" srcset="{{ p.srcset }}" sizes="{{ sizes }}"
+     width="{{ p.width }}" height="{{ p.height }}" alt="{{ alt }}"
+     {%- if eager %} fetchpriority="high"{% else %} loading="lazy"{% endif %} decoding="async"
+     {%- if style %} style="{{ style }}"{% endif %}>
+{%- endmacro %}
+
+{% macro placeholder(label="Foto in arrivo", cls="") -%}
+<div class="placeholder {{ cls }}" role="img" aria-label="{{ label }}"><span>{{ label }}</span></div>
+{%- endmacro %}
+
+{# A studio shot shown whole, on a frame of its own backdrop colour. #}
+{% macro studio(path, alt, sizes, cls="") -%}
+{% if path %}
+{% set p = pic(path, widths=MEDIUM + (1800,)) %}
+<div class="studio {{ cls }}" style="--backdrop: {{ p.backdrop }}">{{ img(p, alt, sizes) }}</div>
+{% else %}
+{{ placeholder(cls="studio " ~ cls) }}
+{% endif %}
+{%- endmacro %}
+
+{% macro swatch(path, name, cls="") -%}
+<figure class="swatch {{ cls }}">
+  {% if path %}{{ img(pic(path, widths=SMALL, ratio=1.0), "", "(min-width: 900px) 12vw, 30vw") }}
+  {% else %}<div class="swatch__empty" aria-hidden="true"></div>{% endif %}
+  <figcaption>{{ name }}</figcaption>
+</figure>
+{%- endmacro %}

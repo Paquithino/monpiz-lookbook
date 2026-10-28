@@ -1,0 +1,48 @@
+# Pubblica la rivista digitale su GitHub Pages a ogni push sul ramo principale.
+# Una volta sola, su GitHub: Settings -> Pages -> Source: "GitHub Actions".
+name: Rivista digitale
+
+on:
+  push:
+    branches: [master, main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install .
+      # Le immagini già ridimensionate restano in cache: si rigenerano solo quelle cambiate.
+      - uses: actions/cache@v4
+        with:
+          path: site/img
+          key: rivista-img-${{ hashFiles('assets/images/**') }}
+          restore-keys: rivista-img-
+      - run: monpiz-lookbook web --output site
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

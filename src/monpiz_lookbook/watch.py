@@ -1,4 +1,4 @@
-"""Watch mode: rebuild the PDF whenever content, assets or source code change.
+"""Watch mode: rebuild the PDF (or the website) whenever content, assets or code change.
 
 Every rebuild runs in a fresh Python process. Python caches imported modules,
 so rebuilding in-process would ignore edits to the code itself (``theme.py``,
@@ -72,10 +72,28 @@ def _rebuild(command: list[str], reason: str) -> None:
     subprocess.run(command, check=False)  # output and errors go straight to the terminal
 
 
+def site_command(content_file: Path, assets_dir: Path, output_dir: Path) -> list[str]:
+    return [
+        sys.executable,
+        "-m",
+        "monpiz_lookbook",
+        "web",
+        "--content",
+        str(content_file),
+        "--assets",
+        str(assets_dir),
+        "--output",
+        str(output_dir),
+    ]
+
+
 def watch(options: BuildOptions) -> None:
-    """Build once, then rebuild on every change until interrupted (Ctrl+C)."""
-    roots = [options.content_file.parent, options.assets_dir, PACKAGE_DIR]
-    command = build_command(options)
+    """Build the PDF once, then rebuild it on every change until interrupted (Ctrl+C)."""
+    run([options.content_file.parent, options.assets_dir, PACKAGE_DIR], build_command(options))
+
+
+def run(roots: list[Path], command: list[str]) -> None:
+    """Run ``command`` once, then again on every change under ``roots``."""
     print("In ascolto su: " + ", ".join(str(root) for root in roots), flush=True)
     print("Premi Ctrl+C per uscire.", flush=True)
 

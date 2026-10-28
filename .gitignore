@@ -1,5 +1,6 @@
 # Output
 dist/
+site/
 .*.partial
 
 # Python

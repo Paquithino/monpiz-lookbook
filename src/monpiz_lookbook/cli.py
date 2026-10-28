@@ -1,9 +1,12 @@
-"""Command line interface: ``build``, ``watch`` and ``check``."""
+"""Command line interface: ``build``, ``watch``, ``web`` and ``check``."""
 
 from __future__ import annotations
 
 import argparse
+import functools
+import http.server
 import sys
+import threading
 from collections.abc import Sequence
 from pathlib import Path
 
@@ -12,11 +15,14 @@ from .builder import BuildOptions, build
 from .content import load_lookbook
 from .errors import LookbookError
 from .pages.section import models_label
-from .watch import watch
+from .watch import PACKAGE_DIR, run, site_command, watch
+from .web import SiteOptions, build_site
 
 DEFAULT_CONTENT = Path("content/lookbook.yaml")
 DEFAULT_ASSETS = Path("assets")
 DEFAULT_OUTPUT = Path("dist/MonPiz-Lookbook.pdf")
+DEFAULT_SITE = Path("site")
+DEFAULT_PORT = 8000
 PRINT_DPI = 300
 PREVIEW_DPI = 150
 EXIT_ERROR = 1
@@ -58,6 +64,15 @@ def _parser() -> argparse.ArgumentParser:
     _add_content_args(watch_cmd)
     _add_output_args(watch_cmd, PREVIEW_DPI)
 
+    web_cmd = commands.add_parser("web", help="genera la rivista digitale (sito statico)")
+    _add_content_args(web_cmd)
+    web_cmd.add_argument("-o", "--output", type=Path, default=DEFAULT_SITE, help="cartella del sito")
+    web_cmd.add_argument(
+        "--watch",
+        action="store_true",
+        help=f"anteprima su http://localhost:{DEFAULT_PORT}, rigenerata a ogni modifica",
+    )
+
     check_cmd = commands.add_parser("check", help="valida contenuti e asset senza generare il PDF")
     _add_content_args(check_cmd)
     return parser
@@ -84,6 +99,16 @@ def main(argv: Sequence[str] | None = None) -> int:
             print(f"Contenuti validi: {summary}.")
         elif args.command == "watch":
             watch(_options(args))
+        elif args.command == "web":
+            if args.watch:
+                _serve(args.output)
+                roots = [args.content.parent, args.assets, PACKAGE_DIR]
+                run(roots, site_command(args.content, args.assets, args.output))
+            else:
+                site = build_site(SiteOptions(args.content, args.assets, args.output))
+                size_mb = site.size_bytes / 1_000_000
+                summary = f"{site.images} immagini, {size_mb:.1f} MB in totale"
+                print(f"Creato {site.output_dir}/index.html ({summary})")
         else:
             result = build(_options(args))
             size_mb = result.size_bytes / 1_000_000
@@ -99,6 +124,20 @@ def main(argv: Sequence[str] | None = None) -> int:
     except KeyboardInterrupt:
         print("\nInterrotto.")
     return 0
+
+
+def _serve(folder: Path) -> None:
+    """Serve ``folder`` on localhost in the background, for the live preview."""
+    folder.mkdir(parents=True, exist_ok=True)
+    handler = functools.partial(_QuietHandler, directory=str(folder))
+    server = http.server.ThreadingHTTPServer(("127.0.0.1", DEFAULT_PORT), handler)
+    threading.Thread(target=server.serve_forever, daemon=True).start()
+    print(f"Anteprima su http://localhost:{DEFAULT_PORT}", flush=True)
+
+
+class _QuietHandler(http.server.SimpleHTTPRequestHandler):
+    def log_message(self, format: str, *args: object) -> None:
+        pass
 
 
 if __name__ == "__main__":

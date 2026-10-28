@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "monpiz-lookbook"
 version = "0.1.0"
-description = "Generatore del lookbook MonPiz in PDF a partire da contenuti YAML."
+description = "Generatore del lookbook MonPiz (PDF da stampa e rivista digitale) a partire da contenuti YAML."
 readme = "README.md"
 requires-python = ">=3.11"
 authors = [{ name = "Francesco Fabbro" }]
@@ -14,6 +14,8 @@ dependencies = [
     "pillow>=10.0",
     "pydantic>=2.5",
     "pyyaml>=6.0",
+    "jinja2>=3.1",  # digital edition: HTML templates
+    "fonttools[woff]>=4.47",  # digital edition: web fonts (woff2)
 ]
 
 [project.optional-dependencies]
@@ -22,7 +24,6 @@ dev = [
     "ruff>=0.5",
     "mypy>=1.10",
     "types-PyYAML",
-    "fonttools>=4.47",  # only for scripts/instance_fonts.py
 ]
 
 [project.scripts]
@@ -30,6 +31,9 @@ monpiz-lookbook = "monpiz_lookbook.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.package-data]
+monpiz_lookbook = ["web/templates/*.j2", "web/static/*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
