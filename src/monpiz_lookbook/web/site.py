@@ -8,7 +8,7 @@ after a text edit takes a couple of seconds.
 
 from __future__ import annotations
 
-import shutil
+import hashlib
 from dataclasses import dataclass
 from datetime import date
 from pathlib import Path
@@ -57,10 +57,9 @@ def build_site(options: SiteOptions) -> SiteResult:
     out.mkdir(parents=True, exist_ok=True)
     images = WebImages(options.assets_dir, out)
 
-    html = render(lookbook, images, options.assets_dir, out)
+    static = _publish_static(out)
+    html = render(lookbook, images, options.assets_dir, out, static)
     (out / "index.html").write_text(html, encoding="utf-8")
-    for static in (HERE / "static").iterdir():
-        shutil.copyfile(static, out / static.name)
     (out / ".nojekyll").write_text("")  # GitHub Pages: publish the files as they are
     if lookbook.web.url:
         host = lookbook.web.url.split("://", 1)[-1].strip("/")
@@ -72,7 +71,9 @@ def build_site(options: SiteOptions) -> SiteResult:
     return SiteResult(out, pages, len(images.written), size)
 
 
-def render(lookbook: Lookbook, images: WebImages, assets_dir: Path, out: Path) -> str:
+def render(
+    lookbook: Lookbook, images: WebImages, assets_dir: Path, out: Path, static: dict[str, str]
+) -> str:
     env = Environment(
         loader=FileSystemLoader(HERE / "templates"),
         autoescape=select_autoescape(["j2", "html"]),
@@ -92,6 +93,7 @@ def render(lookbook: Lookbook, images: WebImages, assets_dir: Path, out: Path) -
         lb=lookbook,
         ids=ids,
         pages=pages,
+        static=static,
         total=sum(1 for page in pages if not page.filler),
         menu=contents(lookbook, ids),
         map=retailers_map(lookbook.retailers) if lookbook.retailers else None,
@@ -113,6 +115,25 @@ def render(lookbook: Lookbook, images: WebImages, assets_dir: Path, out: Path) -
         phone_href=phone_href,
         store_id=store_id,
     )
+
+
+def _publish_static(out: Path) -> dict[str, str]:
+    """Copy CSS and JavaScript with a hash of their content in the name (``site.3f2a91c0.css``).
+
+    Browsers and GitHub Pages cache these files: a new name after every change
+    guarantees that readers always get the stylesheet and script of the page they see.
+    """
+    names = {}
+    for source in sorted((HERE / "static").iterdir()):
+        data = source.read_bytes()
+        name = f"{source.stem}.{hashlib.sha1(data).hexdigest()[:8]}{source.suffix}"
+        (out / name).write_bytes(data)
+        names[source.name] = name
+        for old in out.glob(f"{source.stem}.*{source.suffix}"):
+            if old.name != name:
+                old.unlink()
+        (out / source.name).unlink(missing_ok=True)  # unversioned copy of earlier builds
+    return names
 
 
 def _cover_boots(lookbook: Lookbook, images: WebImages, assets_dir: Path) -> Picture:

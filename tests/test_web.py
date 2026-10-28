@@ -132,8 +132,10 @@ def test_the_site_is_built_from_the_content(lookbook: SiteOptions) -> None:
     assert 'href="mailto:monpiz@monpiz.it"' in html
     assert 'content="https://lookbook.monpiz.it/share.jpg"' in html
     assert (result.output_dir / "CNAME").read_text().strip() == "lookbook.monpiz.it"
-    for name in ("site.css", "site.js", "share.jpg", "apple-touch-icon.png", ".nojekyll"):
+    for name in ("share.jpg", "apple-touch-icon.png", ".nojekyll"):
         assert (result.output_dir / name).is_file()
+    css = next(result.output_dir.glob("site.*.css"))  # versioned: never stale in a browser cache
+    assert f'href="{css.name}"' in html
 
 
 def test_a_rebuild_reuses_the_images_and_drops_the_unused_ones(lookbook: SiteOptions) -> None:
