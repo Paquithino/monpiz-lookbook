@@ -38,3 +38,8 @@ def test_rebuild_command_forwards_every_option() -> None:
     command = build_command(options)
     assert command[1:4] == ["-m", "monpiz_lookbook", "build"]
     assert command[4:] == ["--content", "c/l.yaml", "--assets", "a", "--output", "out.pdf", "--dpi", "150"]
+
+
+def test_rebuild_command_forwards_the_print_flags() -> None:
+    options = BuildOptions(Path("l.yaml"), Path("a"), Path("o.pdf"), bleed=False, crop_marks=True)
+    assert build_command(options)[-2:] == ["--no-bleed", "--crop-marks"]

@@ -1,7 +1,9 @@
-"""Section divider: a full dark page announcing a part of the lookbook (Donna, Uomo).
+"""Section opener (Donna, Uomo).
 
-The title block is laid out bottom-up from the model count, so a longer intro
-pushes the title upwards instead of running into the bottom of the page.
+With a photo: the photo fills the page, darkened towards the bottom, and the
+section name sits on it in very large type, with the intro and the model
+count below. Without a photo: the same composition on the dark forest green.
+The block is laid out bottom-up, so a longer intro pushes the name upwards.
 """
 
 from __future__ import annotations
@@ -9,20 +11,20 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from ..errors import LayoutError
+from ..geometry import Box
 from ..models import Section
 from ..surface import Align, Surface
-from .base import RenderContext, draw_logo
+from .base import RUNNING_HEAD_BASELINE, RenderContext
 
-LOGO_TOP = 52.3
-LOGO_WIDTH = 48.0
-EYEBROW_BASELINE = 65.7
-COUNT_BASELINE = 797.7
-INTRO_WIDTH = 330.0
-INTRO_TO_COUNT = 52.0  # last intro baseline -> count baseline
-TITLE_TO_INTRO = 46.0  # title baseline -> first intro baseline
-RULE_ABOVE_TITLE = 104.0  # rule -> title baseline
+PHOTO_SHADE = 0.72  # darkness reached at the bottom edge
+PHOTO_SHADE_START = 0.35  # fraction of the height where the darkening begins
+INTRO_BASELINE = 762.0  # first line of the intro
+INTRO_WIDTH = 300.0
+RULE_ABOVE_INTRO = 24.0  # intro first baseline -> rule
 RULE_LENGTH = 40.0
-MIN_RULE_TOP = 200.0
+NAME_ABOVE_RULE = 38.0  # rule -> name baseline
+NAME_INDENT = -8.0  # optical: the big capital's side bearing
+MIN_NAME_BASELINE = 260.0
 
 
 def models_label(count: int) -> str:
@@ -32,28 +34,32 @@ def models_label(count: int) -> str:
 @dataclass(frozen=True, slots=True)
 class SectionPage:
     section: Section
+    number: int  # 1-based position among the sections
     folio: str | None = None
 
     def draw(self, surface: Surface, ctx: RenderContext) -> None:
         p, t, g = ctx.theme.palette, ctx.theme.type, ctx.theme.grid
         x, right = g.margin_x, g.width - g.margin_x
+        if self.section.photo is None:
+            surface.fill_page(p.forest, g.width)
+        else:
+            image = ctx.images.shaded(
+                self.section.photo, g.width, g.height, strength=PHOTO_SHADE, start=PHOTO_SHADE_START
+            )
+            surface.image(image, Box(0, 0, g.width, g.height))
 
-        surface.fill_page(p.forest, g.width)
-        draw_logo(surface, ctx, x, LOGO_TOP, LOGO_WIDTH, p.on_dark)
-        surface.text(self.section.eyebrow, right, EYEBROW_BASELINE, t.cover_label, Align.RIGHT)
+        light = t.running_head.with_color(p.on_dark)
+        surface.text(f"{self.number:02d}", x, RUNNING_HEAD_BASELINE, light)
+        surface.text(self.section.eyebrow, right, RUNNING_HEAD_BASELINE, light, Align.RIGHT)
 
-        intro_lines = (
-            surface.lines(self.section.intro, t.cover_claim, INTRO_WIDTH) if self.section.intro else []
-        )
-        intro_last = COUNT_BASELINE - INTRO_TO_COUNT
-        intro_first = intro_last - (len(intro_lines) - 1) * t.cover_claim.leading
-        title_baseline = intro_first - TITLE_TO_INTRO if intro_lines else intro_last
-        rule_top = title_baseline - RULE_ABOVE_TITLE
-        if rule_top < MIN_RULE_TOP:
+        intro_style = t.text.with_color(p.on_dark_muted)
+        lines = surface.lines(self.section.intro, intro_style, INTRO_WIDTH) if self.section.intro else []
+        rule_top = INTRO_BASELINE - RULE_ABOVE_INTRO
+        name_baseline = rule_top - NAME_ABOVE_RULE
+        if name_baseline < MIN_NAME_BASELINE or len(lines) > 3:
             raise LayoutError(f"Il testo della sezione «{self.section.name}» è troppo lungo.")
-
-        surface.hline(x, x + RULE_LENGTH, rule_top, p.cover_accent, width=1.2)
-        surface.text(self.section.name, x, title_baseline, t.section_title)
-        if intro_lines:
-            surface.paragraph(self.section.intro, x, intro_first, INTRO_WIDTH, t.cover_claim)
-        surface.text(models_label(len(self.section.models)), x, COUNT_BASELINE, t.cover_label)
+        surface.text(self.section.name, x + NAME_INDENT, name_baseline, t.display_xl)
+        surface.hline(x, x + RULE_LENGTH, rule_top, p.on_dark, 0.8)
+        if lines:
+            surface.paragraph(self.section.intro, x, INTRO_BASELINE, INTRO_WIDTH, intro_style)
+        surface.text(models_label(len(self.section.models)), right, INTRO_BASELINE, light, Align.RIGHT)

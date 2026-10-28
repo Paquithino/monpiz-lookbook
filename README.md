@@ -6,8 +6,9 @@ Aggiornare il catalogo significa modificare `content/`, non Python.
 
 ```bash
 pip install -e .
-monpiz-lookbook build                      # dist/MonPiz-Lookbook.pdf, 300 dpi (stampa)
-monpiz-lookbook build --dpi 150 -o dist/MonPiz-Lookbook-web.pdf   # versione leggera per email
+monpiz-lookbook build                      # dist/MonPiz-Lookbook.pdf, 300 dpi, con abbondanza (stampa)
+monpiz-lookbook build --crop-marks         # come sopra, con i segni di taglio
+monpiz-lookbook build --no-bleed --dpi 150 -o dist/MonPiz-Lookbook-web.pdf   # versione per email/online
 monpiz-lookbook check                      # valida contenuti e immagini senza generare
 monpiz-lookbook watch                      # anteprima live: rigenera a ogni salvataggio (150 dpi)
 ```
@@ -15,7 +16,7 @@ monpiz-lookbook watch                      # anteprima live: rigenera a ogni sal
 ### Anteprima live
 
 `monpiz-lookbook watch` controlla `content/`, `assets/` e il codice in `src/` e rigenera
-il PDF a ogni file salvato; in caso di errore lo mostra e resta in ascolto. Aperto in
+il PDF (senza abbondanza, come lo si vedrà rifilato) a ogni file salvato; in caso di errore lo mostra e resta in ascolto. Aperto in
 VS Code con l'estensione *vscode-pdf* (affiancato al codice), il PDF si ricarica da solo.
 Ogni rebuild gira in un processo Python nuovo, così anche le modifiche al codice
 (`theme.py`, le pagine) hanno effetto senza riavviare il watch.
@@ -55,19 +56,65 @@ Il flusso è lineare: `YAML → modelli validati → pagine → PDF`.
   (`src/monpiz_lookbook/mountain.py`). La foto è fusa in modalità Moltiplica: il suo
   bianco sparisce e gli scarponi stanno davanti alle montagne; la posizione si basa
   sull'ingombro della scarpa nella foto, quindi va bene qualsiasi scatto su fondo bianco.
+- **Sequenza**: copertina → marchio → indice (generato) → per ogni sezione un'apertura
+  a tutta pagina, poi per ogni modello la pagina di presentazione, l'eventuale pagina
+  di dettaglio (`feature`) e una pagina per prodotto → rivenditori → quarta di copertina.
 - **Struttura**: sezione (`sections`, es. Donna) → modelli (`models`, es. Cortina) →
-  prodotti (`products`). Ogni sezione genera una pagina divisoria; ogni modello una
-  pagina di presentazione (foto, descrizione, fino a 4 materiali) seguita da una pagina
-  per ciascun prodotto.
+  prodotti (`products`).
 - **Prodotto**: `name`, `description` e `variants` obbligatori, `sizes` facoltativo. Ogni
-  variante ha `color` e, quando c'è la foto, `image`. Massimo due varianti per pagina,
-  impilate a tutta larghezza. Le foto restano intere: il fondale da studio viene esteso
-  ai lati fino ai bordi della pagina, quindi vanno scattate su fondale uniforme.
+  variante ha `color` e, quando c'è la foto, `image`. Da 1 a 4 varianti per pagina (una
+  foto grande, affiancate o in griglia 2×2); in alternativa una foto e la cartella
+  colori (`colors`), che si adatta al numero di colori.
 - **Foto mancanti**: ovunque manchi `image` (modello, materiali, varianti) compare il
   segnaposto "Foto in arrivo".
-- **Rivenditori**: pagina facoltativa, attiva quando in `lookbook.yaml` sono presenti
-  i blocchi `retailers` e `closing` (insieme). L'elenco sta in `content/retailers.yaml`;
-  le regioni vengono distribuite su tre colonne minimizzando la colonna più alta.
+- **Rivenditori**: attivi quando in `lookbook.yaml` sono presenti i blocchi `retailers`
+  e `closing` (insieme). L'elenco sta in `content/retailers.yaml`. I negozi con
+  coordinate (`at: [lat, lon]`) compaiono come punti sulla mappa; sotto, l'elenco
+  "Negozio — Città" scorre su tre colonne e, se serve, su altre pagine.
+
+### Campi facoltativi
+
+Tutti opzionali: senza, la pagina usa una versione tipografica.
+
+```yaml
+index:                      # pagina indice
+  title: Indice
+  photo: images/mood/sabbia-bosco.jpg
+sections:
+  - name: Donna
+    photo: images/mood/donna-indossate.jpg   # apertura a tutta pagina
+    models:
+      - name: Cortina
+        specs:                               # tabella tecnica (max 4 righe)
+          - {label: Suola, value: Vibram}
+        feature:                             # pagina di dettaglio dopo il modello
+          image: images/details/cortina-sottobosco.png
+          title: Nata sulle Dolomiti
+          text: Una riga o due.
+          label: Dettaglio
+          focus_x: 0.5                       # punto da tenere nel ritaglio (0-1)
+          focus_y: 0.5
+        products:
+          - name: Cortina Dakar
+            specs: [{label: Tomaia, value: Pelle scamosciata}]   # max 4
+retailers:
+  map:
+    labels:                                  # città scritte sulla mappa
+      - {name: Cortina, at: [46.54, 12.14]}
+closing:
+  photo: images/mood/lussari-foglie.png      # quarta di copertina con foto
+```
+
+## Stampa
+
+- `build` produce il PDF per la tipografia: 3 mm di abbondanza su ogni lato, con
+  TrimBox e BleedBox impostati. Tutto ciò che tocca il bordo (foto, fondi) prosegue
+  nell'abbondanza; le foto vengono scalate in proporzione, mai deformate.
+- `--crop-marks` aggiunge i segni di taglio, se la tipografia li vuole.
+- Per la brossura a punto metallico le pagine devono essere un multiplo di 4: la
+  build avvisa quante ne mancano.
+- I colori sono RGB: la conversione in CMYK (profilo della carta lucida) va
+  concordata con la tipografia.
 
 Se un contenuto non entra nella pagina la build si ferma con un errore esplicito,
 invece di tagliare il testo in silenzio. Un errore di battitura in una chiave

@@ -10,12 +10,12 @@ meta:
 cover:
   tagline: Pedule urban fashion
   claim: Una storia italiana. Qualità ed eccellenza che si guardano, si toccano e si indossano.
-  highlights: [Collezione F.W.2026/2027, Made in Italy, Suole Vibram]
+  highlights: [Collezione F.W.2026/2027, Made in Montebelluna Italy]
   photo: images/products/FALCADE MARTELLATO DOPPIO LACCIO3.jpg
   banner: images/brand/cover-banner.jpg
 # IL BRAND MONPIZ #########################################################################################
 brand:
-  eyebrow: Il marchio
+  eyebrow: Come nasce MonPiz
   title: Tra tradizione ed innovazione
   folio: MonPiz — Montebelluna, Italia
   paragraphs:
@@ -35,7 +35,7 @@ brand:
   details_title: Qualità nei dettagli
   details:
     - name: Tomaia
-      description: in pelle di vitello conciato in Toscana
+      description: in pelle di vitello 
       image: images/details/upper.png
     - name: Fodera
       description: in pelle di vitello con lavorazione sottovuoto
@@ -47,30 +47,40 @@ brand:
       description: in ferro con trattamento antiruggine
       image: images/details/hardware.png
 
+index:
+  photo: images/products/ceppo-bianca.jpg
+
 # CATALOGO DONNA ######################################################################################
 sections:
   - name: Donna
     # SEGNAPOSTO: testo provvisorio, da rivedere.
     intro: >-
-      Pedule nate sulle Dolomiti, pensate per la città. Pellami conciati in
-      Toscana, suole Vibram e una costruzione artigianale che dura nel tempo.
+      Dal sentiero alla città, senza cambiare scarpe. Pedule versatili
+      che offrono comfort in ogni occasione, senza compromessi sullo stile.
+    photo: images/products/Alpem@fabrice_gallina2020-0542.jpg
 
     models:
 # CORTINA ##########################################################################################    
       - name: Cortina
         # SEGNAPOSTO: descrizione provvisoria, da rivedere.
         description: >-
-          La pedula classica MonPiz, con apertura a soffietto per una calzata
-          più facile e suola Vibram per ogni terreno, tra montagna e città.
+          Un classico della montagna, riletto oggi. L'apertura a soffietto
+          rende la calzata più facile e offre una maggiore protezione, mentre
+          le linee vintage restano attuali anche in città.
         #Foto principale del modello
         image: images/products/Cortina.jpg
+        # SEGNAPOSTO: specifiche e pagina di dettaglio di esempio, da verificare.
+        specs:
+          - {label: Costruzione, value: Cucitura a vista}
+          - {label: Suola, value: Vibram}
+          - {label: Taglie, value: 35 — 42}
         materials:
           - name: Pelle martellata
-            image: images/texture/Pelle_martellata.webp
+            image: images/texture/pelle-martellata/pelle-martellata-nera.webp
           - name: Dakar
-            image : images/texture/dakar.webp
+            image : images/texture/dakar/dakar-testa-di-moro.webp
           - name: Suede
-            image : images/texture/suede.webp
+            image : images/texture/suede/suede-ruhm.webp
         products:
         #CORTINA PELLE MARTELLATA 
           - name: Cortina Pelle Martellata
@@ -78,199 +88,225 @@ sections:
               Una pelle dalla grana pronunciata, morbida al tatto e dall'aspetto
               naturale. Versatile e resistente, mantiene nel tempo la forma e
               l'intensità del colore.
-            sizes: 36–41
+            sizes: 35–42
             # Al massimo due varianti per pagina. Senza `image` compare il segnaposto.
             variants:
               - color: Bianco
                 image: images/products/Cortina_Donna_Pelle_martellata_Bianca_spaiate.webp
             colors: 
-             - {name: Nero , image : images/texture/Pelle_martellata.webp }
-             - {name: Bianco , image : images/texture/pelle-martellata-bianco.webp  }
+             - {name: Nero , image : images/texture/pelle-martellata/pelle-martellata-nera.webp }
+             - {name: Bianco , image : images/texture/pelle-martellata/pelle-martellata-bianca.webp  }
           
-          #CORTINA DAKAR
+        #CORTINA DAKAR
           - name: Cortina Dakar
             description: >-
-              Pelle dall'aspetto vissuto, calda e dal carattere deciso. Ai segni
-              dell'uso si schiarisce con naturali velature, sviluppando nel tempo
-              una patina unica per ogni paio.
-            sizes: 36–42
+              La pelle Dakar è un cuoio bovino di prima scelta, lavorato con oli, cere e grassi per un
+              effetto vintage dall'aspetto naturale. Con l'uso si schiarisce in
+              velature morbide e sviluppa una patina unica per ogni paio.
+            specs:
+              - {label: Incluso, value: Grasso naturale}  
+            sizes: 35–42
             variants:
               - color: Testa di moro 
                 image: images/products/Cortina_Donna_Dakar_Testa_di_moro_spaiate.webp 
             colors:
-              - {name: Testa di Moro, image: images/texture/dakar.webp}
-              - {name: Verde , image: }
-              - {name: Senape, image: }
+              - {name: Testa di Moro, image: images/texture/dakar/dakar-testa-di-moro.webp}
+              - {name: Verde , image: images/texture/dakar/dakar-verde.webp}
+              - {name: Senape, image: images/texture/dakar/dakar-giallo.webp}
              
           #CORTINA SUEDE
           - name: Cortina Suede
-            description: Suede morbido, il carattere della pedula in versione vellutata.
-            sizes: 36–43
+            description: >-
+             Il suede è la pelle scamosciata, una superficie morbida, vellutata
+             e leggermente ruvida al tatto, che dà alla pedula un carattere
+             caldo e raffinato.
+            sizes: 35–42
             variants:
               - color: Aneto
                 image: images/products/Cortina_Donna_Aneto_spaiate.webp
             colors:
-              - {name: Alabama, image: images/colors/suede-alabama.webp}
-              - {name: Apache, image: images/colors/suede-apache.webp}
-              - {name: Ambrato, image: images/colors/suede-ambrato.webp}
-              - {name: Seminole, image: images/colors/suede-seminole.webp}
-              - {name: Tabacco, image: images/colors/suede-tabacco.webp}
-              - {name: Pilota, image: images/colors/suede-pilota.webp}
-              - {name: Rhum, image: images/colors/suede-rhum.webp}
-              - {name: Saraceno, image: images/colors/suede-saraceno.webp}
-              - {name: Palm, image: images/colors/suede-palm.webp}
-              - {name: Tex, image: images/colors/suede-tex.webp}
-              - {name: Aneto, image: images/colors/suede-aneto.webp}
-              - {name: Ossido, image: images/colors/suede-ossido.webp}
-              - {name: Carbonio, image: images/colors/suede-carbonio.webp}
+              - {name: Alabama, image: images/texture/suede/suede-alabama.webp}
+              - {name: Apache, image: images/texture/suede/suede-apache-esterno.webp}
+              - {name: Ambrato, image: images/texture/suede/suede-ambrato.webp}
+              - {name: Seminole, image: images/texture/suede/suede-seminole.webp}
+              - {name: Tabacco, image: images/texture/suede/suede-tabacco.webp}
+              - {name: Pilota, image: images/texture/suede/suede-pilota.webp}
+              - {name: Rhum, image: images/texture/suede/suede-ruhm.webp}
+              - {name: Saraceno, image: images/texture/suede/suede-saraceno.webp}
+              - {name: Tex, image: images/texture/suede/suede-tex.webp}
+              - {name: Aneto, image: images/texture/suede/suede-aneto.webp}
+              - {name: Ossido, image: images/texture/suede/suede-ossido.webp}
+              - {name: Carbonio, image: images/texture/suede/suede-carbonio.webp}
               
 # FALCADE ##########################################################################################
       - name: Falcade
         # SEGNAPOSTO: descrizione provvisoria, da rivedere.
         description: >-
-          Struttura solida e confortevole, per l'uso quotidiano tra città
-          e natura.
-        image: images/products/falcade_donna_copertina.webp
-        materials:
-           - name: Pelle martellata
-             image: images/texture/Pelle_Martellata.webp
-           - name: Dakar
-             image : images/texture/dakar.webp
-           - name: Suede
-             image : images/texture/suede.webp
-           - name: Cavallino
-             image: images/texture/cavallino.webp
+          Apertura classica della linguetta, per una calzata essenziale e
+          senza tempo. Struttura solida e confortevole, per tutti i giorni tra
+          città e natura.
+        image: images/products/falcade-donna-copertina.png
+        materials: 
+          - name: Pelle martellata
+            image: images/texture/pelle-martellata/pelle-martellata-nera.webp
+          - name: Dakar
+            image : images/texture/dakar/dakar-testa-di-moro.webp
+          - name: Suede
+            image : images/texture/suede/suede-ruhm.webp
+          - name: Cavallino
+            image: images/texture/cavallino/cvallino-double-mucca.png
 
         
         products:
           #FALCADE PELLE MARTELLATA 
           - name: Falcade Pelle Martellata 
-            description: Pelle martellata, look raffinato e versatile.
-            sizes: 36–43
+            description: >-
+              Una pelle dalla grana pronunciata, morbida al tatto e dall'aspetto
+              naturale. Versatile e resistente, mantiene nel tempo la forma e
+              l'intensità del colore.
+            sizes: 35–42
             variants:
               - color: Bianco 
                 image: images/products/Falcade_Donna_Pelle_martellata_bianca_spaiate.webp  
             colors: 
-             - {name: Nero , image : images/texture/Pelle_martellata.webp }
-             - {name: Bianco , image : images/texture/pelle-martellata-bianco.webp }
+             - {name: Nero , image : images/texture/pelle-martellata/pelle-martellata-nera.webp }
+             - {name: Bianco , image : images/texture/pelle-martellata/pelle-martellata-bianca.webp  }
 
           #FALCADE DAKAR  
           - name: Falcade DAKAR 
-            description: Pelle martellata, look raffinato e versatile.
-            sizes: 36–43
+            description: >-
+             La pelle Dakar è un cuoio bovino di prima scelta, lavorato con oli, cere e grassi per un
+             effetto vintage dall'aspetto naturale. Con l'uso si schiarisce in
+             velature morbide e sviluppa una patina unica per ogni paio.
+            specs:
+              - {label: Incluso, value: Grasso naturale}  
             variants:
               - color: Bianco 
                 image: images/products/Falcade_Donna_Dakar_Verde_spaiate.webp
             colors:
-              - {name: Alabama, image: images/colors/suede-alabama.webp}
-              - {name: Apache, image: images/colors/suede-apache.webp}
-              - {name: Ambrato, image: images/colors/suede-ambrato.webp}  
-
+              - {name: Testa di Moro, image: images/texture/dakar/dakar-testa-di-moro.webp}
+              - {name: Verde , image: images/texture/dakar/dakar-verde.webp}
+              - {name: Senape, image: images/texture/dakar/dakar-giallo.webp}
+         
           #FALCADE SUEDE
           - name: Falcade Suede
-            description: Suede morbido, il carattere della pedula in versione vellutata.
-            sizes: 36–43
+            description: >-
+             Il suede è la pelle scamosciata, una superficie morbida, vellutata
+             e leggermente ruvida al tatto, che dà alla pedula un carattere
+             caldo e raffinato.
+            sizes: 35–42
             variants:
               - color: Saraceno
                 image: images/products/Falcade_Donna_Saraceno_Spaiate.webp
             colors:
-              - {name: Alabama, image: images/colors/suede-alabama.webp}
-              - {name: Apache, image: images/colors/suede-apache.webp}
-              - {name: Ambrato, image: images/colors/suede-ambrato.webp}
-              - {name: Seminole, image: images/colors/suede-seminole.webp}
-              - {name: Tabacco, image: images/colors/suede-tabacco.webp}
-              - {name: Pilota, image: images/colors/suede-pilota.webp}
-              - {name: Rhum, image: images/colors/suede-rhum.webp}
-              - {name: Saraceno, image: images/colors/suede-saraceno.webp}
-              - {name: Palm, image: images/colors/suede-palm.webp}
-              - {name: Tex, image: images/colors/suede-tex.webp}
-              - {name: Aneto, image: images/colors/suede-aneto.webp}
-              - {name: Ossido, image: images/colors/suede-ossido.webp}
-              - {name: Carbonio, image: images/colors/suede-carbonio.webp}
-
-           #FALCADE CAVALLINO   
+              - {name: Alabama, image: images/texture/suede/suede-alabama.webp}
+              - {name: Apache, image: images/texture/suede/suede-apache-esterno.webp}
+              - {name: Ambrato, image: images/texture/suede/suede-ambrato.webp}
+              - {name: Seminole, image: images/texture/suede/suede-seminole.webp}
+              - {name: Tabacco, image: images/texture/suede/suede-tabacco.webp}
+              - {name: Pilota, image: images/texture/suede/suede-pilota.webp}
+              - {name: Rhum, image: images/texture/suede/suede-ruhm.webp}
+              - {name: Saraceno, image: images/texture/suede/suede-saraceno.webp}
+              - {name: Tex, image: images/texture/suede/suede-tex.webp}
+              - {name: Aneto, image: images/texture/suede/suede-aneto.webp}
+              - {name: Ossido, image: images/texture/suede/suede-ossido.webp}
+              - {name: Carbonio, image: images/texture/suede/suede-carbonio.webp}
+           
+           #FALCADE CAVALLINO bianco  
           - name: Falcade Cavallino
             description: Pelle cavallino, texture ricercata e carattere deciso.
-            sizes: 36–43
+            sizes: 35–42
+            variants:
+              - color: Bianco Nera
+                image: images/products/Falcade_Donna_Cavallino_Bianco_nera_Spaiate.webp
+              - color: Bianco Testa di Moro
+                image: images/products/Falcade_Donna_Cavallino_Bianco_Testa_di_moro_Spaiate.webp      
+          #FALCADE CAVALLINO mokka e nuttela
+          - name: Falcade Cavallino
+            description: Pelle cavallino, texture ricercata e carattere deciso.
+            sizes: 35–42
             variants:
               - color: Moka 
                 image: images/products/Falcade_Donna_Cavvalino_moka_Spaiate.webp
-              - color: Bianco Nera
-                image: images/products/Falcade_Donna_Cavallino_Bianco_nera_Spaiate.webp
-              - color: Bianco testa di moro
-                image: images/products/Falcade_Donna_Cavallino_Bianco_Testa_di_moro_Spaiate.webp       
-          
+              - color: Nutella
+                image: images/products/Falcade-Donna-Cavallino-Nutella-Spaiate.webp          
+
 #LAGAZUOI ##########################################################################################
       - name: Lagazuoi 
         # SEGNAPOSTO: descrizione provvisoria, da rivedere.
         description: >-
-          La pedula classica MonPiz: tomaia in pelle conciata in Toscana, fodera
-          in pelle e suola Vibram.
+          Una pedula bassa con occhielli in metallo e suola Vibram dal fondo
+          scuro, leggera come una scarpa sportiva. Cavallino, suede in due
+          colori, puntale in gomma e una bordatura in gomma porosa effetto roccia.
         #Foto principale del modello
         image: images/products/Lagazuo_ Donna_Suede_Cavallino .webp
         materials:
           - name: Cavallino 
-            image: images/texture/Cavallino_double_mucca.png
-          - name: Suede 
-            image : images/texture/suede.webp  
+            image: images/texture/cavallino/cvallino-double-mucca.png
+          - name: Suede
+            image: images/texture/suede/suede-ruhm.webp
           - name : Puntale Gommato
-            image: images/details/puntale-gommato.webp
-          - name: doppia cucitura 
-            image: images/details/Doppia_cucitura_prova.png
+            image: images/details/puntale-gommato-lagazuoi.jpg
+          - name: Doppia cucitura 
+            image: images/details/doppia-cucitura.jpg
         products: 
           - name: Lagazuoi 
-            description: Pelle martellata, look raffinato e versatile.
-            sizes: 36–43
+            description:             
+              Tre varianti di cavallino tra cui scegliere, per adattare la pedula al
+              proprio stile dal camouflage al moka, fino al bianco e nero.
+            sizes: 35–42
             variants:
               - color: Bianco Testa di Moro 
                 image: images/products/Lagazuoi_Donna_Suede_Cavallino_Spaiate.webp
             colors:
-              - {name: Camouflage, image: images/texture/Cavallino_Camuflage.png}
-              - {name: Moka , image: images/texture/cavallino-moka.webp }
-              - {name: Bianco e Nero , image: images/texture/cavallino.webp }
+              - {name: Camouflage, image: images/texture/cavallino/Cavallino_Camuflage.png}
+              - {name: Moka , image: images/texture/cavallino/cavallino-moka.webp }
+              - {name: Bianco e Nero , image: images/texture/cavallino/cavallino-bianco-nero.webp }
 
  #ORTISEI ##########################################################################################
       - name: Ortisei
         # SEGNAPOSTO: descrizione provvisoria, da rivedere.
         description: >-
-          La pedula classica MonPiz: tomaia in pelle conciata in Toscana, fodera
-          in pelle e suola Vibram.
+          La pedula che sceglie di distinguersi. Una base in cavallino gocciato,
+          rifinita da bordatura e inserti in pelle Dakar, per un carattere che
+          non passa inosservato.
         #Foto principale del modello
         image: images/products/Ortisei_Donna_Cavallino_Pelle_Moka.webp
         materials:
           - name: Cavallino 
-            image: images/texture/cavallino-moka.webp 
-          - name: Suola Vibram 
-            image : images/details/sole.png
+            image: images/texture/cavallino/cavallino-moka.webp
           - name: Doppia Cucitura 
-            image: images/details/Doppia_cucitura_prova.png
+            image: images/details/doppia-cucitura.jpg
           - name: Bordatura in pelle Dakar
-            image:    
+            image: images/texture/dakar/dakar-testa-di-moro.webp 
         products: 
           - name: Ortisei
-            description: Pelle martellata, look raffinato e versatile.
-            sizes: 36–43
+            description: >-
+             Disponibile in due varianti di cavallino: moka, calda e avvolgente,
+             oppure bianco e nero, per un contrasto più deciso.
             variants:
-              - color: Bianco Testa di Moro 
-                image: images/products/Ortisei_Donna_Cavallino_Pelle_Moka_Spaiate.webp
+              - color: Moka 
+                image: images/products/Ortisei_Donna_Cavallino_Pelle_Moka_Spaiate.webp        
             colors:
-              - {name: Bianco e Nero , image: images/texture/cavallino.webp }
+              - {name: Bianco e Nero , image: images/texture/cavallino/cvallino-double-mucca.png }
+              - {name: Moka , image: images/texture/cavallino/cavallino-moka.webp }
              
  #ORMA ##########################################################################################
       - name: Orma 
         # SEGNAPOSTO: descrizione provvisoria, da rivedere.
         description: >-
-          La pedula classica MonPiz: tomaia in pelle conciata in Toscana, fodera
-          in pelle e suola Vibram.
+          La novità di MonPiz: una scarpa diversa da tutte le altre, che nasce
+          da un'idea tecnica e la veste di un gusto fashion, senza rinunciare
+          alla comodità.
         #Foto principale del modello
         image: images/products/Orma_Zoom_punta.webp
         materials:
           - name: Cavallino 
-            image: images/texture/Cavallino_double_mucca.png
+            image: images/texture/cavallino/cvallino-double-mucca.png
           - name: Suede 
-            image : images/texture/suede.webp  
+            image : images/texture/suede/suede-ruhm.webp
           - name : Puntale Gommato
-            image: images/details/puntale-gommato.webp
+            image: images/details/puntale-orma.jpg
           - name: Suola Vibram 
             image : images/details/sole.png
 
@@ -278,34 +314,36 @@ sections:
       - name: Urban
         # SEGNAPOSTO: descrizione provvisoria, da rivedere.
         description: >-
-          La pedula classica MonPiz: tomaia in pelle conciata in Toscana, fodera
-          in pelle e suola Vibram.
+         Lo stile MonPiz, senza lacci. Un beatle in cavallino con due bande
+         elastiche laterali che lo rendono comodo da infilare, su una suola
+         Vibram.
         #Foto principale del modello
         image: images/products/Urban_Donna_cavallino.webp
         materials:
           - name: Cavallino 
-            image: images/texture/Cavallino_double_mucca.png 
+            image: images/texture/cavallino/cvallino-double-mucca.png
           - name: Suola Vibram 
             image : images/details/sole.png
-          - name: Doppia cuciutra 
-            image: images/details/Doppia_cucitura_prova.png
+          - name: Doppia cucitura 
+            image: images/details/doppia-cucitura.jpg
 
 #ANFIBIO STRINGATO##########################################################################################
       - name: Anfibio Stringato 
         # SEGNAPOSTO: descrizione provvisoria, da rivedere.
         description: >-
-          La pedula classica MonPiz: tomaia in pelle conciata in Toscana, fodera
-          in pelle e suola Vibram.
+          Completamente diverso, pensato per chi osa. L'anfibio stringato MonPiz
+          porta il cavallino e la suola Vibram fuori da ogni schema, con una zip
+          laterale per una calzata comoda e immediata.
         #Foto principale del modello
         image: images/products/Anfibio_Donna_Cavallino_Bianco_nero_Spaiate.webp
         materials:
           - name: Cavallino 
-            image: images/texture/cavallino.webp  
+            image: images/texture/cavallino/cavallino-bianco-nero.webp
           - name: Suola Vibram 
             image : images/details/sole.png
+           
 
   
-
 
 
 
@@ -323,8 +361,9 @@ sections:
     intro: >-
       Pedule nate sulle Dolomiti, pensate per la città. Pellami conciati in
       Toscana, suole Vibram e una costruzione artigianale che dura nel tempo.
+    photo: images/mood/bosco-coppie.jpg
     models:
- # CORTINA ##########################################################################################
+# CORTINA ##########################################################################################
       - name: Cortina
         # SEGNAPOSTO: descrizione provvisoria, da rivedere.
         description: >-
@@ -334,14 +373,14 @@ sections:
         image: images/products/Cortina_Copertina.jpg
         materials:
           - name: Pelle martellata
-            image: images/texture/Pelle_Martellata.webp
+            image: images/texture/pelle-martellata/pelle-martellata-nera.webp
           - name: Dakar
-            image : images/texture/dakar.webp
+            image : images/texture/dakar/dakar-testa-di-moro.webp
           - name: Suede
-            image : images/texture/suede.webp
+            image : images/texture/suede/suede-apache-esterno.webp
      
         products:
-       #CORTINA PELLE MARTELLATA 
+     #CORTINA PELLE MARTELLATA 
           - name: Cortina Pelle Martellata
             description: Pelle martellata, look raffinato e versatile.
             sizes: 36–43
@@ -349,9 +388,10 @@ sections:
               - color: Nero 
                 image: images/products/Cortina_Donna_Pelle_martellata_nera_spaiate.webp
             colors:
-              - {name: Testa di Moro , image: images/texture/pelle-martellata-testa-di-moro.webp}
-              - {name: Nero , image : images/texture/Pelle_martellata.webp }
-      #CORTINA DAKAR
+               - {name: Nero , image : images/texture/pelle-martellata/pelle-martellata-nera.webp }
+               - {name: Testa di Moro  , image : images/texture/pelle-martellata/pelle-martellata-testa-di-moro-2.webp  }
+      
+     #CORTINA DAKAR
           - name: Cortina Dakar
             description: Pelle Dakar dall'aspetto vissuto, calda e robusta.
             sizes: 36–43
@@ -359,31 +399,31 @@ sections:
               - color: Ananas
                 image: images/products/Cortina_Uomo_Dakar_Ananas_spaiate.jpg
             colors:
-              - {name: Testa di Moro, image: images/texture/dakar.webp}
-              - {name: Verde , image: }
-              - {name: Senape, image: }       
-
+             - {name: Testa di Moro, image: images/texture/dakar/dakar-testa-di-moro.webp}
+             - {name: Verde , image: images/texture/dakar/dakar-verde.webp}
+             - {name: Senape, image: images/texture/dakar/dakar-giallo.webp}
+                
      #CORTINA SUEDE
           - name: Cortina Suede
             description: Suede morbido, il carattere della pedula in versione vellutata.
             sizes: 36–43
             variants:
-              - color: Aneto
-                image: 
+              - color: Pilota
+                image: images/products/Cortina_Uomo_Suede_Blu_Pilota_Spaiate.webp
             colors:
-              - {name: Alabama, image: images/colors/suede-alabama.webp}
-              - {name: Apache, image: images/colors/suede-apache.webp}
-              - {name: Ambrato, image: images/colors/suede-ambrato.webp}
-              - {name: Seminole, image: images/colors/suede-seminole.webp}
-              - {name: Tabacco, image: images/colors/suede-tabacco.webp}
-              - {name: Pilota, image: images/colors/suede-pilota.webp}
-              - {name: Rhum, image: images/colors/suede-rhum.webp}
-              - {name: Saraceno, image: images/colors/suede-saraceno.webp}
-              - {name: Palm, image: images/colors/suede-palm.webp}
-              - {name: Tex, image: images/colors/suede-tex.webp}
-              - {name: Aneto, image: images/colors/suede-aneto.webp}
-              - {name: Ossido, image: images/colors/suede-ossido.webp}
-              - {name: Carbonio, image: images/colors/suede-carbonio.webp}
+              - {name: Alabama, image: images/texture/suede/suede-alabama.webp}
+              - {name: Apache, image: images/texture/suede/suede-apache-esterno.webp}
+              - {name: Ambrato, image: images/texture/suede/suede-ambrato.webp}
+              - {name: Seminole, image: images/texture/suede/suede-seminole.webp}
+              - {name: Tabacco, image: images/texture/suede/suede-tabacco.webp}
+              - {name: Pilota, image: images/texture/suede/suede-pilota.webp}
+              - {name: Rhum, image: images/texture/suede/suede-ruhm.webp}
+              - {name: Saraceno, image: images/texture/suede/suede-saraceno.webp}
+              - {name: Palm}   # foto texture mancante: compare il segnaposto
+              - {name: Tex, image: images/texture/suede/suede-tex.webp}
+              - {name: Aneto, image: images/texture/suede/suede-aneto.webp}
+              - {name: Ossido, image: images/texture/suede/suede-ossido.webp}
+              - {name: Carbonio, image: images/texture/suede/suede-carbonio.webp}
 
 # FALCADE ##########################################################################################
       - name: Falcade
@@ -392,13 +432,14 @@ sections:
           La pedula classica MonPiz: tomaia in pelle conciata in Toscana, fodera
           in pelle e suola Vibram.
         image: images/products/falcade-uomo-aneto-bosco.webp
+        # SEGNAPOSTO: testo di esempio, da rivedere.
         materials:
           - name: Pelle martellata
-            image: images/texture/Pelle_Martellata.webp
+            image: images/texture/pelle-martellata/pelle-martellata-nera.webp
           - name: Dakar
-            image : images/texture/dakar.webp
+            image: images/texture/dakar/dakar-testa-di-moro.webp
           - name: Suede
-            image : images/texture/suede.webp
+            image: images/texture/suede/suede-apache-esterno.webp
         products:
           
            #FALCADE PELLE MARTELLATA 
@@ -409,8 +450,8 @@ sections:
               - color: Testa di Moro
                 image: images/products/Falcade_Uomo_pelle_martellata_testa_di_moro._spaiate.webp
              colors:  
-               - {name: Nero, image: images/texture/Pelle_Martellata.webp}
-               - {name: Testa di Moro, image: images/texture/pelle-martellata-testa-di-moro.webp}
+               - {name: Nero , image : images/texture/pelle-martellata/pelle-martellata-nera.webp }
+               - {name: Testa di Moro  , image : images/texture/pelle-martellata/pelle-martellata-testa-di-moro-2.webp  }
 
            #FALCADE DAKAR
            - name: Falcade Dakar
@@ -420,8 +461,9 @@ sections:
               - color: Verde
                 image: images/products/Falcade_Uomo_Dakar_Verde_spaiate.jpg
              colors:
-               - {name: Testa di Moro, image: images/texture/dakar.webp }
-               - {name: Ananas, image: }
+              - {name: Testa di Moro, image: images/texture/dakar/dakar-testa-di-moro.webp}
+              - {name: Verde , image: images/texture/dakar/dakar-verde.webp}
+              - {name: Senape, image: images/texture/dakar/dakar-giallo.webp}
             
           #FALCADE SUEDE
            - name: Falcade Suede
@@ -431,22 +473,21 @@ sections:
               - color: Rhum
                 image: images/products/Falcade_Uomo_Rhum_Spaiate.webp
              colors:
-              - {name: Alabama, image: images/colors/suede-alabama.webp}
-              - {name: Apache, image: images/colors/suede-apache.webp}
-              - {name: Ambrato, image: images/colors/suede-ambrato.webp}
-              - {name: Seminole, image: images/colors/suede-seminole.webp}
-              - {name: Tabacco, image: images/colors/suede-tabacco.webp}
-              - {name: Pilota, image: images/colors/suede-pilota.webp}
-              - {name: Rhum, image: images/colors/suede-rhum.webp}
-              - {name: Saraceno, image: images/colors/suede-saraceno.webp}
-              - {name: Palm, image: images/colors/suede-palm.webp}
-              - {name: Tex, image: images/colors/suede-tex.webp}
-              - {name: Aneto, image: images/colors/suede-aneto.webp}
-              - {name: Ossido, image: images/colors/suede-ossido.webp}
-              - {name: Carbonio, image: images/colors/suede-carbonio.webp}
-           
-           #FALCADE HERRITAGE 
-           - name: Falcade Herritage
+              - {name: Alabama, image: images/texture/suede/suede-alabama.webp}
+              - {name: Apache, image: images/texture/suede/suede-apache-esterno.webp}
+              - {name: Ambrato, image: images/texture/suede/suede-ambrato.webp}
+              - {name: Seminole, image: images/texture/suede/suede-seminole.webp}
+              - {name: Tabacco, image: images/texture/suede/suede-tabacco.webp}
+              - {name: Pilota, image: images/texture/suede/suede-pilota.webp}
+              - {name: Rhum, image: images/texture/suede/suede-ruhm.webp}
+              - {name: Saraceno, image: images/texture/suede/suede-saraceno.webp}
+              - {name: Tex, image: images/texture/suede/suede-tex.webp}
+              - {name: Aneto, image: images/texture/suede/suede-aneto.webp}
+              - {name: Ossido, image: images/texture/suede/suede-ossido.webp}
+              - {name: Carbonio, image: images/texture/suede/suede-carbonio.webp}
+
+           #FALCADE HERITAGE 
+           - name: Falcade Heritage
              description: Suede morbido, il carattere della pedula in versione vellutata.
              sizes: 36–43
              variants:
@@ -456,19 +497,18 @@ sections:
               label: Punta Heritage
               image: images/products/falcade-heritage-punta.webp     
              colors:
-              - {name: Alabama, image: images/colors/suede-alabama.webp}
-              - {name: Apache, image: images/colors/suede-apache.webp}
-              - {name: Ambrato, image: images/colors/suede-ambrato.webp}
-              - {name: Seminole, image: images/colors/suede-seminole.webp}
-              - {name: Tabacco, image: images/colors/suede-tabacco.webp}
-              - {name: Pilota, image: images/colors/suede-pilota.webp}
-              - {name: Rhum, image: images/colors/suede-rhum.webp}
-              - {name: Saraceno, image: images/colors/suede-saraceno.webp}
-              - {name: Palm, image: images/colors/suede-palm.webp}
-              - {name: Tex, image: images/colors/suede-tex.webp}
-              - {name: Aneto, image: images/colors/suede-aneto.webp}
-              - {name: Ossido, image: images/colors/suede-ossido.webp}
-              - {name: Carbonio, image: images/colors/suede-carbonio.webp}
+              - {name: Alabama, image: images/texture/suede/suede-alabama.webp}
+              - {name: Apache, image: images/texture/suede/suede-apache-esterno.webp}
+              - {name: Ambrato, image: images/texture/suede/suede-ambrato.webp}
+              - {name: Seminole, image: images/texture/suede/suede-seminole.webp}
+              - {name: Tabacco, image: images/texture/suede/suede-tabacco.webp}
+              - {name: Pilota, image: images/texture/suede/suede-pilota.webp}
+              - {name: Rhum, image: images/texture/suede/suede-ruhm.webp}
+              - {name: Saraceno, image: images/texture/suede/suede-saraceno.webp}
+              - {name: Tex, image: images/texture/suede/suede-tex.webp}
+              - {name: Aneto, image: images/texture/suede/suede-aneto.webp}
+              - {name: Ossido, image: images/texture/suede/suede-ossido.webp}
+              - {name: Carbonio, image: images/texture/suede/suede-carbonio.webp}
 
 #LUSSARI  ##########################################################################################
       - name: Lussari
@@ -479,9 +519,9 @@ sections:
         image: images/products/Lussari_copertina.webp
         materials:
           - name: Suede 
-            image: images/texture/Suede.webp
-          - name: Suola Gommara 
-            image: images/details/puntale-gommato.webp
+            image: images/texture/suede/suede-ossido.webp
+          - name: Suola gommata 
+            image: images/details/gomma-lussari-punta.webp
           - name: Suola Vibram 
             image: images/details/sole.png
         products:
@@ -492,19 +532,18 @@ sections:
               - color: Aneto
                 image: images/products/Lussari_Uomo_Aneto_Spaiate.webp
             colors:
-              - {name: Alabama, image: images/colors/suede-alabama.webp}
-              - {name: Apache, image: images/colors/suede-apache.webp}
-              - {name: Ambrato, image: images/colors/suede-ambrato.webp}
-              - {name: Seminole, image: images/colors/suede-seminole.webp}
-              - {name: Tabacco, image: images/colors/suede-tabacco.webp}
-              - {name: Pilota, image: images/colors/suede-pilota.webp}
-              - {name: Rhum, image: images/colors/suede-rhum.webp}
-              - {name: Saraceno, image: images/colors/suede-saraceno.webp}
-              - {name: Palm, image: images/colors/suede-palm.webp}
-              - {name: Tex, image: images/colors/suede-tex.webp}
-              - {name: Aneto, image: images/colors/suede-aneto.webp}
-              - {name: Ossido, image: images/colors/suede-ossido.webp}
-              - {name: Carbonio, image: images/colors/suede-carbonio.webp}
+             - {name: Alabama, image: images/texture/suede/suede-alabama.webp}
+             - {name: Apache, image: images/texture/suede/suede-apache-esterno.webp}
+             - {name: Ambrato, image: images/texture/suede/suede-ambrato.webp}
+             - {name: Seminole, image: images/texture/suede/suede-seminole.webp}
+             - {name: Tabacco, image: images/texture/suede/suede-tabacco.webp}
+             - {name: Pilota, image: images/texture/suede/suede-pilota.webp}
+             - {name: Rhum, image: images/texture/suede/suede-ruhm.webp}
+             - {name: Saraceno, image: images/texture/suede/suede-saraceno.webp}
+             - {name: Tex, image: images/texture/suede/suede-tex.webp}
+             - {name: Aneto, image: images/texture/suede/suede-aneto.webp}
+             - {name: Ossido, image: images/texture/suede/suede-ossido.webp}
+             - {name: Carbonio, image: images/texture/suede/suede-carbonio.webp}
 
 # CORVARA ##########################################################################################
       - name: Corvara
@@ -520,7 +559,7 @@ sections:
           - name: Suola Vibram 
             image : images/details/sole.png 
 
-#LAGAZUOI ##########################################################################################
+#LAGAZUOI  ##########################################################################################
       - name: Lagazuoi 
         # SEGNAPOSTO: descrizione provvisoria, da rivedere.
         description: >-
@@ -530,12 +569,10 @@ sections:
         image: images/products/Lagazuoi_Uomo_Nabuck_Gommata_Spaiate.webp
         materials:
           - name: Nabuk
-            image: 
-          - name: Suede 
-            image : images/texture/suede.webp  
+            image: images/texture/nabuk/nabuk.webp
           - name : Puntale Gommato
-            image: images/details/puntale-gommato.webp
-          - name: doppia cucitura 
+            image: images/details/gomma-ortisei.webp
+          - name: Doppia cucitura 
             image: images/details/Doppia_cucitura_prova.png
            
 # GROSTè ##########################################################################################
@@ -548,7 +585,7 @@ sections:
         image: images/products/Grooste_Uomo_Verde_Spaiate.webp
         materials:
           - name: Pelle Dakar
-            image: 
+            image: images/texture/dakar/dakar-verde.webp
           - name: Suola Vibram 
             image : images/details/sole.png 
           - name: Waterproof
@@ -561,8 +598,8 @@ sections:
           in pelle e suola Vibram.
         image: images/products/City_copertina.webp
         materials:
-          - name: Suede 
-            image: images/texture/suede.webp
+          - name: Suede
+            image: images/texture/suede/suede-corvino.webp
           - name: Suola Bordata 
             image: 
           - name: Suola Vibram 
@@ -575,18 +612,28 @@ sections:
               - color: Corvino
                 image: images/products/City_corvino.webp
             colors:
-              - {name: Aneto, image: images/colors/suede-apache.webp }
-              - {name: Corvino, image: }
-              - {name: Pilota, image: images/colors/suede-pilota.webp}      
+              - {name: Aneto, image: images/texture/suede/suede-aneto.webp }
+              - {name: Corvino, image: images/texture/suede/suede-corvino.webp}
+              - {name: Pilota, image: images/texture/suede/suede-pilota.webp}      
       
 #RIVENDITORI ##########################################################################################
 retailers:
    eyebrow: Dove trovarci
-   title: Dove trovare MonPiz
+   title: 36 negozi, da Cortina a Trieste.
    intro: >-
-    I nostri rivenditori autorizzati, regione per regione. Tocca «Mappa» per
-    raggiungere il negozio o «Negozio online» per acquistare subito.
+    I nostri rivenditori autorizzati, regione per regione.
    source: retailers.yaml
+   map:
+     labels:
+       - {name: Bolzano, at: [46.50, 11.35]}
+       - {name: Trento, at: [46.07, 11.12]}
+       - {name: Cortina, at: [46.54, 12.14]}
+       - {name: Belluno, at: [46.14, 12.22]}
+       - {name: Padova, at: [45.41, 11.88]}
+       - {name: Udine, at: [46.06, 13.23]}
+       - {name: Trieste, at: [45.65, 13.78]}
+       - {name: Sondrio, at: [46.17, 9.87]}
+       - {name: Piacenza, at: [45.05, 9.69]}
 
 closing:
    title: Sei pronto?
@@ -594,6 +641,7 @@ closing:
    contacts:
      - [monpiz@monpiz.it, +39 335 760 4522]
      - [monpiz.it, instagram.com/monpiz_]
+   photo: images/mood/lussari-foglie.jpg
 
 identity:
      logo: images/brand/logo.png

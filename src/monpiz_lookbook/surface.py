@@ -3,6 +3,11 @@
 It exposes the handful of primitives the pages need, in the design
 coordinate system (origin top-left, y downwards), so page modules read like
 the layout spec instead of being littered with ``page_height - y``.
+
+Coordinates are relative to the trimmed page. For print, anything that
+touches a trim edge (a page fill, a full-bleed photo) is extended into the
+``bleed`` beyond it automatically, so a slightly imprecise cut never leaves
+a white hairline. Page modules simply draw up to the page edge.
 """
 
 from __future__ import annotations
@@ -36,13 +41,40 @@ def text_width(text: str, style: TextStyle) -> float:
     return width + style.tracking * max(len(shown) - 1, 0)
 
 
+EDGE_TOLERANCE = 0.5  # pt: a box this close to a trim edge counts as touching it
+
+
 class Surface:
-    def __init__(self, canvas: Canvas, page_height: float) -> None:
+    def __init__(
+        self, canvas: Canvas, page_height: float, *, page_width: float = 0.0, bleed: float = 0.0
+    ) -> None:
         self._canvas = canvas
         self._height = page_height
+        self._width = page_width
+        self._bleed = bleed
 
     def _y(self, top: float) -> float:
         return self._height - top
+
+    def bled(self, box: Box) -> Box:
+        """``box`` with every side that touches a trim edge pushed out into the bleed."""
+        if not self._bleed or not self._width:
+            return box
+        b, tol = self._bleed, EDGE_TOLERANCE
+        left = box.x - b if box.x <= tol else box.x
+        top = box.top - b if box.top <= tol else box.top
+        right = box.right + b if box.right >= self._width - tol else box.right
+        bottom = box.bottom + b if box.bottom >= self._height - tol else box.bottom
+        return Box(left, top, right - left, bottom - top)
+
+    def _bled_point(self, point: tuple[float, float]) -> tuple[float, float]:
+        x, y = point
+        if not self._bleed or not self._width:
+            return point
+        b, tol = self._bleed, EDGE_TOLERANCE
+        x = x - b if x <= tol else (x + b if x >= self._width - tol else x)
+        y = y - b if y <= tol else (y + b if y >= self._height - tol else y)
+        return x, y
 
     # -- shapes -------------------------------------------------------------
 
@@ -62,6 +94,8 @@ class Surface:
         c.saveState()
         if fill is not None:
             c.setFillColor(fill)
+            if stroke is None:
+                box = self.bled(box)
         if stroke is not None:
             c.setStrokeColor(stroke)
             c.setLineWidth(stroke_width)
@@ -99,6 +133,14 @@ class Surface:
         c.drawPath(path, stroke=1, fill=0)
         c.restoreState()
 
+    def dot(self, centre: tuple[float, float], radius: float, color: Color) -> None:
+        """A filled circle (design coordinates)."""
+        c = self._canvas
+        c.saveState()
+        c.setFillColor(color)
+        c.circle(centre[0], self._y(centre[1]), radius, stroke=0, fill=1)
+        c.restoreState()
+
     # -- images -------------------------------------------------------------
 
     def image(
@@ -112,6 +154,8 @@ class Surface:
     ) -> None:
         """Draw ``image`` into ``box``.
 
+        A box touching a trim edge is extended into the bleed: the image is
+        scaled up uniformly (never stretched) to cover the larger box.
         ``multiply`` blends it with what is underneath: white becomes fully
         transparent, so a product shot on white can sit over a drawing.
         ``clip`` (a closed polygon) keeps only the part of the image inside it.
@@ -126,12 +170,22 @@ class Surface:
             c.clipPath(path, stroke=0, fill=0)
         if clip:
             path = c.beginPath()
-            (x0, y0), *rest = clip
+            (x0, y0), *rest = (self._bled_point(point) for point in clip)
             path.moveTo(x0, self._y(y0))
             for x, y in rest:
                 path.lineTo(x, self._y(y))
             path.close()
             c.clipPath(path, stroke=0, fill=0)
+        target = self.bled(box)
+        if target != box:
+            frame = c.beginPath()
+            frame.rect(target.x, self._y(target.bottom), target.width, target.height)
+            c.clipPath(frame, stroke=0, fill=0)
+            scale = max(target.width / box.width, target.height / box.height)
+            cx, cy = target.x + target.width / 2, target.top + target.height / 2
+            box = Box(
+                cx - box.width * scale / 2, cy - box.height * scale / 2, box.width * scale, box.height * scale
+            )
         c.drawImage(image, box.x, self._y(box.bottom), box.width, box.height, mask="auto")
         c.restoreState()
 

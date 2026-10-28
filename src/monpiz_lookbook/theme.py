@@ -30,9 +30,7 @@ class Palette:
     faint: Color
     accent: Color
     paper: Color
-    card: Color
     rule: Color
-    button: Color
     # Dark pages
     forest: Color
     olive: Color
@@ -57,6 +55,9 @@ class TextStyle:
     def with_color(self, color: Color) -> TextStyle:
         return replace(self, color=color)
 
+    def scaled(self, factor: float) -> TextStyle:
+        return replace(self, size=self.size * factor, leading=self.leading * factor)
+
 
 @dataclass(frozen=True, slots=True)
 class Typography:
@@ -69,10 +70,6 @@ class Typography:
     cover_claim: TextStyle
     cover_label: TextStyle
     region: TextStyle
-    region_count: TextStyle
-    store_name: TextStyle
-    store_text: TextStyle
-    store_button: TextStyle
     lead: TextStyle
     contact: TextStyle
     closing_title: TextStyle
@@ -82,6 +79,18 @@ class Typography:
     photo_label: TextStyle
     spec_value: TextStyle
     swatch_name: TextStyle
+    # Magazine layer: few sizes, strong contrast between them
+    running_head: TextStyle  # spaced capitals at the top of the page: model name, page counter
+    label: TextStyle  # small spaced capitals: captions, table keys
+    number: TextStyle  # olive figures: page numbers, material numbers
+    small: TextStyle  # table values, swatch names, store lines
+    text: TextStyle  # running text of model and product pages
+    display_xl: TextStyle  # section openers
+    feature_title: TextStyle  # title over a full-bleed photo
+    index_section: TextStyle
+    index_entry: TextStyle
+    map_city: TextStyle
+    store_line: TextStyle
 
 
 @dataclass(frozen=True, slots=True)
@@ -92,7 +101,8 @@ class Grid:
     height: float = A4[1]
     margin_x: float = 42.0
     margin_top: float = 36.0
-    folio_baseline: float = 799.5
+    folio_baseline: float = 810.0
+    bleed: float = 8.5  # 3 mm, the printers' standard
     gutter: float = 20.0
     radius: float = 6.0
 
@@ -124,9 +134,7 @@ def default_theme() -> Theme:
         faint=HexColor("#8B8A76"),
         accent=HexColor("#6D6F2E"),
         paper=HexColor("#EFECE2"),
-        card=HexColor("#FFFDF8"),
-        rule=HexColor("#DDD8C6"),
-        button=HexColor("#888A3A"),
+        rule=HexColor("#CFC9B6"),
         forest=HexColor("#24291F"),
         olive=HexColor("#52541F"),
         on_dark=HexColor("#FFFDF8"),
@@ -146,19 +154,26 @@ def default_theme() -> Theme:
         folio=TextStyle(Font.SANS, 8.0, 10.0, p.faint, tracking=1.6, uppercase=True),
         cover_claim=TextStyle(Font.SERIF, 16.8, 24.0, p.on_dark),
         cover_label=TextStyle(Font.SANS, 8.25, 10.0, p.cover_highlight, tracking=2.85, uppercase=True),
-        region=TextStyle(Font.SERIF, 14.0, 17.0, p.ink),
-        region_count=TextStyle(Font.SANS, 7.6, 9.0, p.faint, tracking=0.3),
-        store_name=TextStyle(Font.SERIF, 10.5, 12.6, p.ink),
-        store_text=TextStyle(Font.SANS, 7.8, 10.6, p.muted),
-        store_button=TextStyle(Font.SANS, 7.0, 8.4, p.ink, tracking=0.2),
+        region=TextStyle(Font.SANS, 7.2, 9.0, p.ink, tracking=2.2, uppercase=True),
         lead=TextStyle(Font.SANS, 10.05, 15.7, p.on_dark_muted),
         contact=TextStyle(Font.SANS, 10.05, 18.0, p.on_dark),
         closing_title=TextStyle(Font.DISPLAY, 18.4, 22.0, p.on_dark),
         section_title=TextStyle(Font.DISPLAY, 112.0, 112.0, p.on_dark),
-        product_name=TextStyle(Font.DISPLAY, 34.0, 38.0, p.ink),
-        model_title=TextStyle(Font.DISPLAY, 64.0, 64.0, p.ink),
+        product_name=TextStyle(Font.DISPLAY, 40.0, 42.0, p.ink),
+        model_title=TextStyle(Font.DISPLAY, 72.0, 70.0, p.ink),
         photo_label=TextStyle(Font.SANS, 8.25, 10.0, p.ink, tracking=2.3, uppercase=True),
         spec_value=TextStyle(Font.SANS, 10.85, 16.0, p.ink),
-        swatch_name=TextStyle(Font.SANS, 7.8, 9.0, p.muted),
+        swatch_name=TextStyle(Font.SANS, 7.0, 9.0, p.muted),
+        running_head=TextStyle(Font.SANS, 9.5, 11.0, p.ink, tracking=2.8, uppercase=True),
+        label=TextStyle(Font.SANS, 7.2, 9.0, p.ink, tracking=2.2, uppercase=True),
+        number=TextStyle(Font.DISPLAY, 11.0, 14.0, p.accent),
+        small=TextStyle(Font.SANS, 7.8, 11.0, p.muted),
+        text=TextStyle(Font.SANS, 9.6, 15.4, p.body),
+        display_xl=TextStyle(Font.DISPLAY, 150.0, 140.0, p.on_dark),
+        feature_title=TextStyle(Font.DISPLAY, 40.0, 42.0, p.on_dark),
+        index_section=TextStyle(Font.DISPLAY, 22.0, 26.0, p.ink),
+        index_entry=TextStyle(Font.SERIF, 11.5, 15.0, p.ink),
+        map_city=TextStyle(Font.SERIF, 8.5, 10.0, p.ink),
+        store_line=TextStyle(Font.SANS, 6.9, 9.0, p.body),
     )
     return Theme(palette=p, type=t, grid=Grid())

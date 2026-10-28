@@ -97,11 +97,45 @@ class ImageLibrary:
         white = Image.new("RGB", photo.size, (255, 255, 255))
         return self._encode(Image.composite(photo, white, mask))
 
-    def cropped(self, path: Path, width_pt: float, height_pt: float, focus_y: float = 0.5) -> ImageReader:
+    def cropped(
+        self, path: Path, width_pt: float, height_pt: float, focus_y: float = 0.5, focus_x: float = 0.5
+    ) -> ImageReader:
         """The image cropped to fill a ``width_pt`` x ``height_pt`` slot entirely."""
         with Image.open(self._assets_dir / path) as image:
-            box = cover_crop(image.width, image.height, width_pt / height_pt, focus_y)
+            box = cover_crop(image.width, image.height, width_pt / height_pt, focus_y, focus_x)
             return self._encode(self._resample(image.crop(box), width_pt, height_pt))
+
+    def shaded(
+        self,
+        path: Path,
+        width_pt: float,
+        height_pt: float,
+        *,
+        strength: float,
+        start: float = 0.5,
+        focus_y: float = 0.5,
+        focus_x: float = 0.5,
+    ) -> ImageReader:
+        """A full-bleed photo darkened towards the bottom, so light text can sit on it.
+
+        Below ``start`` (a fraction of the height) the image darkens smoothly,
+        reaching ``strength`` (0-1) at the bottom edge; the top is untouched.
+        """
+        with Image.open(self._assets_dir / path) as image:
+            box = cover_crop(image.width, image.height, width_pt / height_pt, focus_y, focus_x)
+            photo = self._resample(image.crop(box).convert("RGB"), width_pt, height_pt)
+        ramp = Image.new("L", (1, photo.height))
+        span = max(1.0, (1.0 - start) * photo.height)
+        first = start * photo.height
+        ramp.putdata(
+            [
+                round(255 * (1 - strength * min(1.0, max(0.0, (y - first) / span)) ** 1.4))
+                for y in range(photo.height)
+            ]
+        )
+        shade = ramp.resize(photo.size)
+        black = Image.new("RGB", photo.size, (0, 0, 0))
+        return self._encode(Image.composite(photo, black, shade))
 
     def bled(self, path: Path, width_pt: float, height_pt: float) -> ImageReader:
         """A studio photo filling a slot of a different shape, never cropping the subject.

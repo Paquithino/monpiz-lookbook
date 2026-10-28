@@ -43,16 +43,16 @@ def contain(src_w: float, src_h: float, box: Box) -> Box:
 
 
 def cover_crop(
-    src_w: int, src_h: int, target_ratio: float, focus_y: float = 0.5
+    src_w: int, src_h: int, target_ratio: float, focus_y: float = 0.5, focus_x: float = 0.5
 ) -> tuple[int, int, int, int]:
     """Pixel crop (left, top, right, bottom) giving ``target_ratio`` (width/height).
 
-    The crop keeps the full extent along one axis and is centred horizontally;
-    vertically it is positioned by ``focus_y`` (0 = top, 1 = bottom).
+    The crop keeps the full extent along one axis; along the other it is
+    positioned by ``focus_x`` / ``focus_y`` (0 = left or top, 1 = right or bottom).
     """
     if src_w / src_h > target_ratio:
         width = round(src_h * target_ratio)
-        left = (src_w - width) // 2
+        left = round((src_w - width) * focus_x)
         return left, 0, left + width, src_h
     height = round(src_w / target_ratio)
     top = round((src_h - height) * focus_y)

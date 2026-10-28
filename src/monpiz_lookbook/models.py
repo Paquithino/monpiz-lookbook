@@ -9,6 +9,7 @@ checks that they exist.
 
 from __future__ import annotations
 
+import re
 from collections.abc import Iterator
 from pathlib import Path
 from typing import Annotated
@@ -40,6 +41,31 @@ class Cover(_Model):
     highlights: list[Text] = Field(default_factory=list, max_length=4)
     photo: Path  # product shot on a white backdrop
     banner: Path | None = None  # full-bleed photo across the top of the cover
+
+
+class Spec(_Model):
+    """A row of a spec table (e.g. Suola — Vibram)."""
+
+    label: Text
+    value: Text
+
+
+class Feature(_Model):
+    """A full-bleed "breathing" page: one photo, a title and a line of text."""
+
+    image: Path
+    title: Text
+    text: str = ""
+    label: Text = "Dettaglio"
+    focus_x: float = Field(0.5, ge=0.0, le=1.0)
+    focus_y: float = Field(0.5, ge=0.0, le=1.0)
+
+
+class Index(_Model):
+    """The contents page, generated from the sections; the photo is optional."""
+
+    title: Text = "Indice"
+    photo: Path | None = None
 
 
 class ImageRef(_Model):
@@ -94,6 +120,7 @@ class Product(_Model):
     variants: list[Variant] = Field(min_length=1, max_length=4)
     colors: list[Swatch] = Field(default_factory=list, max_length=MAX_COLORS)
     closeup: Closeup | None = None
+    specs: list[Spec] = Field(default_factory=list, max_length=4)
 
     @model_validator(mode="after")
     def _colors_need_a_single_master_photo(self) -> Product:
@@ -129,6 +156,8 @@ class ShoeModel(_Model):
     description: Text
     image: Path | None = Field(None, description="Hero photo; a placeholder until provided")
     materials: list[Material] = Field(default_factory=list, max_length=4)
+    specs: list[Spec] = Field(default_factory=list, max_length=4)
+    feature: Feature | None = None  # full-bleed page shown right after the model page
     products: list[Product] = Field(default_factory=list)
 
 
@@ -138,6 +167,7 @@ class Section(_Model):
     name: Text
     eyebrow: Text = "Collezione"
     intro: str = ""
+    photo: Path | None = None  # full-bleed photo of the divider; a dark page without it
     models: list[ShoeModel] = Field(min_length=1)
 
     @property
@@ -146,11 +176,28 @@ class Section(_Model):
         return [product for model in self.models for product in model.products]
 
 
+_TOWN = re.compile(r"\b\d{5}\s+(.+?)(?:,?\s+[A-Z]{2})?$")
+_PROVINCE = re.compile(r"[A-Z]{2}")
+
+
 class Store(_Model):
     name: Text
     address: Text  # full postal address, or just the country for stores abroad
     phone: Text | None = None
     shop: Text | None = None  # URL of the store's online shop
+    at: tuple[float, float] | None = None  # (latitude, longitude), to place the store on the map
+
+    @property
+    def town(self) -> str:
+        """The town of the address: after the postcode ("31029 Vittorio Veneto TV"), else its
+        last part that is not a province code ("Castrette, TV" -> "Castrette")."""
+        match = _TOWN.search(self.address)
+        if match:
+            return match.group(1)
+        parts = [part.strip() for part in self.address.split(",")]
+        while len(parts) > 1 and _PROVINCE.fullmatch(parts[-1]):
+            parts.pop()
+        return parts[-1]
 
     @property
     def maps_url(self) -> str:
@@ -163,10 +210,26 @@ class Region(_Model):
     stores: list[Store] = Field(min_length=1)
 
 
+class MapLabel(_Model):
+    name: Text
+    at: tuple[float, float]  # (latitude, longitude)
+
+
+class RetailersMap(_Model):
+    """Area drawn on the retailers page; stores outside it are mentioned below the map."""
+
+    north: float = 47.05
+    south: float = 44.75
+    west: float = 9.2
+    east: float = 14.1
+    labels: list[MapLabel] = Field(default_factory=list)
+
+
 class Retailers(_Model):
     eyebrow: Text
     title: Text
     intro: str = ""
+    map: RetailersMap = Field(default_factory=RetailersMap)
     regions: list[Region] = Field(min_length=1)
 
 
@@ -174,6 +237,7 @@ class Closing(_Model):
     title: Text
     text: Text
     contacts: list[list[Text]] = Field(default_factory=list)
+    photo: Path | None = None  # back cover photo; a plain olive page without it
 
 
 class Lookbook(_Model):
@@ -181,6 +245,7 @@ class Lookbook(_Model):
     identity: Identity
     cover: Cover
     brand: Brand
+    index: Index | None = None
     sections: list[Section] = Field(min_length=1)
     retailers: Retailers | None = None
     closing: Closing | None = None
@@ -194,10 +259,18 @@ class Lookbook(_Model):
             yield self.cover.banner
         yield self.brand.banner.path
         yield from (detail.image for detail in self.brand.details)
+        if self.index is not None and self.index.photo is not None:
+            yield self.index.photo
+        if self.closing is not None and self.closing.photo is not None:
+            yield self.closing.photo
         for section in self.sections:
+            if section.photo is not None:
+                yield section.photo
             for model in section.models:
                 if model.image is not None:
                     yield model.image
+                if model.feature is not None:
+                    yield model.feature.image
                 yield from (m.image for m in model.materials if m.image is not None)
                 for product in model.products:
                     yield from (v.image for v in product.variants if v.image is not None)

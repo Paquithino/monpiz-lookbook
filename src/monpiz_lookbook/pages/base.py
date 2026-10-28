@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Protocol
@@ -10,13 +11,16 @@ from reportlab.lib.colors import Color
 
 from ..geometry import Box
 from ..images import ImageLibrary
-from ..surface import Align, Surface
+from ..surface import Align, Surface, text_width
 from ..theme import TextStyle, Theme
 
 EYEBROW_BASELINE = 48.5
 PLACEHOLDER_TEXT = "Foto in arrivo"
 HEADING_BASELINE = 90.0
 LABEL_PROBE = (0.0, 0.0, 0.35, 0.15)  # top-left corner of a photo, where labels sit
+RUNNING_HEAD_BASELINE = 40.0  # labels on top of a full-bleed photo
+SPEC_ROW = 22.0  # spec table: baseline to baseline
+SPEC_RULE_DROP = 8.0  # baseline -> hairline under the row
 DARK_PHOTO = 120.0  # mean grey level below which labels on a photo turn light
 
 
@@ -66,6 +70,44 @@ def photo_label_style(
     if photo is not None and ctx.images.luminance(photo, probe) < DARK_PHOTO:
         return style.with_color(ctx.theme.palette.on_dark)
     return style
+
+
+def fit_to_width(text: str, style: TextStyle, width: float) -> TextStyle:
+    """``style``, scaled down just enough for ``text`` to fit in ``width`` on one line."""
+    natural = text_width(text, style)
+    return style if natural <= width else style.scaled(width / natural)
+
+
+def label_on(
+    ctx: RenderContext,
+    photo: Path | None,
+    probe: tuple[float, float, float, float],
+    style: TextStyle | None = None,
+) -> TextStyle:
+    """``style`` (the ``label`` style by default), dark or light depending on the photo under ``probe``."""
+    style = style or ctx.theme.type.label
+    if photo is not None and ctx.images.luminance(photo, probe) < DARK_PHOTO:
+        return style.with_color(ctx.theme.palette.on_dark)
+    return style
+
+
+def draw_spec_table(
+    surface: Surface,
+    ctx: RenderContext,
+    rows: Sequence[tuple[str, str]],
+    x: float,
+    right: float,
+    baseline: float,
+) -> float:
+    """Key / value rows separated by hairlines; returns the last baseline."""
+    p, t = ctx.theme.palette, ctx.theme.type
+    last = baseline
+    for index, (key, value) in enumerate(rows):
+        last = baseline + index * SPEC_ROW
+        surface.text(key, x, last, t.label.with_color(p.faint))
+        surface.text(value, right, last, t.small.with_color(p.ink), Align.RIGHT)
+        surface.hline(x, right, last + SPEC_RULE_DROP, p.rule, 0.4)
+    return last
 
 
 def logo_height(ctx: RenderContext, width: float) -> float:

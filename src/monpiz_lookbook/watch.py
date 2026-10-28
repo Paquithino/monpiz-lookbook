@@ -49,6 +49,7 @@ def changed_files(before: Snapshot, after: Snapshot) -> set[Path]:
 
 
 def build_command(options: BuildOptions) -> list[str]:
+    flags = (["--no-bleed"] if not options.bleed else []) + (["--crop-marks"] if options.crop_marks else [])
     return [
         sys.executable,
         "-m",
@@ -62,6 +63,7 @@ def build_command(options: BuildOptions) -> list[str]:
         str(options.output),
         "--dpi",
         str(options.dpi),
+        *flags,
     ]
 
 

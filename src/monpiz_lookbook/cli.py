@@ -45,6 +45,14 @@ def _parser() -> argparse.ArgumentParser:
     build_cmd = commands.add_parser("build", help="genera il PDF")
     _add_content_args(build_cmd)
     _add_output_args(build_cmd, PRINT_DPI)
+    build_cmd.add_argument(
+        "--crop-marks", action="store_true", help="aggiunge i segni di taglio per la tipografia"
+    )
+    build_cmd.add_argument(
+        "--no-bleed",
+        action="store_true",
+        help="senza abbondanza: per la versione online o da spedire via email",
+    )
 
     watch_cmd = commands.add_parser("watch", help="rigenera il PDF a ogni modifica salvata")
     _add_content_args(watch_cmd)
@@ -56,7 +64,15 @@ def _parser() -> argparse.ArgumentParser:
 
 
 def _options(args: argparse.Namespace) -> BuildOptions:
-    return BuildOptions(args.content, args.assets, args.output, args.dpi)
+    return BuildOptions(
+        args.content,
+        args.assets,
+        args.output,
+        args.dpi,
+        # The live preview shows the trimmed page; a build is for print unless told otherwise.
+        bleed=args.command == "build" and not args.no_bleed,
+        crop_marks=getattr(args, "crop_marks", False),
+    )
 
 
 def main(argv: Sequence[str] | None = None) -> int:
@@ -72,6 +88,11 @@ def main(argv: Sequence[str] | None = None) -> int:
             result = build(_options(args))
             size_mb = result.size_bytes / 1_000_000
             print(f"Creato {result.output} ({result.pages} pagine, {size_mb:.1f} MB)")
+            if result.blank_pages_needed:
+                print(
+                    f"Nota: per la stampa a punto metallico le pagine devono essere un multiplo di 4: "
+                    f"ne mancano {result.blank_pages_needed}."
+                )
     except LookbookError as exc:
         print(f"Errore: {exc}", file=sys.stderr)
         return EXIT_ERROR
