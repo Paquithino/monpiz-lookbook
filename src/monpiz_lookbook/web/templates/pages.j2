@@ -1,0 +1,223 @@
+{# One macro per page kind (see book.py). `page` is a book.Page. #}
+{% import "macros.j2" as m with context %}
+
+{% macro folio(page) -%}
+<header class="folio"><span>{{ page.section }}</span><span>{{ page.number }}</span></header>
+{%- endmacro %}
+
+{% macro cover(page) -%}
+{% set c = lb.cover %}
+{% if c.banner %}
+<div class="cover__top">
+  <div class="cover__banner">{{ m.img(pic(c.banner), "", "100vw", eager=True) }}</div>
+  <svg class="cover__ridge" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+    <path d="{{ ridge_path }}" vector-effect="non-scaling-stroke"/>
+  </svg>
+</div>
+{% endif %}
+<div class="cover__body">
+  <h1 class="cover__logo">{{ m.img(logo, lb.meta.author, "(orientation: landscape) 22vw, 46vw", eager=True) }}</h1>
+  <p class="cover__tagline">{{ c.tagline }}</p>
+  <div class="cover__boots">{{ m.img(boots, "", "(orientation: landscape) 40vw, 80vw", eager=True) }}</div>
+  <p class="cover__claim">{{ c.claim }}</p>
+  {% if c.highlights %}<ul class="cover__highlights">{% for h in c.highlights %}<li>{{ h }}</li>{% endfor %}</ul>{% endif %}
+  <p class="cover__hint" aria-hidden="true"><span class="hint--touch">Scorri per sfogliare</span><span class="hint--keys">Sfoglia con le frecce o con la rotella</span></p>
+</div>
+{%- endmacro %}
+
+{% macro brand(page) -%}
+{% set b = lb.brand %}
+{{ folio(page) }}
+<div class="text-block">
+  <h2 class="title">{{ b.title }}</h2>
+  {% for paragraph in b.paragraphs %}<p class="lead">{{ paragraph }}</p>{% endfor %}
+</div>
+<figure class="fill">{{ m.img(pic(b.banner.path, focus=(0.5, b.banner.focus_y)), "", "(orientation: landscape) 50vw, 100vw", style="object-position: 50%% %d%%" % (b.banner.focus_y * 100)) }}</figure>
+{%- endmacro %}
+
+{% macro details(page) -%}
+{% set b = lb.brand %}
+{{ folio(page) }}
+<h2 class="title">{{ b.details_title }}</h2>
+<ul class="details">
+  {% for d in b.details %}
+  <li>
+    {{ m.img(pic(d.image, widths=SMALL, ratio=1.0), "", "(orientation: landscape) 14vw, 30vw") }}
+    <h3>{{ d.name }}</h3>
+    <p>{{ d.description }}</p>
+  </li>
+  {% endfor %}
+</ul>
+{%- endmacro %}
+
+{% macro contents(page) -%}
+{{ folio(page) }}
+<h2 class="title">{{ page.title }}</h2>
+<ol class="toc">
+  {% for entry in menu %}
+  <li>
+    <a class="toc__entry" href="#{{ entry.anchor }}" data-goto>{{ entry.title }}</a>
+    {% if entry.children %}
+    <ol class="toc__children">{% for child in entry.children %}<li><a href="#{{ child.anchor }}" data-goto>{{ child.title }}</a></li>{% endfor %}</ol>
+    {% endif %}
+  </li>
+  {% endfor %}
+</ol>
+{%- endmacro %}
+
+{% macro photo(page) -%}
+<figure class="bleed">{{ m.img(pic(page.data.photo), "", "(orientation: landscape) 50vw, 100vw") }}</figure>
+{%- endmacro %}
+
+{% macro opener(page) -%}
+{% set s = page.data.section %}
+{% if s.photo %}<figure class="bleed">{{ m.img(pic(s.photo), "", "100vw") }}</figure>{% endif %}
+<div class="opener__text">
+  <p class="opener__number">{{ "%02d" % page.data.number }}<span>{{ s.eyebrow }}</span></p>
+  <h2 class="opener__name">{{ s.name }}</h2>
+  {% if s.intro %}<p class="opener__intro">{{ s.intro }}</p>{% endif %}
+  <p class="opener__count">{{ models_label(s.models|length) }}</p>
+</div>
+{%- endmacro %}
+
+{% macro model(page) -%}
+{% set mo = page.data.model %}
+{{ folio(page) }}
+<figure class="fill model__hero">
+  {% if mo.image %}{{ m.img(pic(mo.image), mo.name, "(orientation: landscape) 50vw, 100vw") }}{% else %}{{ m.placeholder() }}{% endif %}
+</figure>
+<div class="model__text">
+  <p class="kicker">{{ page.data.section.name }}, modello {{ page.data.index }} di {{ page.data.count }}</p>
+  <h2 class="model__name">{{ mo.name }}</h2>
+  <p class="body">{{ mo.description }}</p>
+  {% if mo.specs %}<dl class="specs specs--inline">{% for s in mo.specs %}<div><dt>{{ s.label }}</dt><dd>{{ s.value }}</dd></div>{% endfor %}</dl>{% endif %}
+  {% if mo.materials %}
+  <ol class="materials" aria-label="Materiali">
+    {% for mat in mo.materials %}
+    <li>
+      {% if mat.image %}{{ m.img(pic(mat.image, widths=SMALL, ratio=1.0), "", "(orientation: landscape) 8vw, 20vw") }}
+      {% else %}<span class="materials__empty" aria-hidden="true"></span>{% endif %}
+      <span class="materials__name">{{ mat.name }}</span>
+    </li>
+    {% endfor %}
+  </ol>
+  {% endif %}
+</div>
+{%- endmacro %}
+
+{% macro feature(page) -%}
+{% set f = page.data.feature %}
+<figure class="bleed">{{ m.img(pic(f.image), "", "(orientation: landscape) 50vw, 100vw", style="object-position: %d%% %d%%" % (f.focus_x * 100, f.focus_y * 100)) }}</figure>
+<div class="feature__text">
+  <p class="feature__label">{{ f.label }}</p>
+  <h3 class="feature__title">{{ f.title }}</h3>
+  {% if f.text %}<p class="feature__body">{{ f.text }}</p>{% endif %}
+</div>
+{%- endmacro %}
+
+{% macro product(page) -%}
+{% set p = page.data.product %}
+{% set mo = page.data.model %}
+{{ folio(page) }}
+<div class="fill shots shots--{{ p.variants|length }}">
+  {% for v in p.variants %}
+  <figure class="shot">
+    {{ m.studio(v.image, p.name ~ ", " ~ v.color, "(orientation: landscape) 50vw, 100vw") }}
+    <figcaption>{{ v.color }}</figcaption>
+  </figure>
+  {% endfor %}
+  {% if p.closeup %}
+  <figure class="closeup">
+    {{ m.img(pic(p.closeup.image, widths=SMALL, ratio=1.0), p.closeup.label, "(orientation: landscape) 12vw, 30vw") }}
+    <figcaption>{{ p.closeup.label }}</figcaption>
+  </figure>
+  {% endif %}
+</div>
+<div class="product__text">
+  <p class="kicker">{{ mo.name }}</p>
+  <h3 class="product__name">{{ short_name(p.name, mo.name) }}</h3>
+  <p class="body">{{ p.description }}</p>
+  <dl class="specs specs--inline">
+    {% for s in p.specs %}<div><dt>{{ s.label }}</dt><dd>{{ s.value }}</dd></div>{% endfor %}
+    {% if p.sizes %}<div><dt>Taglie</dt><dd>{{ p.sizes }}</dd></div>{% endif %}
+    {% if p.colors %}<div><dt>Colori</dt><dd>{{ p.colors|length }}</dd></div>{% endif %}
+  </dl>
+  {% if p.colors %}
+  <div class="colors" data-colors>
+    <p class="colors__name" aria-live="polite" data-color-name>{{ p.master.color }}</p>
+    <ul class="colors__chips">
+      {% for c in p.colors %}
+      {% set shown = c.name|trim|lower == p.master.color|trim|lower %}
+      <li>
+        <button type="button" class="chip{% if shown %} is-current{% endif %}" data-color="{{ c.name }}" aria-label="{{ c.name }}" title="{{ c.name }}"{% if shown %} aria-pressed="true"{% else %} aria-pressed="false"{% endif %}>
+          {% if c.image %}{{ m.img(pic(c.image, widths=(160,), ratio=1.0), "", "48px") }}{% endif %}
+        </button>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+</div>
+{%- endmacro %}
+
+{% macro retailers_map(page) -%}
+{% set r = page.data.retailers %}
+{{ folio(page) }}
+<h2 class="title">{{ r.title }}</h2>
+{% if r.intro %}<p class="body">{{ r.intro }}</p>{% endif %}
+{% if map %}
+<figure class="fill map">
+  <svg viewBox="0 0 {{ map.width }} {{ map.height }}" role="img" aria-label="Mappa dei rivenditori" preserveAspectRatio="xMidYMid meet">
+    <path class="map__sky" d="{{ map.skyline }}"/>
+    {% for label in map.regions %}<text class="map__region" x="{{ '%.1f' % label.x }}" y="{{ '%.1f' % label.y }}">{{ label.text }}</text>{% endfor %}
+    {% for d in map.dots %}<a href="{{ d.store.link }}" target="_blank" rel="noopener" aria-label="{{ d.store.name }}, {{ d.store.town }}"><circle cx="{{ '%.1f' % d.x }}" cy="{{ '%.1f' % d.y }}" r="5"/></a>{% endfor %}
+    {% for label in map.cities %}<text class="map__city" x="{{ '%.1f' % label.x }}" y="{{ '%.1f' % label.y }}" text-anchor="{{ label.anchor }}">{{ label.text }}</text>{% endfor %}
+  </svg>
+  {% if map.outside %}<figcaption>Anche in: {{ map.outside | join(", ") }}</figcaption>{% endif %}
+</figure>
+{% endif %}
+<p class="map__hint">Tocca un punto per aprire il negozio. L'elenco completo è nelle pagine successive.</p>
+{%- endmacro %}
+
+{% macro retailers_list(page) -%}
+{{ folio(page) }}
+{% for chunk in page.data.chunks %}
+<section class="region">
+  <h3 class="region__name">{{ chunk.region.region }}{% if chunk.continued %} <span>(segue)</span>{% endif %}</h3>
+  <ul>
+    {% for s in chunk.stores %}
+    <li class="store">
+      <a class="store__name" href="{{ s.link }}" target="_blank" rel="noopener">{{ s.name }}</a>
+      <span class="store__town">{{ s.town }}</span>
+      <span class="store__links">
+        {% if s.shop %}<a href="{{ s.shop }}" target="_blank" rel="noopener">Shop online</a>{% endif %}
+        <a href="{{ s.maps_url }}" target="_blank" rel="noopener">Mappa</a>
+        {% if s.phone %}<a href="{{ phone_href(s.phone) }}">{{ s.phone }}</a>{% endif %}
+      </span>
+    </li>
+    {% endfor %}
+  </ul>
+</section>
+{% endfor %}
+{%- endmacro %}
+
+{% macro closing(page) -%}
+{% set c = lb.closing %}
+<div class="closing__body">
+  {{ m.img(logo, lb.meta.author, "200px", cls="closing__logo") }}
+  <h2 class="closing__title">{{ c.title }}</h2>
+  <p class="body">{{ c.text }}</p>
+  <div class="closing__contacts">
+    {% for row in c.contacts %}
+    <p>{% for item in row %}{% set k = contact(item) %}{% if k.href %}<a href="{{ k.href }}"{% if k.href.startswith("http") %} target="_blank" rel="noopener"{% endif %}>{{ k.text }}</a>{% else %}<span>{{ k.text }}</span>{% endif %}{% endfor %}</p>
+    {% endfor %}
+  </div>
+  <p class="closing__legal">© {{ year }} {{ lb.meta.author }}</p>
+</div>
+{%- endmacro %}
+
+{% macro filler(page) -%}
+<div class="filler">
+  <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d="{{ ridge_path }}" vector-effect="non-scaling-stroke"/></svg>
+</div>
+{%- endmacro %}

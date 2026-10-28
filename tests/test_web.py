@@ -145,3 +145,22 @@ def test_a_rebuild_reuses_the_images_and_drops_the_unused_ones(lookbook: SiteOpt
     build_site(lookbook)
     after = {p.name: p.stat().st_mtime_ns for p in images.glob("*.webp")}
     assert after == before
+
+
+def test_full_spreads_always_start_on_a_left_hand_page(lookbook: SiteOptions) -> None:
+    from monpiz_lookbook.content import load_lookbook
+    from monpiz_lookbook.web.book import book_pages
+    from monpiz_lookbook.web.view import anchors
+
+    lb = load_lookbook(lookbook.content_file, lookbook.assets_dir)
+    pages = book_pages(lb, anchors(lb))
+    position = 0  # 0: left-hand page, 1: right-hand page
+    for page in pages:
+        if page.span == 2:
+            assert position == 0 and page.spread_start
+            continue
+        assert page.spread_start == (position == 0)
+        position = 1 - position
+    assert position == 0  # the book ends with a complete spread
+    real = [p.number for p in pages if not p.filler]
+    assert real == list(range(1, len(real) + 1))

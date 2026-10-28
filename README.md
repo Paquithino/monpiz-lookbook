@@ -129,9 +129,15 @@ YAML (es. `colours` invece di `colors`) viene segnalato, non ignorato.
 tablet e computer: una pagina HTML statica in `site/`, senza server né database.
 Il PDF non viene pubblicato: la rivista si consulta, non si scarica.
 
-- **Impaginazione**: sul telefono si scorre in verticale, con aperture e foto a tutto
-  schermo; da 900 px in su ogni modello e prodotto diventa una doppia pagina (foto
-  fissa a sinistra, testo a destra). Colori, caratteri e logo sono quelli della stampa.
+- **Un libro da sfogliare**: ogni pagina occupa lo schermo e si gira con lo swipe, le
+  frecce in basso, la tastiera o la rotella del mouse, con l'effetto della pagina che
+  ruota sul dorso. Sul telefono si vede una pagina alla volta; sugli schermi orizzontali
+  due pagine affiancate come una rivista aperta (copertina e aperture di sezione
+  occupano la doppia pagina; `web/book.py` inserisce le pagine di raccordo necessarie).
+  Il contatore in basso apre la panoramica di tutte le pagine.
+- **Pagine**: modello con foto grande e materiali in una riga di piccoli tondi; prodotto
+  con foto, specifiche e colori come pastiglie da toccare (mostrano il nome).
+  Colori, caratteri e logo sono quelli della stampa.
 - **Immagini**: ogni foto è pubblicata in WebP a più larghezze (480–1800 px); il
   browser scarica solo quella adatta allo schermo. I file hanno nel nome un'impronta
   del contenuto: una foto cambiata non resta mai vecchia nella cache del browser.

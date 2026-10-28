@@ -22,6 +22,7 @@ from ..models import Lookbook
 from ..pages.product import short_name
 from ..pages.section import models_label
 from ..theme import default_theme
+from .book import book_pages
 from .fonts import build_fonts
 from .media import Picture, WebImages
 from .text import phone_href
@@ -45,7 +46,7 @@ class SiteOptions:
 @dataclass(frozen=True, slots=True)
 class SiteResult:
     output_dir: Path
-    pages: int  # products shown
+    pages: int  # pages of the book, fillers included
     images: int
     size_bytes: int
 
@@ -67,8 +68,8 @@ def build_site(options: SiteOptions) -> SiteResult:
     images.prune()
 
     size = sum(p.stat().st_size for p in out.rglob("*") if p.is_file())
-    products = sum(len(m.products) or 1 for s in lookbook.sections for m in s.models)
-    return SiteResult(out, products, len(images.written), size)
+    pages = len(book_pages(lookbook, anchors(lookbook)))
+    return SiteResult(out, pages, len(images.written), size)
 
 
 def render(lookbook: Lookbook, images: WebImages, assets_dir: Path, out: Path) -> str:
@@ -85,10 +86,13 @@ def render(lookbook: Lookbook, images: WebImages, assets_dir: Path, out: Path) -
         name.replace("_", "-"): "#" + getattr(palette, name).hexval()[2:]
         for name in palette.__dataclass_fields__
     }
+    pages = book_pages(lookbook, ids)
     template = env.get_template("index.html.j2")
     return template.render(
         lb=lookbook,
         ids=ids,
+        pages=pages,
+        total=sum(1 for page in pages if not page.filler),
         menu=contents(lookbook, ids),
         map=retailers_map(lookbook.retailers) if lookbook.retailers else None,
         colors=colors,
