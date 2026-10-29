@@ -731,3 +731,5 @@ closing:
 identity:
      logo: images/brand/logo.png
      logo_mask: images/brand/logo-mask.png
+web:
+  url: https:://lookbook.monpiz.it
