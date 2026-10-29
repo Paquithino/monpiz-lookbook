@@ -707,7 +707,7 @@ retailers:
    eyebrow: Dove trovarci
    title: 30 negozi, da Cortina a Trieste.
    intro: >-
-    I nostri rivenditori autorizzati, regione per regione.
+    Scopri i nostri rivenditori autorizzati.
    source: retailers.yaml
    map:
      labels:
@@ -723,7 +723,7 @@ retailers:
 
 closing:
    title: Sei pronto?
-   text: Scopri i nuovi prodotti MonPiz, o cerca il rivenditore più vicino a te.
+   text: Scopri i nuovi prodotti MonPiz, o cerca il rivenditore più vicino a te!
    contacts:
      - [monpiz@monpiz.it, +39 335 760 4522]
      - [monpiz.it, instagram.com/monpiz_]
