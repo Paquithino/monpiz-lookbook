@@ -1,6 +1,7 @@
 /* MonPiz lookbook, digital edition: pages read by scrolling down, like a PDF.
-   Each page is a sheet as wide as the screen, with a thin dark line between
-   pages; photos keep their own proportions. Colours come from theme.py (custom properties written in
+   On a phone each page is a sheet as wide as the screen, with a thin dark line
+   between pages; on a computer the sheets sit centred on the dark green, like a
+   PDF viewer. Photos keep their own proportions. Colours come from theme.py (custom properties written in
    index.html); the fonts are the print ones. */
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -31,7 +32,7 @@ ol, ul { list-style: none; }
 
 /* --- the pages ------------------------------------------------------------------------------ */
 .book { display: flex; flex-direction: column; align-items: center; gap: var(--gap); padding-bottom: 6rem; outline: none; }
-.page { width: var(--sheet); scroll-margin-top: 0; }
+.page { width: min(100%, var(--sheet)); scroll-margin-top: 0; } /* 100%: no sideways scroll under a desktop scrollbar */
 .sheet {
   position: relative;
   display: flex; flex-direction: column;
@@ -301,9 +302,13 @@ ol, ul { list-style: none; }
 
 /* --- wider screens: sheets on a table ------------------------------------------------------ */
 @media (min-width: 960px) {
+  /* Computer: pages the size of a magazine page, on a dark green table. */
+  :root { --sheet: 920px; --gap: 2.2rem; }
+  .book { padding-top: 2.2rem; }
+  .page .sheet { box-shadow: 0 10px 40px rgb(0 0 0 / 0.35); }
   /* On a computer the cover is the same page as on a phone, sized to the first screen:
      the photo with the mountain edge on top, the boots take the room that is left. */
-  .page--cover .sheet { min-height: 0; height: max(36rem, 100vh); padding-bottom: 1rem; }
+  .page--cover .sheet { min-height: 0; height: max(36rem, calc(100vh - 4.4rem)); padding-bottom: 1rem; }
   .cover__top { flex: 0 0 auto; }
   .cover__banner img { aspect-ratio: auto; height: 28vh; min-height: 10rem; clip-path: var(--ridge-clip-wide); }
   .ridge--phone { display: none; }
