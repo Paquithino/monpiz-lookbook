@@ -15,8 +15,8 @@ from ..models import Index
 from ..surface import Align, Surface
 from .base import RenderContext
 
-PHOTO_WIDTH = 232.0
-PHOTO_GAP = 34.0  # list -> photo
+PHOTO_WIDTH = 300.0  # about half the page: the photo reads as a picture, not a strip
+PHOTO_GAP = 28.0  # list -> photo
 EYEBROW_BASELINE = 74.0
 EYEBROW = "Collezione"
 TITLE_BASELINE = 150.0
