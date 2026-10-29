@@ -276,7 +276,6 @@ sections:
                 image: images/products/Lagazuoi_Donna_Suede_Cavallino_Spaiate.webp
             colors:
               - {name: Camouflage, image: images/texture/cavallino/Cavallino_Camuflage.png}
-              - {name: Moka , image: images/texture/cavallino/cavallino-moka.webp }
               - {name: Bianco e Nero , image: images/texture/cavallino/cavallino-bianco-nero.webp }
 
  #ORTISEI ##########################################################################################
