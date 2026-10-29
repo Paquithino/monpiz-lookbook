@@ -6,8 +6,7 @@ centre of their stores and a few labelled towns. Stores outside the area are
 mentioned under the map ("Anche in: Lazio, Estero").
 
 The list gives one line per store, "Name — Town", grouped by region; the name
-links to the store's online shop, else to Google Maps. Stores that sell online
-are set in the accent colour with a dot before the name. ``paginate`` flows
+links to the store's online shop, else to Google Maps. ``paginate`` flows
 the regions down the columns, then onto a further page if needed; a region
 broken across columns repeats its header.
 """
@@ -45,9 +44,6 @@ HEAD_TO_FIRST = 18.0
 LINE_PITCH = 12.2
 REGION_GAP = 16.0
 DASH = " — "
-SHOP_LEGEND = "Shop online: clicca sul nome del negozio"
-SHOP_DOT_RADIUS = 1.8
-SHOP_DOT_OFFSET = 5.0  # dot centre -> left edge of the store name
 CONTINUED = " (segue)"
 
 
@@ -58,7 +54,6 @@ class Line:
     baseline: float
     head: bool  # a region header, not a store line
     url: str | None = None
-    shop: bool = False  # the store sells online: line in the accent colour, a dot before its name
 
 
 def town_line(store: Store) -> str:
@@ -131,7 +126,7 @@ def paginate(retailers: Retailers, theme: Theme) -> list[list[Line]]:
                 header_due = False
             for number, text in enumerate(lines):
                 url = store.link if number == 0 else None
-                pages[-1].append(Line(text, x(), y, head=False, url=url, shop=bool(store.shop)))
+                pages[-1].append(Line(text, x(), y, head=False, url=url))
                 y += LINE_PITCH
         y += REGION_GAP
     return pages
@@ -159,10 +154,6 @@ class RetailersPage:
                 )
         for line in self.lines:
             style = t.region if line.head else t.store_line
-            if line.shop:
-                style = style.with_color(p.accent)
-                if line.url:
-                    surface.dot((line.x - SHOP_DOT_OFFSET, line.baseline - 2.3), SHOP_DOT_RADIUS, p.accent)
             width = surface.text(line.text, line.x, line.baseline, style)
             if line.url:
                 surface.link(line.url, Box(line.x, line.baseline - style.size, width, style.leading))
@@ -204,12 +195,6 @@ class RetailersPage:
             note = OUTSIDE_PREFIX + ", ".join(outside)
             surface.text(note, MAP.right, MAP.bottom - 4, t.small, Align.RIGHT)
         surface.hline(MAP.x, MAP.right, MAP.bottom + RULE_BELOW_MAP, p.ink, 0.6)
-        if any(s.shop for r in self.retailers.regions for s in r.stores):
-            legend = t.small.with_color(p.accent)
-            baseline = MAP.bottom + RULE_BELOW_MAP - 6
-            width = text_width(SHOP_LEGEND, legend)
-            surface.text(SHOP_LEGEND, MAP.right, baseline, legend, Align.RIGHT)
-            surface.dot((MAP.right - width - SHOP_DOT_OFFSET, baseline - 2.3), SHOP_DOT_RADIUS, p.accent)
 
 
 def _label_drop(placed: list[tuple[float, float]], centre_y: float) -> float:

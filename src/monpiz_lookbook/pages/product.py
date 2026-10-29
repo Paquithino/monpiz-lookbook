@@ -20,12 +20,13 @@ underlined.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 
 from ..errors import LayoutError
 from ..geometry import Box
 from ..models import MAX_COLORS, Closeup, Product, Swatch, Variant
 from ..surface import Align, Surface
+from ..theme import Font
 from .base import (
     RUNNING_HEAD_BASELINE,
     RenderContext,
@@ -187,7 +188,10 @@ class ProductPage:
         top = self.photos_bottom
         surface.text(self.model_name, x, top + EYEBROW_OFFSET, t.label.with_color(p.accent))
         name = short_name(self.product.name, self.model_name)
-        title = fit_to_width(name, t.product_name, SPECS_X - TITLE_GAP - x)
+        style = t.product_name
+        if name != self.product.name:  # a material variant of the model: set in italics
+            style = replace(style, font=Font.DISPLAY_ITALIC)
+        title = fit_to_width(name, style, SPECS_X - TITLE_GAP - x)
         surface.text(name, x - 2, top + TITLE_OFFSET, title)
         return surface.paragraph(self.product.description, x, top + TEXT_OFFSET, TEXT_WIDTH, t.text)
 

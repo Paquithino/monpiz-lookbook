@@ -704,7 +704,7 @@ sections:
 #RIVENDITORI ##########################################################################################
 retailers:
    eyebrow: Dove trovarci
-   title: 30 negozi, da Cortina a Trieste.
+   title: Una rete di 30 negozi.
    intro: >-
     Scopri i nostri rivenditori autorizzati.
    source: retailers.yaml
@@ -721,7 +721,7 @@ retailers:
        - {name: Piacenza, at: [45.05, 9.69]}
 
 closing:
-   title: Sei pronto?
+   title: Inizia il tuo viaggio con ... 
    text: Scopri i nuovi prodotti MonPiz, o cerca il rivenditore più vicino a te!
    contacts:
      - [monpiz@monpiz.it, +39 335 760 4522]

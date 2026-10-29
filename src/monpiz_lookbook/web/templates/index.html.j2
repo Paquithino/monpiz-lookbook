@@ -26,7 +26,7 @@
 {% endfor %}
 <style>
 {% for f in fonts %}
-@font-face { font-family: "{{ f.family }}"; src: url("{{ f.url }}") format("{{ f.format }}"); font-display: swap; }
+@font-face { font-family: "{{ f.family }}"; src: url("{{ f.url }}") format("{{ f.format }}"); font-style: {{ f.style }}; font-display: swap; }
 {% endfor %}
 :root {
 {% for name, value in colors.items() %}  --{{ name }}: {{ value }};

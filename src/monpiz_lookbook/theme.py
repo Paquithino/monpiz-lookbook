@@ -18,6 +18,7 @@ class Font(StrEnum):
     """Font names as registered in ReportLab (see :mod:`fonts`)."""
 
     DISPLAY = "Fraunces-Display"
+    DISPLAY_ITALIC = "Fraunces-DisplayItalic"  # material variant of a model (Cortina *Dakar*)
     SERIF = "Fraunces-Text"
     SANS = "Inter-Regular"
 

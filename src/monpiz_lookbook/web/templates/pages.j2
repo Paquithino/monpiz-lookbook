@@ -133,7 +133,7 @@
 {% set p = page.data.product %}
 {% set mo = page.data.model %}
 {{ folio(page) }}
-<div class="wide shots shots--{{ p.variants|length }}">
+<div class="wide shots shots--{{ p.variants|length }}{% if p.closeup %} shots--closeup{% endif %}">
   {% for v in p.variants %}
   <figure class="shot">
     {{ m.studio(v.image, p.name ~ ", " ~ v.color, "100vw") }}
@@ -142,14 +142,15 @@
   {% endfor %}
   {% if p.closeup %}
   <figure class="closeup">
-    {{ m.img(pic(p.closeup.image, widths=SMALL, ratio=1.0), p.closeup.label, "(min-width: 960px) 240px, 30vw") }}
+    {{ m.img(pic(p.closeup.image, widths=(480, 800)), p.closeup.label, "(min-width: 960px) 340px, 37vw") }}
     <figcaption>{{ p.closeup.label }}</figcaption>
   </figure>
   {% endif %}
 </div>
 <div class="product__text">
   <p class="kicker">{{ mo.name }}</p>
-  <h3 class="product__name">{{ short_name(p.name, mo.name) }}</h3>
+  {% set variant = short_name(p.name, mo.name) %}
+  <h3 class="product__name{% if variant != p.name %} product__name--variant{% endif %}">{{ variant }}</h3>
   <p class="body">{{ p.description }}</p>
   <dl class="specs specs--inline">
     {% for s in p.specs %}<div><dt>{{ s.label }}</dt><dd>{{ s.value }}</dd></div>{% endfor %}

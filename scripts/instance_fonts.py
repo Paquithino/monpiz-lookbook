@@ -8,6 +8,7 @@ axes to the values used in the design and writes static TTFs to
 Usage:
     python scripts/instance_fonts.py \
         --fraunces "path/to/Fraunces[SOFT,WONK,opsz,wght].ttf" \
+        --fraunces-italic "path/to/Fraunces-Italic[SOFT,WONK,opsz,wght].ttf" \
         --inter "path/to/Inter[opsz,wght].ttf"
 
 Sources: https://github.com/google/fonts (ofl/fraunces, ofl/inter).
@@ -27,6 +28,7 @@ OUTPUT_DIR = Path(__file__).resolve().parents[1] / "assets" / "fonts"
 INSTANCES: tuple[tuple[str, str, dict[str, float]], ...] = (
     ("fraunces", "Fraunces-Display.ttf", {"opsz": 48, "wght": 500, "SOFT": 0, "WONK": 0}),
     ("fraunces", "Fraunces-Text.ttf", {"opsz": 14, "wght": 500, "SOFT": 0, "WONK": 0}),
+    ("fraunces_italic", "Fraunces-DisplayItalic.ttf", {"opsz": 48, "wght": 500, "SOFT": 0, "WONK": 0}),
     ("inter", "Inter-Regular.ttf", {"opsz": 14, "wght": 400}),
 )
 
@@ -48,10 +50,11 @@ def build_instance(source: Path, target: Path, location: dict[str, float]) -> No
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--fraunces", type=Path, required=True)
+    parser.add_argument("--fraunces-italic", type=Path, required=True)
     parser.add_argument("--inter", type=Path, required=True)
     args = parser.parse_args()
 
-    sources = {"fraunces": args.fraunces, "inter": args.inter}
+    sources = {"fraunces": args.fraunces, "fraunces_italic": args.fraunces_italic, "inter": args.inter}
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     for key, filename, location in INSTANCES:
         target = OUTPUT_DIR / filename

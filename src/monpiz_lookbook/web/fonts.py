@@ -28,12 +28,14 @@ class WebFont:
     family: str  # CSS font-family
     url: str
     format: str  # "woff2" or "woff"
+    style: str = "normal"  # CSS font-style
 
 
 FAMILIES = {
-    Font.DISPLAY: "Fraunces Display",
-    Font.SERIF: "Fraunces Text",
-    Font.SANS: "Inter",
+    Font.DISPLAY: ("Fraunces Display", "normal"),
+    Font.DISPLAY_ITALIC: ("Fraunces Display", "italic"),
+    Font.SERIF: ("Fraunces Text", "normal"),
+    Font.SANS: ("Inter", "normal"),
 }
 
 
@@ -42,7 +44,7 @@ def build_fonts(assets_dir: Path, site_dir: Path) -> list[WebFont]:
     out_dir = site_dir / FONT_DIR
     out_dir.mkdir(parents=True, exist_ok=True)
     fonts = []
-    for font, family in FAMILIES.items():
+    for font, (family, style) in FAMILIES.items():
         source = assets_dir / "fonts" / f"{font.value}.ttf"
         target = out_dir / f"{font.value}.{flavor}"
         if not target.exists() or target.stat().st_mtime < source.stat().st_mtime:
@@ -55,5 +57,5 @@ def build_fonts(assets_dir: Path, site_dir: Path) -> list[WebFont]:
             subsetter.populate(unicodes=UNICODES)
             subsetter.subset(loaded)
             subset.save_font(loaded, str(target), options)
-        fonts.append(WebFont(family, f"{FONT_DIR}/{target.name}", flavor))
+        fonts.append(WebFont(family, f"{FONT_DIR}/{target.name}", flavor, style))
     return fonts
