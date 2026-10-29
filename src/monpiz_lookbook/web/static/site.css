@@ -263,8 +263,8 @@ ol, ul { list-style: none; }
 
 /* --- closing --------------------------------------------------------------------------------- */
 .closing__body { margin: 2rem 0; display: flex; flex-direction: column; align-items: center; text-align: center; }
-.closing__logo { width: 10rem; height: auto; margin-bottom: 1.4rem; }
-.closing__title { font: 500 clamp(2rem, calc(var(--pw) * 0.09), 3rem)/1.1 var(--display); color: var(--ink); margin-bottom: 0.5rem; }
+.closing__logo { width: 10rem; height: auto; margin: 0.4rem 0 1.4rem; }
+.closing__title { font: 500 clamp(1.5rem, calc(var(--pw) * 0.064), 2.6rem)/1.1 var(--display); color: var(--ink); margin-bottom: 0.9rem; }
 .closing__contacts { margin-top: 1.4rem; padding-top: 1.4rem; border-top: 1px solid var(--ink); }
 .closing__contacts p { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.2rem 1.2rem; }
 .closing__contacts a { color: var(--ink); }

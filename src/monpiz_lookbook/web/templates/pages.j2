@@ -225,8 +225,8 @@
 {% macro closing(page) -%}
 {% set c = lb.closing %}
 <div class="closing__body">
-  {{ m.img(logo, lb.meta.author, "200px", cls="closing__logo") }}
   <h2 class="closing__title">{{ c.title }}</h2>
+  {{ m.img(logo, lb.meta.author, "200px", cls="closing__logo") }}
   <p class="body">{{ c.text }}</p>
   <div class="closing__contacts">
     {% for row in c.contacts %}
