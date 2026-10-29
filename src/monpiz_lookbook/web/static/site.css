@@ -332,6 +332,16 @@ ol, ul { list-style: none; }
   .cover__tagline { margin-top: 0.4rem; }
   .cover__claim { font-size: clamp(0.95rem, 2.1vh, 1.2rem); }
   .cover__highlights { margin-top: 1.1rem; }
+  /* Contents: the photo whole at its own proportions, the list compact beside it (as in print). */
+  .contents { grid-template-columns: 1fr 48%; align-items: stretch; }
+  .contents__photo img { position: static; height: auto; display: block; }
+  .contents__list { padding: 2rem 2.2rem 2rem var(--pad); }
+  .page--contents .title { font-size: 3.2rem; margin-bottom: 0.6rem; }
+  .toc > li { padding: 0.32rem 0 0.36rem; }
+  .toc__entry { font-size: 1.3rem; }
+  .toc__children { margin-top: 0.1rem; }
+  .toc__children a { padding: 0.08rem 0 0.08rem 0.8rem; font-size: 0.92rem; }
+  .toc__page { font-size: 0.8rem; }
   .dock__label { display: inline; }
   .details { grid-template-columns: repeat(4, 1fr); }
   .overview__grid { grid-template-columns: repeat(auto-fill, minmax(8.5rem, 1fr)); }
