@@ -70,6 +70,8 @@ ol, ul { list-style: none; }
   color: var(--ink); letter-spacing: -0.01em;
   margin-bottom: 0.55em; max-width: 14ch;
 }
+/* Retailers: the headline on one line ("Una rete di 30 negozi"), sized to the page. */
+.page--retailers_map .title { max-width: none; white-space: nowrap; font-size: clamp(1.4rem, calc(var(--pw) * 0.072), 3.4rem); }
 .lead { font: 400 clamp(0.92rem, calc(var(--pw) * 0.036), 1.12rem)/1.55 var(--serif); max-width: 34rem; }
 .lead + .lead { margin-top: 0.8em; }
 .body { font-size: clamp(0.86rem, calc(var(--pw) * 0.034), 1rem); line-height: 1.55; max-width: 34rem; }
