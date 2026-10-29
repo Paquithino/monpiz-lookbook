@@ -55,18 +55,26 @@
 {%- endmacro %}
 
 {% macro contents(page) -%}
-{{ folio(page) }}
-<h2 class="title">{{ page.title }}</h2>
-<ol class="toc">
-  {% for entry in menu %}
-  <li>
-    <a class="toc__entry" href="#{{ entry.anchor }}" data-goto>{{ entry.title }}</a>
-    {% if entry.children %}
-    <ol class="toc__children">{% for child in entry.children %}<li><a href="#{{ child.anchor }}" data-goto>{{ child.title }}</a></li>{% endfor %}</ol>
-    {% endif %}
-  </li>
-  {% endfor %}
-</ol>
+{# As in print: the list on the left, one entry under the other, the photo on the right. #}
+<div class="contents">
+  <div class="contents__list">
+    {{ folio(page) }}
+    <h2 class="title">{{ page.title }}</h2>
+    <ol class="toc">
+      {% for entry in menu %}
+      <li>
+        <a class="toc__entry" href="#{{ entry.anchor }}" data-goto><span>{{ entry.title }}</span><span class="toc__page">{{ page_number[entry.anchor] }}</span></a>
+        {% if entry.children %}
+        <ol class="toc__children">
+          {% for child in entry.children %}<li><a href="#{{ child.anchor }}" data-goto><span>{{ child.title }}</span><span class="toc__page">{{ page_number[child.anchor] }}</span></a></li>{% endfor %}
+        </ol>
+        {% endif %}
+      </li>
+      {% endfor %}
+    </ol>
+  </div>
+  {% if page.thumb %}<figure class="contents__photo">{{ m.img(pic(page.thumb), "", "(min-width: 960px) 360px, 40vw") }}</figure>{% endif %}
+</div>
 {%- endmacro %}
 
 {% macro photo(page) -%}
@@ -97,6 +105,7 @@
   {% if mo.specs %}<dl class="specs specs--inline">{% for s in mo.specs %}<div><dt>{{ s.label }}</dt><dd>{{ s.value }}</dd></div>{% endfor %}</dl>{% endif %}
   {% if mo.materials %}
   {% set ratio = material_ratio(mo.materials|length) %}
+  <p class="materials__label">Materiali</p>
   <ol class="materials" aria-label="Materiali" style="--count: {{ mo.materials|length }}; --ratio: {{ '%.3f' % ratio }}">
     {% for mat in mo.materials %}
     <li>
@@ -149,7 +158,7 @@
   </dl>
   {% if p.colors %}
   <div class="colors" data-colors>
-    <p class="colors__name" aria-live="polite" data-color-name>{{ p.master.color }}</p>
+    <p class="colors__label">Colori</p>
     <ul class="colors__chips">
       {% for c in p.colors %}
       {% set shown = c.name|trim|lower == p.master.color|trim|lower %}
@@ -176,9 +185,9 @@
     <path class="map__sky" d="{{ map.skyline }}"/>
     {% for d in map.dots %}
     {% if d.stores|length == 1 %}{% set s = d.stores[0] %}
-    <a class="map__dot" href="{{ s.link }}" target="_blank" rel="noopener" aria-label="{{ s.name }}, {{ s.town }}"><title>{{ s.name }}, {{ s.town }}</title><circle cx="{{ '%.1f' % d.x }}" cy="{{ '%.1f' % d.y }}"/></a>
+    <a class="map__dot" href="{{ s.link }}" target="_blank" rel="noopener" aria-label="{{ s.name }}, {{ s.town }}"><title>{{ s.name }}, {{ s.town }}</title><circle r="6" cx="{{ '%.1f' % d.x }}" cy="{{ '%.1f' % d.y }}"/></a>
     {% else %}
-    <a class="map__dot map__dot--group" href="#{{ store_id(d.stores[0]) }}" data-goto aria-label="{{ d.stores|length }} negozi: {{ d.stores|map(attribute='name')|join(', ') }}"><title>{{ d.stores|map(attribute='name')|join(', ') }}</title><circle cx="{{ '%.1f' % d.x }}" cy="{{ '%.1f' % d.y }}"/><text x="{{ '%.1f' % d.x }}" y="{{ '%.1f' % d.y }}">{{ d.stores|length }}</text></a>
+    <a class="map__dot map__dot--group" href="#{{ store_id(d.stores[0]) }}" data-goto aria-label="{{ d.stores|length }} negozi: {{ d.stores|map(attribute='name')|join(', ') }}"><title>{{ d.stores|map(attribute='name')|join(', ') }}</title><circle r="11" cx="{{ '%.1f' % d.x }}" cy="{{ '%.1f' % d.y }}"/><text x="{{ '%.1f' % d.x }}" y="{{ '%.1f' % d.y }}">{{ d.stores|length }}</text></a>
     {% endif %}
     {% endfor %}
     {% for label in map.cities %}<text class="map__city" x="{{ '%.1f' % label.x }}" y="{{ '%.1f' % label.y }}" text-anchor="{{ label.anchor }}">{{ label.text }}</text>{% endfor %}

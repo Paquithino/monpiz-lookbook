@@ -105,6 +105,7 @@ def render(lookbook: Lookbook, images: WebImages, assets_dir: Path, out: Path, s
         pages=pages,
         static=static,
         total=len(pages),
+        page_number={page.id: page.number for page in pages},
         menu=contents(lookbook, ids),
         map=retailers_map(lookbook.retailers) if lookbook.retailers else None,
         colors=colors,

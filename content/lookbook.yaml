@@ -180,7 +180,7 @@ sections:
              - {name: Bianco , image : images/texture/pelle-martellata/pelle-martellata-bianca.webp  }
 
           #FALCADE DAKAR  
-          - name: Falcade DAKAR 
+          - name: Falcade Dakar
             description: >-
              La pelle Dakar è un cuoio bovino di prima scelta, lavorato con oli, cere e grassi per un
              effetto vintage dall'aspetto naturale. Con l'uso si schiarisce in

@@ -90,7 +90,7 @@ ol, ul { list-style: none; }
 .cover__boots img { width: 100%; mix-blend-mode: multiply; }
 .cover__claim { font: 400 clamp(1rem, 4vw, 1.4rem)/1.4 var(--serif); color: var(--ink); max-width: 26rem; }
 .cover__highlights {
-  display: flex; flex-wrap: wrap; justify-content: center; gap: 0.3rem 1.4rem; margin-top: 0.8rem;
+  display: flex; flex-direction: column; align-items: center; gap: 0.35rem; margin-top: 0.8rem;
   font-size: 0.66rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--faint);
 }
 .cover__hint { margin-top: auto; padding-top: 1.4rem; font-size: 0.8rem; color: var(--ink); text-decoration: none; }
@@ -107,11 +107,18 @@ ol, ul { list-style: none; }
 .details h3 { font: 500 1.05rem/1.2 var(--serif); color: var(--ink); }
 .details p { font-size: 0.82rem; line-height: 1.4; color: var(--muted); }
 
-.toc { margin-top: 0.4rem; }
-.toc > li { border-top: 1px solid var(--rule); padding: 0.8rem 0; }
-.toc__entry { font: 500 clamp(1.4rem, calc(var(--pw) * 0.07), 2.2rem)/1.1 var(--display); color: var(--ink); text-decoration: none; }
-.toc__children { display: flex; flex-wrap: wrap; gap: 0.2rem 1rem; margin-top: 0.4rem; font-size: 0.92rem; }
-.toc__children a { text-decoration: none; }
+.page--contents .sheet { padding: 0; }
+.contents { display: grid; grid-template-columns: 1fr 38%; min-height: 100%; }
+.contents__list { padding: calc(var(--pad) * 0.7) 1rem var(--pad) var(--pad); }
+.contents__photo { position: relative; }
+.contents__photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.toc { margin-top: 0.2rem; }
+.toc > li { border-top: 1px solid var(--rule); padding: 0.55rem 0 0.6rem; }
+.toc a { display: flex; justify-content: space-between; align-items: baseline; gap: 0.6rem; text-decoration: none; }
+.toc__entry { font: 500 clamp(1.15rem, calc(var(--pw) * 0.05), 1.8rem)/1.15 var(--display); color: var(--ink); }
+.toc__children { margin-top: 0.25rem; }
+.toc__children a { padding: 0.18rem 0 0.18rem 0.9rem; font: 400 clamp(0.88rem, calc(var(--pw) * 0.034), 1.05rem)/1.3 var(--serif); color: var(--body); }
+.toc__page { font: 400 0.9rem var(--display); color: var(--accent); }
 .toc a:hover { color: var(--accent); }
 
 /* --- section opener and full-bleed pages ----------------------------------------------------- */
@@ -144,8 +151,13 @@ ol, ul { list-style: none; }
 }
 .materials {
   display: grid; grid-template-columns: repeat(var(--count, 4), minmax(0, 1fr)); gap: 0.6rem;
-  margin-top: 0.9rem; padding-top: 0.8rem; border-top: 1px solid var(--rule);
+  margin-top: 0.4rem;
 }
+/* Same style as the spec labels (Costruzione, Incluso ...). */
+.materials__label, .colors__label {
+  font-size: var(--small); letter-spacing: 0.14em; text-transform: uppercase; color: var(--faint);
+}
+.materials__label { margin-top: 1.1rem; }
 .materials img, .materials__empty { display: block; width: 100%; aspect-ratio: var(--ratio, 1.9); object-fit: cover; border-radius: 3px; background: var(--studio); }
 .materials__name { display: block; margin-top: 0.3rem; font-size: 0.66rem; line-height: 1.25; color: var(--muted); }
 
@@ -184,7 +196,7 @@ ol, ul { list-style: none; }
 .product__text { padding-top: calc(var(--pad) * 0.6); }
 .product__name { font: 500 clamp(2rem, calc(var(--pw) * 0.1), 3.4rem)/1 var(--display); color: var(--ink); margin-bottom: 0.4em; }
 .colors { margin-top: 0.7rem; }
-.colors__name { font-size: 0.82rem; color: var(--ink); margin-bottom: 0.4rem; min-height: 1.3em; }
+.colors__label { margin-bottom: 0.45rem; }
 .colors__chips { display: flex; flex-wrap: wrap; gap: 0.4rem; }
 .chip {
   width: clamp(1.9rem, calc(var(--pw) * 0.085), 2.6rem); aspect-ratio: 1; padding: 0;
@@ -203,8 +215,8 @@ ol, ul { list-style: none; }
 .map { margin: 1rem 0 0; }
 .map svg { width: 100%; height: auto; overflow: visible; }
 .map__sky { fill: none; stroke: var(--rule); stroke-width: 1.2; }
-.map__dot circle { fill: var(--accent); r: 6; stroke: var(--paper); stroke-width: 2; transition: r 0.15s; }
-.map__dot--group circle { r: 11; }
+/* The radius is an SVG attribute: Safari on iPhone ignores `r` set in CSS and draws no dot. */
+.map__dot circle { fill: var(--accent); stroke: var(--paper); stroke-width: 2; }
 .map__dot text { font: 600 12px "Inter", sans-serif; fill: var(--on-dark); text-anchor: middle; dominant-baseline: central; pointer-events: none; }
 .map__dot:hover circle, .map__dot:focus-visible circle { fill: var(--ink); }
 .map__city {
@@ -307,8 +319,6 @@ ol, ul { list-style: none; }
   .cover__claim { font-size: clamp(0.95rem, 2.1vh, 1.2rem); }
   .cover__highlights { margin-top: 1.1rem; }
   .dock__label { display: inline; }
-  .map__dot circle { r: 5; }
-  .map__dot--group circle { r: 10; }
   .details { grid-template-columns: repeat(4, 1fr); }
   .overview__grid { grid-template-columns: repeat(auto-fill, minmax(8.5rem, 1fr)); }
 }

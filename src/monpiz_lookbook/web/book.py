@@ -49,9 +49,8 @@ def _sequence(lb: Lookbook, ids: Anchors) -> Iterator[Page]:
     yield Page("cover", "top", "Copertina", "", thumb=lb.cover.banner or lb.cover.photo)
     yield Page("brand", "marchio", brand.eyebrow, brand.eyebrow)
     yield Page("details", "dettagli", brand.details_title, brand.eyebrow, thumb=brand.banner.path)
-    yield Page("contents", "indice", lb.index.title if lb.index else "Indice", "Indice")
-    if lb.index and lb.index.photo:
-        yield Page("photo", "indice-foto", "", "", thumb=lb.index.photo, data={"photo": lb.index.photo})
+    photo = lb.index.photo if lb.index else None
+    yield Page("contents", "indice", lb.index.title if lb.index else "Indice", "Indice", thumb=photo)
 
     for s, section in enumerate(lb.sections):
         yield Page(
