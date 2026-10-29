@@ -24,7 +24,7 @@
   <p class="cover__tagline">{{ c.tagline }}</p>
   <div class="cover__boots">{{ m.img(boots, "", "(min-width: 960px) 600px, 80vw", eager=True) }}</div>
   <p class="cover__claim">{{ c.claim }}</p>
-  {% if c.highlights %}<ul class="cover__highlights">{% for h in c.highlights %}<li>{{ h }}</li>{% endfor %}</ul>{% endif %}
+  {% if c.highlights %}<ul class="cover__highlights">{% for h in c.highlights %}<li>{{ h | e | replace(" Italy", "<br>Italy" | safe) }}</li>{% endfor %}</ul>{% endif %}
   <a class="cover__hint" href="#marchio" data-goto>Scorri per sfogliare</a>
 </div>
 {%- endmacro %}
