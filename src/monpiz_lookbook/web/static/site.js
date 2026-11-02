@@ -91,17 +91,5 @@
     page.scrollIntoView({ block: "start", behavior: fromOverview ? "auto" : "smooth" });
   });
 
-  // --- colour chips: show the name of the colour touched ---------------------------------------
-  for (const group of document.querySelectorAll("[data-colors]")) {
-    group.addEventListener("click", (event) => {
-      const chip = event.target.closest("[data-color]");
-      if (!chip) return;
-      group.querySelectorAll("[data-color]").forEach((c) => {
-        c.classList.toggle("is-current", c === chip);
-        c.setAttribute("aria-pressed", String(c === chip));
-      });
-    });
-  }
-
   update();
 })();

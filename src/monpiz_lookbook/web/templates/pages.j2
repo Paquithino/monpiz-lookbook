@@ -158,16 +158,17 @@
     {% if p.colors %}<div><dt>Colori</dt><dd>{{ p.colors|length }}</dd></div>{% endif %}
   </dl>
   {% if p.colors %}
-  <div class="colors" data-colors>
+  <div class="colors">
     <p class="colors__label">Colori</p>
     <ul class="colors__chips">
       {% for c in p.colors %}
       {% set shown = c.name|trim|lower == p.master.color|trim|lower %}
       <li>
-        <button type="button" class="chip{% if shown %} is-current{% endif %}" data-color="{{ c.name }}" aria-label="{{ c.name }}" title="{{ c.name }}"{% if shown %} aria-pressed="true"{% else %} aria-pressed="false"{% endif %}>
+        {# Not clickable: the ring marks the colour of the shoe in the photo, as in print. #}
+        <span class="chip{% if shown %} is-current{% endif %}" aria-hidden="true">
           {% if c.image %}{{ m.img(pic(c.image, widths=(160,), ratio=1.0), "", "48px") }}{% endif %}
-        </button>
-        <span class="chip__name" aria-hidden="true">{{ c.name }}</span>
+        </span>
+        <span class="chip__name">{{ c.name }}{% if shown %}<span class="visually-hidden"> (in foto)</span>{% endif %}</span>
       </li>
       {% endfor %}
     </ul>
