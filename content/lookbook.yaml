@@ -189,7 +189,7 @@ sections:
               - {label: Incluso, value: Doppio laccio}
               - {label: Incluso, value: Grasso naturale}  
             variants:
-              - color: Bianco 
+              - color: Verde
                 image: images/products/Falcade_Donna_Dakar_Verde_spaiate.webp
             colors:
               - {name: Testa di Moro, image: images/texture/dakar/dakar-testa-di-moro.webp}
@@ -277,6 +277,7 @@ sections:
             colors:
               - {name: Camouflage, image: images/texture/cavallino/Cavallino_Camuflage.png}
               - {name: Bianco e Nero , image: images/texture/cavallino/cavallino-bianco-nero.webp }
+              - {name: Bianco Testa di moro , image: images/texture/cavallino/cvallino-double-mucca.png }
 
  #ORTISEI ##########################################################################################
       - name: Ortisei
@@ -432,7 +433,7 @@ sections:
               - {label: Incluso, value: Grasso naturale}
             sizes: 36–43
             variants:
-              - color: Ananas
+              - color: Sneape
                 image: images/products/Cortina_Uomo_Dakar_Ananas_spaiate.jpg
             colors:
              - {name: Testa di Moro, image: images/texture/dakar/dakar-testa-di-moro.webp}
