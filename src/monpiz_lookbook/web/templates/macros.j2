@@ -7,7 +7,8 @@
      {%- if style %} style="{{ style }}"{% endif %}>
 {%- endmacro %}
 
-{% macro placeholder(label="Foto in arrivo", cls="") -%}
+{% macro placeholder(label=None, cls="") -%}
+{% set label = label or _("Foto in arrivo") %}
 <div class="placeholder {{ cls }}" role="img" aria-label="{{ label }}"><span>{{ label }}</span></div>
 {%- endmacro %}
 

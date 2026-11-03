@@ -12,6 +12,7 @@ from dataclasses import dataclass
 
 from ..errors import LayoutError
 from ..geometry import Box
+from ..i18n import tr
 from ..models import ShoeModel
 from ..surface import Align, Surface
 from .base import (
@@ -65,7 +66,7 @@ class ModelPage:
         style = ctx.theme.type.running_head
         left_style = label_on(ctx, self.model.image, LEFT_PROBE, style)
         surface.text(self.section_name, x, RUNNING_HEAD_BASELINE, left_style)
-        head = f"Il modello — {self.number:02d}"
+        head = f"{tr('Il modello')} — {self.number:02d}"
         right_style = label_on(ctx, self.model.image, RIGHT_PROBE, style)
         surface.text(head, right, RUNNING_HEAD_BASELINE, right_style, Align.RIGHT)
 
@@ -84,7 +85,7 @@ class ModelPage:
         if not materials:
             return
         p, t, g = ctx.theme.palette, ctx.theme.type, ctx.theme.grid
-        surface.text(MATERIALS_LABEL, g.margin_x, MATERIALS_BASELINE, t.label)
+        surface.text(tr(MATERIALS_LABEL), g.margin_x, MATERIALS_BASELINE, t.label)
         width = g.column_width(len(materials), SWATCH_GAP)
         top = MATERIALS_BASELINE + SWATCH_TOP_OFFSET
         for column, material in enumerate(materials):

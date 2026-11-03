@@ -12,6 +12,8 @@ import re
 from dataclasses import dataclass
 from urllib.parse import urlsplit
 
+from .i18n import tr
+
 _EMAIL = re.compile(r"^[^@\s]+@[^@\s]+\.[a-z]{2,}$", re.IGNORECASE)
 _PHONE = re.compile(r"^\+?[\d\s]{6,}$")
 _WEB = re.compile(r"^(https?://)?[\w-]+(\.[\w-]+)+(/\S*)?$", re.IGNORECASE)
@@ -37,18 +39,18 @@ def contact(text: str) -> Contact:
     """A contact line with its kind, label and link."""
     text = text.strip()
     if _EMAIL.match(text):
-        return Contact(text, f"mailto:{text}", "email", "Email")
+        return Contact(text, f"mailto:{text}", "email", tr("Email"))
     if _PHONE.match(text):
-        return Contact(text, phone_href(text), "phone", "Telefono")
+        return Contact(text, phone_href(text), "phone", tr("Telefono"))
     if _WEB.match(text):
         href = text if text.startswith("http") else f"https://{text}"
         parts = urlsplit(href)
         host = parts.netloc.removeprefix("www.")
         path = parts.path.strip("/")
         if host == "instagram.com" and path:
-            return Contact(f"@{path.split('/')[0]}", href, "instagram", "Instagram")
+            return Contact(f"@{path.split('/')[0]}", href, "instagram", tr("Instagram"))
         shown = host + (f"/{path}" if path else "")
-        return Contact(shown, href, "web", "Sito")
+        return Contact(shown, href, "web", tr("Sito"))
     return Contact(text, None)
 
 

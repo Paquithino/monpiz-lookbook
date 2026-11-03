@@ -8,6 +8,7 @@ from typing import Any
 import yaml
 from pydantic import ValidationError
 
+from . import i18n
 from .errors import ContentError
 from .models import Lookbook
 
@@ -30,11 +31,13 @@ def _format_validation_error(path: Path, error: ValidationError) -> str:
     return "\n".join(lines)
 
 
-def load_lookbook(content_file: Path, assets_dir: Path) -> Lookbook:
+def load_lookbook(content_file: Path, assets_dir: Path, lang: str = i18n.DEFAULT) -> Lookbook:
     """Load ``content_file``, resolve the retailers source and validate everything.
 
     The ``retailers.source`` key is a loading concern: it names a YAML file,
     relative to ``content_file``, whose regions are merged into the model.
+    In a language other than Italian the texts are translated with the
+    dictionary next to ``content_file`` (``en.yaml``): see :mod:`i18n`.
     """
     raw = _read_yaml(content_file)
     if not isinstance(raw, dict):
@@ -55,4 +58,14 @@ def load_lookbook(content_file: Path, assets_dir: Path) -> Lookbook:
         listing = "\n".join(f"  - {name}" for name in missing)
         raise ContentError(f"Asset mancanti in {assets_dir}:\n{listing}")
 
-    return lookbook
+    if lang == i18n.DEFAULT:
+        return lookbook
+    dictionary = i18n.load_dictionary(i18n.dictionary_path(content_file, lang))
+    return Lookbook.model_validate(i18n.translate(lookbook.model_dump(), dictionary))
+
+
+def untranslated(content_file: Path, assets_dir: Path, lang: str) -> list[str]:
+    """Italian texts of the content with no translation in ``lang``'s dictionary."""
+    lookbook = load_lookbook(content_file, assets_dir)
+    dictionary = i18n.load_dictionary(i18n.dictionary_path(content_file, lang))
+    return i18n.missing(lookbook.model_dump(), dictionary)

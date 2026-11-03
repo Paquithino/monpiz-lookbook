@@ -10,7 +10,6 @@ from __future__ import annotations
 import math
 from dataclasses import dataclass, field
 
-from ..contacts import Contact, contact  # noqa: F401  (re-exported: shared with the printed back cover)
 from ..models import Lookbook, Retailers, RetailersMap, Store
 from ..mountain import BOX_WIDTH, SKYLINE, place
 from .text import slugify, unique_slugs

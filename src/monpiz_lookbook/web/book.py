@@ -11,6 +11,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
+from ..i18n import tr
 from ..models import Lookbook, Region, Store
 from .view import Anchors
 
@@ -46,11 +47,11 @@ def book_pages(lookbook: Lookbook, ids: Anchors) -> list[Page]:
 
 def _sequence(lb: Lookbook, ids: Anchors) -> Iterator[Page]:
     brand = lb.brand
-    yield Page("cover", "top", "Copertina", "", thumb=lb.cover.banner or lb.cover.photo)
+    yield Page("cover", "top", tr("Copertina"), "", thumb=lb.cover.banner or lb.cover.photo)
     yield Page("brand", "marchio", brand.eyebrow, brand.eyebrow)
     yield Page("details", "dettagli", brand.details_title, brand.eyebrow, thumb=brand.banner.path)
     photo = lb.index.photo if lb.index else None
-    yield Page("contents", "indice", lb.index.title if lb.index else "Indice", "Indice", thumb=photo)
+    yield Page("contents", "indice", lb.index.title if lb.index else tr("Indice"), tr("Indice"), thumb=photo)
 
     for s, section in enumerate(lb.sections):
         yield Page(

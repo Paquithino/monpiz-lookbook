@@ -15,7 +15,7 @@ from pathlib import Path
 
 from reportlab.pdfgen.canvas import Canvas
 
-from . import __version__
+from . import __version__, i18n
 from .content import load_lookbook
 from .fonts import register_fonts
 from .geometry import Box
@@ -58,6 +58,7 @@ class BuildOptions:
     dpi: int = 300
     bleed: bool = True
     crop_marks: bool = False
+    lang: str = i18n.DEFAULT
 
 
 @dataclass(frozen=True, slots=True)
@@ -229,7 +230,8 @@ def render(
 
 
 def build(options: BuildOptions) -> BuildResult:
-    lookbook = load_lookbook(options.content_file, options.assets_dir)
+    i18n.set_language(options.lang)
+    lookbook = load_lookbook(options.content_file, options.assets_dir, options.lang)
     pages = render(
         lookbook,
         options.output,

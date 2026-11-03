@@ -10,9 +10,9 @@ import threading
 from collections.abc import Sequence
 from pathlib import Path
 
-from . import __version__
+from . import __version__, i18n
 from .builder import BuildOptions, build
-from .content import load_lookbook
+from .content import load_lookbook, untranslated
 from .errors import LookbookError
 from .pages.section import models_label
 from .watch import PACKAGE_DIR, run, site_command, watch
@@ -33,6 +33,15 @@ def _add_content_args(command: argparse.ArgumentParser) -> None:
     command.add_argument("--assets", type=Path, default=DEFAULT_ASSETS, help="cartella di font e immagini")
 
 
+def _add_lang_arg(command: argparse.ArgumentParser) -> None:
+    command.add_argument(
+        "--lang",
+        choices=sorted(i18n.LANGUAGES),
+        default=i18n.DEFAULT,
+        help="lingua del lookbook (default it); le traduzioni sono in content/<lingua>.yaml",
+    )
+
+
 def _add_output_args(command: argparse.ArgumentParser, default_dpi: int) -> None:
     command.add_argument("-o", "--output", type=Path, default=DEFAULT_OUTPUT, help="percorso del PDF")
     command.add_argument(
@@ -51,6 +60,7 @@ def _parser() -> argparse.ArgumentParser:
     build_cmd = commands.add_parser("build", help="genera il PDF")
     _add_content_args(build_cmd)
     _add_output_args(build_cmd, PRINT_DPI)
+    _add_lang_arg(build_cmd)
     build_cmd.add_argument(
         "--crop-marks", action="store_true", help="aggiunge i segni di taglio per la tipografia"
     )
@@ -63,6 +73,7 @@ def _parser() -> argparse.ArgumentParser:
     watch_cmd = commands.add_parser("watch", help="rigenera il PDF a ogni modifica salvata")
     _add_content_args(watch_cmd)
     _add_output_args(watch_cmd, PREVIEW_DPI)
+    _add_lang_arg(watch_cmd)
 
     web_cmd = commands.add_parser("web", help="genera la rivista digitale (sito statico)")
     _add_content_args(web_cmd)
@@ -75,18 +86,23 @@ def _parser() -> argparse.ArgumentParser:
 
     check_cmd = commands.add_parser("check", help="valida contenuti e asset senza generare il PDF")
     _add_content_args(check_cmd)
+    _add_lang_arg(check_cmd)
     return parser
 
 
 def _options(args: argparse.Namespace) -> BuildOptions:
+    output = args.output
+    if output == DEFAULT_OUTPUT and args.lang != i18n.DEFAULT:  # MonPiz-Lookbook-EN.pdf
+        output = output.with_name(f"{output.stem}-{args.lang.upper()}{output.suffix}")
     return BuildOptions(
         args.content,
         args.assets,
-        args.output,
+        output,
         args.dpi,
         # The live preview shows the trimmed page; a build is for print unless told otherwise.
         bleed=args.command == "build" and not args.no_bleed,
         crop_marks=getattr(args, "crop_marks", False),
+        lang=args.lang,
     )
 
 
@@ -97,6 +113,10 @@ def main(argv: Sequence[str] | None = None) -> int:
             lookbook = load_lookbook(args.content, args.assets)
             summary = ", ".join(f"{s.name} ({models_label(len(s.models))})" for s in lookbook.sections)
             print(f"Contenuti validi: {summary}.")
+            for lang in (
+                [args.lang] if args.lang != i18n.DEFAULT else sorted(set(i18n.LANGUAGES) - {i18n.DEFAULT})
+            ):
+                _report_translations(args.content, args.assets, lang)
         elif args.command == "watch":
             watch(_options(args))
         elif args.command == "web":
@@ -124,6 +144,19 @@ def main(argv: Sequence[str] | None = None) -> int:
     except KeyboardInterrupt:
         print("\nInterrotto.")
     return 0
+
+
+def _report_translations(content: Path, assets: Path, lang: str) -> None:
+    if not i18n.dictionary_path(content, lang).is_file():
+        print(f"{i18n.LANGUAGES[lang]}: nessun file di traduzioni ({i18n.dictionary_path(content, lang)}).")
+        return
+    missing = untranslated(content, assets, lang)
+    if not missing:
+        print(f"{i18n.LANGUAGES[lang]}: tutti i testi sono tradotti.")
+        return
+    print(f"{i18n.LANGUAGES[lang]}: {len(missing)} testi senza traduzione (restano in italiano):")
+    for text in missing:
+        print(f"  - {text if len(text) <= 90 else text[:87] + '...'}")
 
 
 def _serve(folder: Path) -> None:

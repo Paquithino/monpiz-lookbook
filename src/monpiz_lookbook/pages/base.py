@@ -10,6 +10,7 @@ from typing import Protocol
 from reportlab.lib.colors import Color
 
 from ..geometry import Box
+from ..i18n import tr
 from ..images import ImageLibrary
 from ..surface import Align, Surface, text_width
 from ..theme import TextStyle, Theme
@@ -126,4 +127,4 @@ def draw_placeholder(surface: Surface, ctx: RenderContext, slot: Box) -> None:
     t = ctx.theme.type
     surface.rect(slot, fill=ctx.theme.palette.studio)
     middle = slot.top + slot.height / 2
-    surface.text(PLACEHOLDER_TEXT, slot.x + slot.width / 2, middle, t.photo_label, Align.CENTER)
+    surface.text(tr(PLACEHOLDER_TEXT), slot.x + slot.width / 2, middle, t.photo_label, Align.CENTER)

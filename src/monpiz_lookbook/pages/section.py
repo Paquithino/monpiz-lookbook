@@ -12,6 +12,7 @@ from dataclasses import dataclass
 
 from ..errors import LayoutError
 from ..geometry import Box
+from ..i18n import tr
 from ..models import Section
 from ..surface import Align, Surface
 from .base import RUNNING_HEAD_BASELINE, RenderContext
@@ -28,7 +29,7 @@ MIN_NAME_BASELINE = 260.0
 
 
 def models_label(count: int) -> str:
-    return f"{count:02d} {'modello' if count == 1 else 'modelli'}"
+    return f"{count:02d} {tr('modello') if count == 1 else tr('modelli')}"
 
 
 @dataclass(frozen=True, slots=True)

@@ -6,8 +6,6 @@ import re
 import unicodedata
 from collections.abc import Callable
 
-from ..contacts import phone_href  # noqa: F401  (re-exported for the templates)
-
 _NON_WORD = re.compile(r"[^a-z0-9]+")
 
 

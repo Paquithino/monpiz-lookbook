@@ -6,10 +6,11 @@ from pathlib import Path
 import pytest
 from PIL import Image
 
+from monpiz_lookbook.contacts import contact, phone_href
 from monpiz_lookbook.models import Region, Retailers, RetailersMap, Store
 from monpiz_lookbook.web import SiteOptions, build_site
-from monpiz_lookbook.web.text import phone_href, slugify, unique_slugs
-from monpiz_lookbook.web.view import contact, retailers_map, ridge_points
+from monpiz_lookbook.web.text import slugify, unique_slugs
+from monpiz_lookbook.web.view import retailers_map, ridge_points
 
 FONTS = Path(__file__).parents[1] / "assets" / "fonts"
 

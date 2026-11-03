@@ -1,22 +1,25 @@
 {% import "macros.j2" as m with context %}
 {% import "pages.j2" as pages_ with context %}
 <!doctype html>
-<html lang="it">
+<html lang="{{ edition.lang }}">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>{{ lb.meta.title }}</title>
 <meta name="description" content="{{ lb.cover.claim }}">
 <meta name="theme-color" content="{{ colors.paper }}">
-{% if lb.web.url %}<link rel="canonical" href="{{ lb.web.url }}">{% endif %}
+{% if lb.web.url %}<link rel="canonical" href="{{ page_url(edition) }}">
+{% for e in editions %}<link rel="alternate" hreflang="{{ e.lang }}" href="{{ page_url(e) }}">
+{% endfor %}<link rel="alternate" hreflang="x-default" href="{{ page_url(editions[0]) }}">
+{% endif %}
 <meta property="og:type" content="website">
-<meta property="og:locale" content="it_IT">
+<meta property="og:locale" content="{{ locale }}">
 <meta property="og:title" content="{{ lb.meta.title }}">
 <meta property="og:description" content="{{ lb.cover.claim }}">
 <meta property="og:image" content="{{ share }}">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-{% if lb.web.url %}<meta property="og:url" content="{{ lb.web.url }}">{% endif %}
+{% if lb.web.url %}<meta property="og:url" content="{{ page_url(edition) }}">{% endif %}
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="{{ icons['favicon-32.png'] }}" sizes="32x32">
 <link rel="icon" href="{{ icons['icon-192.png'] }}" sizes="192x192">
@@ -43,7 +46,7 @@
 <main class="book" aria-label="{{ lb.meta.title }}">
 {% for page in pages %}
   <section class="page page--{{ page.kind }}" id="{{ page.id }}" data-page="{{ page.number }}"
-           aria-label="Pagina {{ page.number }}{% if page.title %}: {{ page.title }}{% endif %}">
+           aria-label="{{ _("Pagina") }} {{ page.number }}{% if page.title %}: {{ page.title }}{% endif %}">
     <div class="sheet">
       {{ pages_[page.kind](page) }}
     </div>
@@ -51,18 +54,19 @@
 {% endfor %}
 </main>
 
-<nav class="dock" aria-label="Pagine">
-  <button type="button" class="dock__turn" data-prev aria-label="Pagina precedente"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 15l7-7 7 7"/></svg></button>
+<nav class="dock" aria-label="{{ _("Pagine") }}">
+  <button type="button" class="dock__turn" data-prev aria-label="{{ _("Pagina precedente") }}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 15l7-7 7 7"/></svg></button>
   <button type="button" class="dock__count" data-overview-toggle aria-expanded="false" aria-controls="overview">
-    <span data-count>1</span><span class="dock__total"> / {{ total }}</span><span class="dock__label">Pagine</span>
+    <span data-count>1</span><span class="dock__total"> / {{ total }}</span><span class="dock__label">{{ _("Pagine") }}</span>
   </button>
-  <button type="button" class="dock__turn" data-next aria-label="Pagina successiva"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 9l7 7 7-7"/></svg></button>
+  <button type="button" class="dock__turn" data-next aria-label="{{ _("Pagina successiva") }}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 9l7 7 7-7"/></svg></button>
+  {% if editions|length > 1 %}<span class="langs langs--dock" role="group" aria-label="{{ _("Lingua") }}">{% for e in editions %}<a href="{{ e.file }}" hreflang="{{ e.lang }}" lang="{{ e.lang }}" title="{{ e.name }}" data-lang-switch{% if e.lang == edition.lang %} aria-current="true"{% endif %}>{{ e.label }}</a>{% endfor %}</span>{% endif %}
 </nav>
 
-<div class="overview" id="overview" hidden data-overview role="dialog" aria-modal="true" aria-label="Tutte le pagine">
+<div class="overview" id="overview" hidden data-overview role="dialog" aria-modal="true" aria-label="{{ _("Tutte le pagine") }}">
   <div class="overview__head">
     {{ m.img(logo, lb.meta.author, "120px", cls="overview__logo") }}
-    <button type="button" class="overview__close" data-overview-close>Chiudi</button>
+    <button type="button" class="overview__close" data-overview-close>{{ _("Chiudi") }}</button>
   </div>
   <ol class="overview__grid">
     {% for page in pages %}

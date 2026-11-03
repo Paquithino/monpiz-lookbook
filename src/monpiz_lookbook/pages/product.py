@@ -24,6 +24,7 @@ from dataclasses import dataclass, replace
 
 from ..errors import LayoutError
 from ..geometry import Box
+from ..i18n import tr
 from ..models import MAX_COLORS, Closeup, Product, Swatch, Variant
 from ..surface import Align, Surface
 from ..theme import Font
@@ -200,9 +201,9 @@ class ProductPage:
         g = ctx.theme.grid
         rows = [(spec.label, spec.value) for spec in self.product.specs]
         if self.product.sizes:
-            rows.append(("Taglie", self.product.sizes))
+            rows.append((tr("Taglie"), self.product.sizes))
         if self.product.colors:
-            rows.append(("Colori", str(len(self.product.colors))))
+            rows.append((tr("Colori"), str(len(self.product.colors))))
         baseline = self.photos_bottom + SPECS_OFFSET
         return draw_spec_table(surface, ctx, rows, SPECS_X, g.width - g.margin_x, baseline)
 
@@ -217,7 +218,7 @@ class ProductPage:
         few = len(colors) <= FEW_COLORS
         card, gap = (FEW, FEW_GAP) if few else (MANY, MANY_GAP)
         columns = max(3, len(colors)) if few else COLOR_COLUMNS
-        label = "Colori" if few else f"{len(colors)} colori"
+        label = tr("Colori") if few else tr("%d colori") % len(colors)
         baseline = self._colors_label_baseline()
         surface.text(label, g.margin_x, baseline, t.label)
         width = g.column_width(columns, gap)

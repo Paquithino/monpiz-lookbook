@@ -9,7 +9,8 @@ pip install -e .
 monpiz-lookbook build                      # dist/MonPiz-Lookbook.pdf, 300 dpi, con abbondanza (stampa)
 monpiz-lookbook build --crop-marks         # come sopra, con i segni di taglio
 monpiz-lookbook build --no-bleed --dpi 150 -o dist/MonPiz-Lookbook-web.pdf   # versione per email/online
-monpiz-lookbook check                      # valida contenuti e immagini senza generare
+monpiz-lookbook build --lang en            # dist/MonPiz-Lookbook-EN.pdf, edizione inglese
+monpiz-lookbook check                      # valida contenuti e immagini, elenca i testi non tradotti
 monpiz-lookbook watch                      # anteprima live: rigenera a ogni salvataggio (150 dpi)
 monpiz-lookbook web                        # rivista digitale in site/ (sito statico)
 monpiz-lookbook web --watch                # anteprima su http://localhost:8000, rigenerata a ogni modifica
@@ -107,6 +108,25 @@ retailers:
 closing:
   photo: images/mood/lussari-foglie.png      # quarta di copertina con foto
 ```
+
+## Lingue
+
+Il catalogo è uno solo, in italiano: `content/lookbook.yaml`. L'inglese sta in
+`content/en.yaml`, un dizionario di coppie `it` → `en` più l'elenco `keep` dei testi
+che restano uguali (nomi dei modelli, dei colori, città). Foto, colori, taglie e
+rivenditori non si ripetono: le due edizioni non possono divergere.
+
+- Se cambi un testo in `lookbook.yaml`, aggiorna anche la coppia in `en.yaml`.
+  Spazi e a capo non contano.
+- Un testo senza traduzione resta in italiano: `monpiz-lookbook check` lo segnala.
+- Le parole fisse dell'impaginazione ("Colori", "Taglie", "Indice" ...) sono in
+  `src/monpiz_lookbook/i18n.py`.
+- PDF: `build --lang en` (e `watch --lang en`). Sito: `web` genera `index.html`
+  (italiano) e `en.html` (inglese, anche su `/en`), con il selettore IT / EN che
+  resta sulla stessa pagina. Alla prima visita, un telefono impostato in una lingua
+  diversa dall'italiano apre l'inglese; la scelta del visitatore viene ricordata.
+- Per una nuova lingua: aggiungerla a `LANGUAGES` e `UI` in `i18n.py` e creare
+  `content/<lingua>.yaml`.
 
 ## Stampa
 

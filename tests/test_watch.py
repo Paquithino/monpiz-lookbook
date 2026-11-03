@@ -37,7 +37,9 @@ def test_rebuild_command_forwards_every_option() -> None:
     options = BuildOptions(Path("c/l.yaml"), Path("a"), Path("out.pdf"), dpi=150)
     command = build_command(options)
     assert command[1:4] == ["-m", "monpiz_lookbook", "build"]
-    assert command[4:] == ["--content", "c/l.yaml", "--assets", "a", "--output", "out.pdf", "--dpi", "150"]
+    assert command[4:] == [
+        "--content", "c/l.yaml", "--assets", "a", "--output", "out.pdf", "--dpi", "150", "--lang", "it",
+    ]  # fmt: skip
 
 
 def test_rebuild_command_forwards_the_print_flags() -> None:

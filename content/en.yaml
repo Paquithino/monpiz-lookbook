@@ -1,0 +1,262 @@
+# TRADUZIONI INGLESI DEL LOOKBOOK ################################################################
+#
+# Il catalogo resta uno solo: lookbook.yaml (foto, colori, taglie, rivenditori).
+# Qui ci sono solo i testi in inglese, a coppie: 'it' come scritto in lookbook.yaml, 'en' la traduzione.
+# - Se cambi un testo in lookbook.yaml, cambia anche il suo 'it' qui e aggiorna l'inglese.
+# - Un testo senza traduzione resta in italiano: 'monpiz-lookbook check --lang en' li elenca.
+# - Spazi e a capo non contano: basta che le parole siano le stesse.
+
+# Testi che in inglese restano uguali (nomi dei modelli, dei colori, città).
+keep:
+  # Modelli e nomi che restano uguali
+  - Cortina
+  - Falcade
+  - Lagazuoi
+  - Ortisei
+  - Orma
+  - Urban
+  - Lussari
+  - Corvara
+  - Grostè
+  - City
+  - Cortina Dakar
+  - Cortina Suede
+  - Falcade Dakar
+  - Falcade Suede
+  - Falcade Heritage
+  - Dakar
+  - Suede
+  - Vibram
+  # Nomi dei colori (nomi propri del campionario)
+  - Alabama
+  - Apache
+  - Ambrato
+  - Seminole
+  - Tabacco
+  - Pilota
+  - Rhum
+  - Saraceno
+  - Tex
+  - Aneto
+  - Ossido
+  - Carbonio
+  - Palm
+  - Moka
+  - Nutella
+  - Camouflage
+  - Corvino
+  # Marchio, taglie, città e regioni
+  - Pedule urban fashion
+  - Made in Montebelluna Italy
+  - 35 — 42
+  - 35–42
+  - 36–43
+  - 40–46
+  - 40-46
+  - Bolzano
+  - Trento
+  - Belluno
+  - Udine
+  - Trieste
+  - Sondrio
+  - Piacenza
+  - Veneto
+  - Trentino-Alto Adige
+  - Friuli-Venezia Giulia
+  - Emilia-Romagna
+
+translations:
+
+  # Copertina e marchio #############################################################################
+  - it: Lookbook MonPiz — Collezione Inverno
+    en: MonPiz Lookbook — Winter Collection
+  - it: "Pedule urban fashion, made in Italy"
+    en: "Urban fashion hiking boots, made in Italy"
+  - it: "Una storia italiana. Qualità ed eccellenza che si guardano, si toccano e si indossano."
+    en: "An Italian story. Quality and excellence you can see, touch and wear."
+  - it: Collezione F.W.2026/2027
+    en: F/W 2026/2027 Collection
+  - it: Come nasce MonPiz
+    en: How MonPiz began
+  - it: Tra tradizione ed innovazione
+    en: Between tradition and innovation
+  - it: "MonPiz — Montebelluna, Italia"
+    en: "MonPiz — Montebelluna, Italy"
+  - it: "Negli anni ’50, Montebelluna, un comune in provincia di Treviso, è diventato un centro di eccellenza per la produzione di calzature tecniche. Le pedule, scarpe progettate per il trekking e l’escursionismo, sono nate qui grazie all’abilità e alla tradizione dei calzolai locali."
+    en: "In the 1950s Montebelluna, a town in the province of Treviso, became a centre of excellence for technical footwear. The pedula, a boot designed for trekking and hiking, was born here, thanks to the skill and tradition of the local shoemakers."
+  - it: "MonPiz coniuga tradizione artigianale e innovazione, introducendo materiali dell’eccellenza italiana e migliorando comfort e prestazioni delle pedule senza compromettere la qualità. Un twist urbano, a proprio agio su qualsiasi terreno."
+    en: "MonPiz brings together craft tradition and innovation, using the finest Italian materials and improving the comfort and performance of the pedula without compromising on quality. An urban twist, at ease on any terrain."
+  - it: Qualità nei dettagli
+    en: Quality in the details
+  - it: Tomaia
+    en: Upper
+  - it: in pelle di vitello
+    en: calfskin
+  - it: Fodera
+    en: Lining
+  - it: in pelle di vitello con lavorazione sottovuoto
+    en: vacuum-processed calfskin
+  - it: Suola
+    en: Sole
+  - it: in gomma Vibram
+    en: Vibram rubber
+  - it: Ganci e anelli
+    en: Hooks and eyelets
+  - it: in ferro con trattamento antiruggine
+    en: iron with anti-rust treatment
+  - it: Indice
+    en: Contents
+
+  # Sezioni #########################################################################################
+  - it: Donna
+    en: Women
+  - it: Uomo
+    en: Men
+  - it: Collezione
+    en: Collection
+  - it: "Dal sentiero alla città, senza cambiare scarpe. Pedule versatili che offrono comfort in ogni occasione, senza compromessi sullo stile."
+    en: "From trail to city without changing shoes. Versatile boots that bring comfort to every occasion, with no compromise on style."
+
+  # Materiali, dettagli e schede ####################################################################
+  - it: Pelle martellata
+    en: Pebbled leather
+  - it: Cavallino
+    en: Pony hair
+  - it: Puntale Gommato
+    en: Rubber toe cap
+  - it: Doppia cucitura
+    en: Double stitching
+  - it: Doppia Cucitura
+    en: Double stitching
+  - it: Bordatura in pelle Dakar
+    en: Dakar leather rand
+  - it: Suola Vibram
+    en: Vibram sole
+  - it: Suola gommata
+    en: Rubber-wrapped sole
+  - it: Nabuk
+    en: Nubuck
+  - it: Pelle Dakar
+    en: Dakar leather
+  - it: Imbottitura Waterproof
+    en: Waterproof padding
+  - it: Suola Bordata in Nabuk
+    en: Nubuck-trimmed sole
+  - it: Punta Heritage
+    en: Heritage toe
+  - it: Dettaglio
+    en: Detail
+  - it: Costruzione
+    en: Construction
+  - it: Cucitura a vista
+    en: Visible stitching
+  - it: Taglie
+    en: Sizes
+  - it: Incluso
+    en: Included
+  - it: Doppio laccio
+    en: Double laces
+  - it: Grasso naturale
+    en: Natural grease
+
+  # Colori ##########################################################################################
+  - it: Bianco
+    en: White
+  - it: Nero
+    en: Black
+  - it: Verde
+    en: Green
+  - it: Senape
+    en: Mustard
+  - it: Sneape
+    en: Mustard
+  - it: Testa di moro
+    en: Dark brown
+  - it: Testa di Moro
+    en: Dark brown
+  - it: Bianco Nera
+    en: "Black & White"
+  - it: Bianco e Nero
+    en: "Black & White"
+  - it: Bianco Testa di Moro
+    en: "White & Dark brown"
+  - it: Bianco Testa di moro
+    en: "White & Dark brown"
+
+  # Modelli e prodotti ##############################################################################
+  - it: "Un classico della montagna, riletto oggi. L'apertura a soffietto rende la calzata più facile e offre una maggiore protezione, mentre le linee vintage restano attuali anche in città."
+    en: "A mountain classic, reinterpreted for today. The bellows tongue makes the boot easier to put on and gives more protection, while its vintage lines still feel current in the city."
+  - it: Cortina Pelle Martellata
+    en: Cortina Pebbled Leather
+  - it: Falcade Pelle Martellata
+    en: Falcade Pebbled Leather
+  - it: Falcade Cavallino
+    en: Falcade Pony Hair
+  - it: Anfibio Stringato
+    en: Lace-up Combat Boot
+  - it: "Una pelle dalla grana pronunciata, morbida al tatto e dall'aspetto naturale. Versatile e resistente, mantiene nel tempo la forma e l'intensità del colore."
+    en: "A leather with a pronounced grain, soft to the touch and natural in appearance. Versatile and hard-wearing, it keeps its shape and the depth of its colour over time."
+  - it: "La pelle Dakar è un cuoio bovino di prima scelta, lavorato con oli, cere e grassi per un effetto vintage dall'aspetto naturale. Con l'uso si schiarisce in velature morbide e sviluppa una patina unica per ogni paio."
+    en: "Dakar is a top-grade cowhide worked with oils, waxes and fats for a natural, vintage look. With wear it lightens in soft shades and develops a patina unique to every pair."
+  - it: "Il suede è la pelle scamosciata, una superficie morbida, vellutata e leggermente ruvida al tatto, che dà alla pedula un carattere caldo e raffinato."
+    en: "Suede is brushed leather: a soft, velvety surface, slightly rough to the touch, that gives the boot a warm and refined character."
+  - it: "Apertura classica della linguetta, per una calzata essenziale e senza tempo. Struttura solida e confortevole, per tutti i giorni tra città e natura."
+    en: "A classic open tongue for a clean, timeless fit. Solid and comfortable, for every day between city and nature."
+  - it: "Pelle cavallino, texture ricercata e carattere deciso."
+    en: "Pony-hair leather: a refined texture with a bold character."
+  - it: "Una pedula bassa con occhielli in metallo e suola Vibram dal fondo scuro, leggera come una scarpa sportiva. Cavallino, suede in due colori, puntale in gomma e una bordatura in gomma porosa effetto roccia."
+    en: "A low boot with metal eyelets and a dark Vibram sole, as light as a sneaker. Pony hair, two-tone suede, a rubber toe cap and a porous rubber rand with a rock effect."
+  - it: "Tre varianti di cavallino tra cui scegliere, per adattare la pedula al proprio stile dal camouflage al moka, fino al bianco e nero."
+    en: "Three pony-hair options to choose from, to match the boot to your style: from camouflage to moka, to black and white."
+  - it: "La pedula che sceglie di distinguersi. Una base in cavallino gocciato, rifinita da bordatura e inserti in pelle Dakar, per un carattere che non passa inosservato."
+    en: "The boot that chooses to stand out. A spotted pony-hair base, finished with a rand and inserts in Dakar leather, for a character that never goes unnoticed."
+  - it: "Disponibile in due varianti di cavallino: moka, calda e avvolgente, oppure bianco e nero, per un contrasto più deciso."
+    en: "Available in two pony-hair options: moka, warm and enveloping, or black and white, for a bolder contrast."
+  - it: "La novità di MonPiz: una scarpa diversa da tutte le altre, che nasce da un'idea tecnica e la veste di un gusto fashion, senza rinunciare alla comodità."
+    en: "New from MonPiz: a shoe unlike any other, born from a technical idea and dressed with a fashion sensibility, without giving up comfort."
+  - it: "Lo stile MonPiz, senza lacci. Un beatle in cavallino con due bande elastiche laterali che lo rendono comodo da infilare, su una suola Vibram."
+    en: "MonPiz style, without laces. A pony-hair Beatle boot with two elastic side panels that make it easy to slip on, on a Vibram sole."
+  - it: "Completamente diverso, pensato per chi osa. L'anfibio stringato MonPiz porta il cavallino e la suola Vibram fuori da ogni schema, con una zip laterale per una calzata comoda e immediata."
+    en: "Completely different, made for those who dare. The MonPiz lace-up combat boot takes pony hair and the Vibram sole beyond every convention, with a side zip for a quick, comfortable fit."
+  - it: "Suede trattato a mano per dare un aspetto vissuto, come se avesse già una storia. Ogni paio è diverso dall'altro: è questo a renderlo unico."
+    en: "Hand-treated suede with a worn-in look, as if it already had a story. No two pairs are alike: that is what makes it unique."
+  - it: "Il suede incontra la gomma. La bordatura protegge la tomaia e regala alla pedula un'immagine più grintosa e accattivante."
+    en: "Suede meets rubber. The rand protects the upper and gives the boot a bolder, more striking look."
+  - it: Disponibile in tutte le varianti colori del suede.
+    en: Available in every suede colour.
+  - it: "Pedula in nabuk, una pelle pregiata ricavata dal lato fiore, la parte più esterna e compatta. Levigata finemente fino a diventare vellutata, morbida e calda al tatto, è più robusta e duratura dello scamosciato."
+    en: "A boot in nubuck, a fine leather taken from the grain side, its outermost and most compact layer. Finely buffed until velvety, soft and warm to the touch, it is sturdier and longer-lasting than suede."
+  - it: "Una pedula bassa con occhielli in metallo e suola Vibram dal fondo scuro, leggera come una scarpa sportiva. Nabuk suede in due colori, puntale in gomma e una bordatura in gomma porosa effetto roccia."
+    en: "A low boot with metal eyelets and a dark Vibram sole, as light as a sneaker. Two-tone nubuck suede, a rubber toe cap and a porous rubber rand with a rock effect."
+  - it: "Volutamente diversa, per chi ama la montagna sul serio. Un calzetto waterproof si stringe con un laccetto di chiusura, su una suola Vibram pronta a ogni terreno."
+    en: "Deliberately different, for those who take the mountains seriously. A waterproof inner sock tightens with a drawcord, on a Vibram sole ready for any terrain."
+  - it: "La City di MonPiz, pensata per il massimo comfort. Ben ammortizzata, con plantare in memory foam e l'immancabile suola Vibram. Nata per chi ama la pedula MonPiz e cerca un modello da città."
+    en: "The MonPiz City, designed for maximum comfort. Well cushioned, with a memory foam insole and the signature Vibram sole. Made for those who love the MonPiz boot and want a model for the city."
+  - it: Disponibile in tre colori di Suede.
+    en: Available in three suede colours.
+
+  # Rivenditori #####################################################################################
+  - it: Dove trovarci
+    en: Where to find us
+  - it: Una rete di 30 negozi.
+    en: A network of 30 stores
+  - it: Una rete di 30 negozi
+    en: A network of 30 stores
+  - it: Scopri i nostri rivenditori autorizzati.
+    en: Discover our authorised retailers.
+  - it: "I nostri rivenditori autorizzati, regione per regione."
+    en: "Our authorised retailers, region by region."
+  - it: Padova
+    en: Padua
+  - it: Lombardia
+    en: Lombardy
+
+  # Ultima pagina ###################################################################################
+  - it: Inizia il tuo viaggio con ...
+    en: Your journey starts with...
+  - it: Il tuo viaggio inizia con...
+    en: Your journey starts with...
+  - it: "Scopri i nuovi prodotti MonPiz, o cerca il rivenditore più vicino a te!"
+    en: "Discover the new MonPiz products, or find your nearest retailer!"
+  - it: "Scopri i nuovi prodotti MonPiz, o cerca il rivenditore più vicino a te."
+    en: "Discover the new MonPiz products, or find your nearest retailer."

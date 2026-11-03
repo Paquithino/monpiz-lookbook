@@ -63,6 +63,8 @@ def build_command(options: BuildOptions) -> list[str]:
         str(options.output),
         "--dpi",
         str(options.dpi),
+        "--lang",
+        options.lang,
         *flags,
     ]
 

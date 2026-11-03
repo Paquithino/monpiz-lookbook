@@ -1,5 +1,5 @@
 // MonPiz lookbook, digital edition: page counter, previous/next page, overview of
-// all pages, colour names. The pages scroll down natively; this only adds comfort.
+// all pages, language switch. The pages scroll down natively; this only adds comfort.
 (() => {
   const pages = [...document.querySelectorAll("[data-page]")];
   if (!pages.length) return;
@@ -90,6 +90,32 @@
     if (fromOverview) setOverview(false);
     page.scrollIntoView({ block: "start", behavior: fromOverview ? "auto" : "smooth" });
   });
+
+  // --- languages: the other edition opens on the same page --------------------------------------
+  const remember = (lang) => { try { localStorage.setItem("monpiz-lang", lang); } catch { /* private mode */ } };
+  const remembered = () => { try { return localStorage.getItem("monpiz-lang"); } catch { return null; } };
+  const here = document.documentElement.lang;
+  const switches = [...document.querySelectorAll("[data-lang-switch]")];
+  switches.forEach((link) => {
+    link.addEventListener("click", (event) => {
+      const lang = link.getAttribute("hreflang");
+      remember(lang);
+      if (lang === here) { event.preventDefault(); return; }
+      const url = new URL(link.href);
+      url.searchParams.set("p", String(current() + 1));
+      link.href = url.href; // the browser follows the updated link
+    });
+  });
+  const asked = Number(new URLSearchParams(location.search).get("p"));
+  if (asked > 1 && pages[asked - 1]) {
+    history.replaceState(null, "", `${location.pathname}#${pages[asked - 1].id}`);
+    show(pages[asked - 1]);
+  } else if (!remembered() && !location.hash && here === "it" && switches.length) {
+    // First visit from a phone set to another language: the English edition.
+    const wanted = (navigator.languages || [navigator.language]).map((l) => l.slice(0, 2).toLowerCase());
+    const english = switches.find((l) => l.getAttribute("hreflang") === "en");
+    if (english && !wanted.includes("it")) location.replace(english.href);
+  }
 
   update();
 })();

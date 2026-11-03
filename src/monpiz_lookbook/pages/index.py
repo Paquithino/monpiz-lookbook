@@ -11,6 +11,7 @@ from dataclasses import dataclass
 
 from ..errors import LayoutError
 from ..geometry import Box
+from ..i18n import tr
 from ..models import Index
 from ..surface import Align, Surface
 from .base import RenderContext
@@ -54,7 +55,7 @@ class IndexPage:
             right = photo.x - PHOTO_GAP
 
         x = g.margin_x
-        surface.text(self.eyebrow, x, EYEBROW_BASELINE, t.label.with_color(p.faint))
+        surface.text(tr(self.eyebrow), x, EYEBROW_BASELINE, t.label.with_color(p.faint))
         surface.text(self.index.title, x, TITLE_BASELINE, t.model_title)
 
         pitch = self._entry_pitch()

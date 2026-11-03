@@ -17,6 +17,7 @@ from dataclasses import dataclass
 
 from ..errors import LayoutError
 from ..geometry import Box, wrap_text
+from ..i18n import tr
 from ..models import Retailers, RetailersMap, Store
 from ..mountain import BOX_WIDTH, SKYLINE, place
 from ..surface import Align, Surface, text_width
@@ -120,7 +121,7 @@ def paginate(retailers: Retailers, theme: Theme) -> list[list[Line]]:
                 next_column()
                 header_due = True
             if header_due:
-                name = region.region + (CONTINUED if index else "")
+                name = region.region + (" " + tr(CONTINUED.strip()) if index else "")
                 pages[-1].append(Line(name, x(), y, head=True))
                 y += HEAD_TO_FIRST
                 header_due = False
@@ -192,7 +193,7 @@ class RetailersPage:
             cx, cy = point(city.at)
             surface.text(city.name, cx + CITY_OFFSET[0], cy + CITY_OFFSET[1], t.map_city)
         if outside:
-            note = OUTSIDE_PREFIX + ", ".join(outside)
+            note = tr(OUTSIDE_PREFIX) + ", ".join(outside)
             surface.text(note, MAP.right, MAP.bottom - 4, t.small, Align.RIGHT)
         surface.hline(MAP.x, MAP.right, MAP.bottom + RULE_BELOW_MAP, p.ink, 0.6)
 

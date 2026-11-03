@@ -16,7 +16,8 @@ from pathlib import Path
 from jinja2 import Environment, FileSystemLoader, StrictUndefined, select_autoescape
 from PIL import Image
 
-from ..contacts import contact_list
+from .. import i18n
+from ..contacts import contact, contact_list, phone_href
 from ..content import load_lookbook
 from ..images import ImageLibrary, whitened
 from ..models import Lookbook
@@ -27,11 +28,9 @@ from ..theme import default_theme
 from .book import book_pages
 from .fonts import build_fonts
 from .media import Picture, WebImages
-from .text import phone_href
 from .view import (
     RIDGE_DEPTH_WIDE,
     anchors,
-    contact,
     contents,
     retailers_map,
     ridge_clip,
@@ -62,17 +61,46 @@ class SiteResult:
     size_bytes: int
 
 
+@dataclass(frozen=True, slots=True)
+class Edition:
+    """One language of the site: ``index.html`` in Italian, ``en.html`` in English."""
+
+    lang: str
+    file: str
+    label: str  # shown on the language switch: "IT", "EN"
+    name: str  # "Italiano", "English"
+
+
+def editions(content_file: Path) -> list[Edition]:
+    """Italian always; every other language that has its dictionary next to the content."""
+    return [
+        Edition(lang, "index.html" if lang == i18n.DEFAULT else f"{lang}.html", lang.upper(), name)
+        for lang, name in i18n.LANGUAGES.items()
+        if lang == i18n.DEFAULT or i18n.dictionary_path(content_file, lang).is_file()
+    ]
+
+
 def build_site(options: SiteOptions) -> SiteResult:
-    lookbook = load_lookbook(options.content_file, options.assets_dir)
+    """Both editions of the site; the images are shared between them."""
     out = options.output_dir
     out.mkdir(parents=True, exist_ok=True)
     images = WebImages(options.assets_dir, out)
-
     static = _publish_static(out)
-    html = render(lookbook, images, options.assets_dir, out, static)
-    partial = out / ".index.html.partial"  # never serve a half-written page
-    partial.write_text(html, encoding="utf-8")
-    partial.replace(out / "index.html")
+    langs = editions(options.content_file)
+    lookbook = load_lookbook(options.content_file, options.assets_dir)
+    try:
+        for edition in langs:
+            i18n.set_language(edition.lang)
+            translated = load_lookbook(options.content_file, options.assets_dir, edition.lang)
+            html = render(translated, images, options.assets_dir, out, static, edition, langs)
+            partial = out / f".{edition.file}.partial"  # never serve a half-written page
+            partial.write_text(html, encoding="utf-8")
+            partial.replace(out / edition.file)
+    finally:
+        i18n.set_language(i18n.DEFAULT)
+    for stale in out.glob("*.html"):  # a language whose dictionary was removed
+        if stale.name not in {e.file for e in langs}:
+            stale.unlink()
     (out / ".nojekyll").write_text("")  # GitHub Pages: publish the files as they are
     if lookbook.web.url:
         host = lookbook.web.url.split("://", 1)[-1].strip("/")
@@ -84,7 +112,15 @@ def build_site(options: SiteOptions) -> SiteResult:
     return SiteResult(out, pages, len(images.written), size)
 
 
-def render(lookbook: Lookbook, images: WebImages, assets_dir: Path, out: Path, static: dict[str, str]) -> str:
+def render(
+    lookbook: Lookbook,
+    images: WebImages,
+    assets_dir: Path,
+    out: Path,
+    static: dict[str, str],
+    edition: Edition | None = None,
+    langs: list[Edition] | None = None,
+) -> str:
     env = Environment(
         loader=FileSystemLoader(HERE / "templates"),
         autoescape=select_autoescape(["j2", "html"]),
@@ -99,8 +135,15 @@ def render(lookbook: Lookbook, images: WebImages, assets_dir: Path, out: Path, s
         for name in palette.__dataclass_fields__
     }
     pages = book_pages(lookbook, ids)
+    edition = edition or Edition(i18n.DEFAULT, "index.html", "IT", i18n.LANGUAGES[i18n.DEFAULT])
+    base = (lookbook.web.url or "").rstrip("/")
     template = env.get_template("index.html.j2")
     return template.render(
+        _=i18n.tr,
+        edition=edition,
+        editions=langs or [edition],
+        locale=i18n.LOCALES[edition.lang],
+        page_url=lambda e: f"{base}/" + ("" if e.file == "index.html" else e.file.removesuffix(".html")),
         lb=lookbook,
         ids=ids,
         pages=pages,
@@ -127,7 +170,7 @@ def render(lookbook: Lookbook, images: WebImages, assets_dir: Path, out: Path, s
         short_name=short_name,
         models_label=models_label,
         contact=contact,
-        contacts=contact_list(lookbook.closing.contacts),
+        contacts=contact_list(lookbook.closing.contacts) if lookbook.closing else [],
         phone_href=phone_href,
         store_id=store_id,
     )
