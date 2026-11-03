@@ -267,9 +267,26 @@ ol, ul { list-style: none; }
 .closing__body { margin: 2rem 0; display: flex; flex-direction: column; align-items: center; text-align: center; }
 .closing__logo { width: 10rem; height: auto; margin: 0.4rem 0 1.4rem; }
 .closing__title { font: 500 clamp(1.5rem, calc(var(--pw) * 0.064), 2.6rem)/1.1 var(--display); color: var(--ink); margin-bottom: 0.9rem; }
-.closing__contacts { margin-top: 1.4rem; padding-top: 1.4rem; border-top: 1px solid var(--ink); }
-.closing__contacts p { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.2rem 1.2rem; }
-.closing__contacts a { color: var(--ink); }
+.contacts {
+  width: 100%; max-width: 44rem; margin-top: 1.6rem;
+  display: grid; grid-template-columns: 1fr; gap: 0.5rem; text-align: left;
+}
+@media (min-width: 600px) { .contacts { grid-template-columns: repeat(3, 1fr); } }
+.contact a, .contact > span {
+  display: flex; align-items: center; gap: 0.8rem; height: 100%;
+  padding: 0.65rem 0.9rem; border: 1px solid var(--rule); border-radius: 0.9rem;
+  color: var(--ink); text-decoration: none; transition: border-color 0.2s, background 0.2s;
+}
+.contact a:hover { border-color: var(--ink); }
+.contact svg { flex: none; width: 1.35rem; height: 1.35rem; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; color: var(--accent); }
+.contact__text { display: flex; flex-direction: column; min-width: 0; }
+.contact__label { font-size: 0.62rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); }
+.contact__value { font: 500 0.95rem/1.3 var(--serif); overflow-wrap: anywhere; }
+/* Instagram first and in colour: the place to follow the brand. */
+.contact--instagram { order: -1; grid-column: 1 / -1; }
+.contact--instagram a { background: var(--accent); border-color: var(--accent); color: var(--paper); justify-content: center; padding: 1rem; }
+.contact--instagram svg, .contact--instagram .contact__label { color: var(--paper); }
+.contact--instagram a:hover { background: var(--ink); border-color: var(--ink); }
 .closing__legal { margin-top: 1.6rem; font-size: 0.75rem; color: var(--faint); }
 
 

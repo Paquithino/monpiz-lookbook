@@ -229,11 +229,25 @@
   <h2 class="closing__title">{{ c.title }}</h2>
   {{ m.img(logo, lb.meta.author, "200px", cls="closing__logo") }}
   <p class="body">{{ c.text }}</p>
-  <div class="closing__contacts">
-    {% for row in c.contacts %}
-    <p>{% for item in row %}{% set k = contact(item) %}{% if k.href %}<a href="{{ k.href }}"{% if k.href.startswith("http") %} target="_blank" rel="noopener"{% endif %}>{{ k.text }}</a>{% else %}<span>{{ k.text }}</span>{% endif %}{% endfor %}</p>
+  {% set icons = {
+    "email": '<path d="M3.5 6.5h17v11h-17z"/><path d="M3.5 7l8.5 6.5L20.5 7"/>',
+    "phone": '<path d="M6.5 3.5h3l1.5 4-2 1.3a11 11 0 0 0 6.2 6.2l1.3-2 4 1.5v3a2 2 0 0 1-2.2 2A16.5 16.5 0 0 1 4.5 5.7a2 2 0 0 1 2-2.2z"/>',
+    "web": '<circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.6 2.4 3.8 5.2 3.8 8.5s-1.2 6.1-3.8 8.5c-2.6-2.4-3.8-5.2-3.8-8.5s1.2-6.1 3.8-8.5z"/>',
+    "instagram": '<rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="0.6" fill="currentColor"/>',
+  } %}
+  <ul class="contacts">
+    {% for k in contacts %}
+    <li class="contact contact--{{ k.kind }}">
+      {% if k.href %}<a href="{{ k.href }}"{% if k.href.startswith("http") %} target="_blank" rel="noopener"{% endif %}>{% else %}<span>{% endif %}
+        {% if k.kind in icons %}<svg viewBox="0 0 24 24" aria-hidden="true">{{ icons[k.kind] | safe }}</svg>{% endif %}
+        <span class="contact__text">
+          {% if k.label %}<span class="contact__label">{% if k.kind == "instagram" %}Seguici su Instagram{% else %}{{ k.label }}{% endif %}</span>{% endif %}
+          <span class="contact__value">{{ k.text }}</span>
+        </span>
+      {% if k.href %}</a>{% else %}</span>{% endif %}
+    </li>
     {% endfor %}
-  </div>
+  </ul>
   <p class="closing__legal">© {{ year }} {{ lb.meta.author }}</p>
 </div>
 {%- endmacro %}

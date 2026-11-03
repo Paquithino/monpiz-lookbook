@@ -10,6 +10,9 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+from reportlab.lib.colors import Color
+
+from ..contacts import contact_list
 from ..geometry import Box
 from ..models import Closing
 from ..surface import Align, Surface
@@ -25,8 +28,9 @@ LOGO_TO_TEXT = 26.0  # logo bottom -> text
 TEXT_WIDTH = 300.0
 RULE_OFFSET = 18.0  # text -> short rule
 RULE_LENGTH = 40.0
-CONTACTS_OFFSET = 26.0  # rule -> first contact row
-CONTACT_SEPARATOR = "  ·  "
+CONTACTS_OFFSET = 30.0  # rule -> contact labels
+CONTACT_VALUE_DROP = 14.0  # label baseline -> value baseline
+CONTACT_COLUMN = 128.0  # width of each contact column
 
 
 @dataclass(frozen=True, slots=True)
@@ -72,8 +76,25 @@ class ClosingPage:
         )
         rule = end + RULE_OFFSET
         surface.hline(centre - RULE_LENGTH / 2, centre + RULE_LENGTH / 2, rule, ink, 0.6)
-        for row, contacts in enumerate(self.closing.contacts):
-            line = CONTACT_SEPARATOR.join(contacts)
-            surface.text(
-                line, centre, rule + CONTACTS_OFFSET + row * 16, t.small.with_color(ink), Align.CENTER
-            )
+        self._draw_contacts(surface, ctx, rule + CONTACTS_OFFSET, ink, soft)
+
+    def _draw_contacts(
+        self, surface: Surface, ctx: RenderContext, top: float, ink: Color, soft: Color
+    ) -> None:
+        """One column per contact, label above value, thin rules between: Instagram first."""
+        t, g = ctx.theme.type, ctx.theme.grid
+        items = sorted(contact_list(self.closing.contacts), key=lambda k: k.kind != "instagram")
+        if not items:
+            return
+        width = min(CONTACT_COLUMN, g.content_width / len(items))
+        left = g.width / 2 - width * len(items) / 2
+        label = t.label.with_color(soft)
+        value = t.small.with_color(ink)
+        for index, item in enumerate(items):
+            x = left + index * width + width / 2
+            if item.label:
+                surface.text(item.label, x, top, label, Align.CENTER)
+            surface.text(item.text, x, top + CONTACT_VALUE_DROP, value, Align.CENTER)
+            if index:
+                rule_x = left + index * width
+                surface.vline(rule_x, top - 8, top + CONTACT_VALUE_DROP + 2, soft, 0.25)

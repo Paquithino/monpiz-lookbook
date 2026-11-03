@@ -6,6 +6,8 @@ import re
 import unicodedata
 from collections.abc import Callable
 
+from ..contacts import phone_href  # noqa: F401  (re-exported for the templates)
+
 _NON_WORD = re.compile(r"[^a-z0-9]+")
 
 
@@ -25,11 +27,3 @@ def unique_slugs() -> Callable[[str], str]:
         return slug if seen[slug] == 1 else f"{slug}-{seen[slug]}"
 
     return make
-
-
-def phone_href(phone: str) -> str:
-    """A ``tel:`` link for an Italian number written with spaces: ``0436 3320`` -> ``tel:+3904363320``."""
-    digits = re.sub(r"[^\d+]", "", phone)
-    if not digits.startswith("+"):
-        digits = "+39" + digits
-    return f"tel:{digits}"

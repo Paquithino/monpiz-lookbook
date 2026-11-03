@@ -115,6 +115,14 @@ class Surface:
         c.line(x0, self._y(top), x1, self._y(top))
         c.restoreState()
 
+    def vline(self, x: float, top: float, bottom: float, color: Color, width: float = 0.75) -> None:
+        c = self._canvas
+        c.saveState()
+        c.setStrokeColor(color)
+        c.setLineWidth(width)
+        c.line(x, self._y(top), x, self._y(bottom))
+        c.restoreState()
+
     def polyline(self, points: Sequence[tuple[float, float]], color: Color, width: float) -> None:
         """Stroke an open polyline with round joins and caps (design coordinates)."""
         if len(points) < 2:

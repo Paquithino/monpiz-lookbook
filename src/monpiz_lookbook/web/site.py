@@ -16,6 +16,7 @@ from pathlib import Path
 from jinja2 import Environment, FileSystemLoader, StrictUndefined, select_autoescape
 from PIL import Image
 
+from ..contacts import contact_list
 from ..content import load_lookbook
 from ..images import ImageLibrary, whitened
 from ..models import Lookbook
@@ -126,6 +127,7 @@ def render(lookbook: Lookbook, images: WebImages, assets_dir: Path, out: Path, s
         short_name=short_name,
         models_label=models_label,
         contact=contact,
+        contacts=contact_list(lookbook.closing.contacts),
         phone_href=phone_href,
         store_id=store_id,
     )

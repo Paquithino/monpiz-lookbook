@@ -178,3 +178,11 @@ def test_stores_too_close_to_tell_apart_share_one_point() -> None:
     view = retailers_map(retailers)
     assert view is not None
     assert sorted(len(d.stores) for d in view.dots) == [1, 2]
+
+
+def test_contacts_are_labelled_and_instagram_shown_as_handle() -> None:
+    insta = contact("https://www.instagram.com/monpiz_official/")
+    assert (insta.kind, insta.label, insta.text) == ("instagram", "Instagram", "@monpiz_official")
+    assert insta.href == "https://www.instagram.com/monpiz_official/"
+    assert contact("monpiz.it").label == "Sito"
+    assert contact("monpiz@monpiz.it").label == "Email"

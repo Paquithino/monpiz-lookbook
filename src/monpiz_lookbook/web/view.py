@@ -8,12 +8,12 @@ plain data computed in Python, so the templates only lay it out.
 from __future__ import annotations
 
 import math
-import re
 from dataclasses import dataclass, field
 
+from ..contacts import Contact, contact  # noqa: F401  (re-exported: shared with the printed back cover)
 from ..models import Lookbook, Retailers, RetailersMap, Store
 from ..mountain import BOX_WIDTH, SKYLINE, place
-from .text import phone_href, slugify, unique_slugs
+from .text import slugify, unique_slugs
 
 # --- anchors and contents -------------------------------------------------------------------------
 
@@ -218,30 +218,6 @@ def _place_city(name: str, x: float, y: float, taken: list[Box]) -> Label | None
 
 def _overlap(a: Box, b: Box) -> bool:
     return a[0] < b[2] and b[0] < a[2] and a[1] < b[3] and b[1] < a[3]
-
-
-# --- contacts -----------------------------------------------------------------------------------
-
-_EMAIL = re.compile(r"^[^@\s]+@[^@\s]+\.[a-z]{2,}$", re.IGNORECASE)
-_PHONE = re.compile(r"^\+?[\d\s]{6,}$")
-_WEB = re.compile(r"^(https?://)?[\w-]+(\.[\w-]+)+(/\S*)?$", re.IGNORECASE)
-
-
-@dataclass(frozen=True, slots=True)
-class Contact:
-    text: str
-    href: str | None
-
-
-def contact(text: str) -> Contact:
-    """A contact line made clickable: e-mail, phone number or web address."""
-    if _EMAIL.match(text):
-        return Contact(text, f"mailto:{text}")
-    if _PHONE.match(text):
-        return Contact(text, phone_href(text))
-    if _WEB.match(text):
-        return Contact(text, text if text.startswith("http") else f"https://{text}")
-    return Contact(text, None)
 
 
 def store_id(store: Store) -> str:
