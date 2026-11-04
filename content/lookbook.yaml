@@ -414,7 +414,7 @@ sections:
              l'intensità del colore.
             specs:
               - {label: Incluso, value: Doppio laccio}
-            sizes: 36–43
+            sizes: 40-46
             variants:
               - color: Nero 
                 image: images/products/Cortina_Donna_Pelle_martellata_nera_spaiate.webp
@@ -431,7 +431,7 @@ sections:
             specs:
               - {label: Incluso, value: Doppio laccio}
               - {label: Incluso, value: Grasso naturale}
-            sizes: 36–43
+            sizes: 40-46
             variants:
               - color: Sneape
                 image: images/products/Cortina_Uomo_Dakar_Ananas_spaiate.jpg
@@ -448,7 +448,7 @@ sections:
              caldo e raffinato.
             specs:
               - {label: Incluso, value: Doppio laccio}
-            sizes: 36–43
+            sizes: 40-46
             variants:
               - color: Pilota
                 image: images/products/Cortina_Uomo_Suede_Blu_Pilota_Spaiate.webp
