@@ -1,7 +1,7 @@
 """Contacts of the back cover, recognised from how they are written.
 
 ``monpiz@monpiz.it`` is an e-mail, ``+39 335 ...`` a phone number,
-``instagram.com/monpiz_official`` the Instagram profile (shown as
+also reachable on WhatsApp, ``instagram.com/monpiz_official`` the Instagram profile (shown as
 ``@monpiz_official``), any other address the web site. Print and web lay them
 out the same way: a small label above each value.
 """
@@ -27,12 +27,18 @@ def phone_href(phone: str) -> str:
     return f"tel:{digits}"
 
 
+def whatsapp_href(phone: str) -> str:
+    """A WhatsApp chat with the number: ``+39 335 760 4522`` -> ``https://wa.me/393357604522``."""
+    return "https://wa.me/" + phone_href(phone).removeprefix("tel:+")
+
+
 @dataclass(frozen=True, slots=True)
 class Contact:
     text: str  # as shown: "@monpiz_official", "monpiz.it"
     href: str | None
     kind: str = "text"  # email, phone, instagram, web, text
-    label: str = ""  # "Email", "Telefono", "Instagram", "Sito"
+    label: str = ""  # "Email", "Telefono e WhatsApp", "Instagram", "Sito"
+    whatsapp: str | None = None  # phone numbers: the same number on WhatsApp
 
 
 def contact(text: str) -> Contact:
@@ -41,7 +47,7 @@ def contact(text: str) -> Contact:
     if _EMAIL.match(text):
         return Contact(text, f"mailto:{text}", "email", tr("Email"))
     if _PHONE.match(text):
-        return Contact(text, phone_href(text), "phone", tr("Telefono"))
+        return Contact(text, phone_href(text), "phone", tr("Telefono e WhatsApp"), whatsapp_href(text))
     if _WEB.match(text):
         href = text if text.startswith("http") else f"https://{text}"
         parts = urlsplit(href)

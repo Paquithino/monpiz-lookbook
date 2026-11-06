@@ -187,3 +187,11 @@ def test_contacts_are_labelled_and_instagram_shown_as_handle() -> None:
     assert insta.href == "https://www.instagram.com/monpiz_official/"
     assert contact("monpiz.it").label == "Sito"
     assert contact("monpiz@monpiz.it").label == "Email"
+
+
+def test_a_phone_number_is_also_a_whatsapp_chat() -> None:
+    phone = contact("+39 335 760 4522")
+    assert phone.href == "tel:+393357604522"
+    assert phone.whatsapp == "https://wa.me/393357604522"
+    assert contact("0436 3320").whatsapp == "https://wa.me/3904363320"
+    assert contact("monpiz@monpiz.it").whatsapp is None

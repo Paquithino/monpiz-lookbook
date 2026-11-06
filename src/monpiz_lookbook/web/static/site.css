@@ -271,19 +271,37 @@ ol, ul { list-style: none; }
   width: 100%; max-width: 44rem; margin-top: 1.6rem;
   display: grid; grid-template-columns: 1fr; gap: 0.5rem; text-align: left;
 }
-@media (min-width: 600px) { .contacts { grid-template-columns: repeat(3, 1fr); } }
-.contact a, .contact > span {
+@media (min-width: 600px) { .contacts { grid-template-columns: repeat(2, 1fr); } }
+.contact > a, .contact > span {
   display: flex; align-items: center; gap: 0.8rem; height: 100%;
   padding: 0.65rem 0.9rem; border: 1px solid var(--rule); border-radius: 0.9rem;
   color: var(--ink); text-decoration: none; transition: border-color 0.2s, background 0.2s;
 }
-.contact a:hover { border-color: var(--ink); }
+.contact > a:hover { border-color: var(--ink); }
 .contact svg { flex: none; width: 1.35rem; height: 1.35rem; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; color: var(--accent); }
 .contact__text { display: flex; flex-direction: column; min-width: 0; }
 .contact__label { font-size: 0.62rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); }
 .contact__value { font: 500 0.95rem/1.3 var(--serif); overflow-wrap: anywhere; }
 /* Instagram first and in colour: the place to follow the brand. */
-.contact--instagram { order: -1; grid-column: 1 / -1; }
+.contact--instagram { order: -2; grid-column: 1 / -1; }
+/* Phone and WhatsApp on one full-width row: the number, then a button for each. */
+.contact--phone { order: -1; grid-column: 1 / -1; }
+.contact--phone > span { flex-wrap: wrap; }
+.contact__icons { display: flex; gap: 0.15rem; }
+.contact__actions { display: flex; gap: 0.4rem; margin-left: auto; }
+.contact__action {
+  display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.42rem 0.8rem; border-radius: 999px;
+  border: 1px solid var(--ink); color: var(--ink); text-decoration: none;
+  font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase;
+}
+.contact .contact__action svg { width: 1rem; height: 1rem; color: currentColor; }
+.contact__action:hover { background: var(--ink); color: var(--paper); }
+.contact__action--whatsapp { background: #1f8f4e; border-color: #1f8f4e; color: #fff; }
+.contact__action--whatsapp:hover { background: #17703c; border-color: #17703c; color: #fff; }
+@media (max-width: 599px) {
+  .contact__actions { flex: 1 1 100%; margin-left: 0; }
+  .contact__action { flex: 1; justify-content: center; }
+}
 .contact--instagram a { background: var(--accent); border-color: var(--accent); color: var(--paper); justify-content: center; padding: 1rem; }
 .contact--instagram svg, .contact--instagram .contact__label { color: var(--paper); }
 .contact--instagram a:hover { background: var(--ink); border-color: var(--ink); }

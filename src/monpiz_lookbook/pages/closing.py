@@ -14,6 +14,7 @@ from reportlab.lib.colors import Color
 
 from ..contacts import contact_list
 from ..geometry import Box
+from ..i18n import tr
 from ..models import Closing
 from ..surface import Align, Surface
 from .base import RenderContext, draw_logo, logo_height
@@ -92,8 +93,9 @@ class ClosingPage:
         value = t.small.with_color(ink)
         for index, item in enumerate(items):
             x = left + index * width + width / 2
-            if item.label:
-                surface.text(item.label, x, top, label, Align.CENTER)
+            name = tr("Tel. · WhatsApp") if item.whatsapp else item.label  # shorter in print
+            if name:
+                surface.text(name, x, top, label, Align.CENTER)
             surface.text(item.text, x, top + CONTACT_VALUE_DROP, value, Align.CENTER)
             if index:
                 rule_x = left + index * width

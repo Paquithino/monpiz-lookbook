@@ -44,6 +44,10 @@ UI: dict[str, dict[str, str]] = {
         "Anche in: ": "Also in: ",
         "Email": "Email",
         "Telefono": "Phone",
+        "Telefono e WhatsApp": "Phone & WhatsApp",
+        "Tel. · WhatsApp": "Tel. · WhatsApp",
+        "Chiama": "Call",
+        "Scrivi su WhatsApp": "Message on WhatsApp",
         "Sito": "Website",
         "Instagram": "Instagram",
         # web only
